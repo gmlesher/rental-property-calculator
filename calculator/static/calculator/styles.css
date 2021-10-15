@@ -1,0 +1,122 @@
+/*Index Page*/
+.reportList {
+  list-style-type: none;
+  padding-left: 0;
+}
+.reportList li a {
+  text-decoration: none;
+  color: white;
+}
+.img-fluid {
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100%;
+  min-width: 100%;
+}
+.card {
+  border: none;
+  max-width: 540px;
+}
+
+/*Calculator Page*/
+textarea {
+  max-height:  8em;
+}
+label.required::after {
+  content: '*';
+  color: red;
+}
+form > div.row, .sticky-top {
+  padding: 0 0 2rem 0;
+}
+/*form > div.utilities > div {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}*/
+aside > a {
+  text-decoration: none;
+}
+
+/*Report Page*/
+table td, table th {
+  padding:  0 30px 0 0;
+}
+.report-photo img {
+  max-width: 300px;
+  height:  auto;
+  padding:  15px 0 15px 0;
+}
+.report-address {
+  padding: 10px 0 10px 10px;
+}
+.report-address h5 {
+  display: inline-block;
+  padding-bottom: 10px;
+  position:  relative;
+}
+.report-address h5::after {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  border-bottom: 2px solid steelblue;
+}
+.report-buttons button {
+  width: 180px;
+}
+.expenses-pie-chart, .income-pie-chart {
+  height: 480px !important;
+  width: auto;
+}
+.expenses-pie-chart > div, .income-pie-chart > div {
+  height: 480px !important;
+  width: auto;
+}
+.aot-table, .aot-table > div {
+  height: 320px !important;
+  width: auto;
+}
+.IEO-graph, .IEO-graph > div {
+  height: 480px !important;
+  width: auto;
+}
+.LBVE-graph, .LBVE-graph > div {
+  height: 480px !important;
+  width: auto;
+}
+.income-pie-chart {
+  display:  none;
+}
+#purchasePriceTable, #purchaseInfoTable, #calulationsTable {
+  width: 100%;
+}
+#purchaseInfoTable > tbody > tr > td {
+  padding:  4px 0 4px 0;
+}
+.aot h3, .financialInfo h3 {
+  display: inline-block;
+  padding-bottom: 10px;
+  position:  relative;
+}
+.aot h3::after, .financialInfo h3::after {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  border-bottom: 2px solid steelblue;
+}
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+a[data-bs-toggle=popover] {
+  text-decoration-style: dashed;
+}
+a[data-bs-toggle=popover]:hover {
+  cursor: pointer;
+}

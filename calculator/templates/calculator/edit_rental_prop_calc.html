@@ -1,0 +1,35 @@
+{% extends "calculator/base.html" %}
+{% load widget_tweaks %}
+
+{% block page_header %}
+<div>
+  <h1>Rental Calculator</h1>
+</div>
+
+{% endblock page_header %}
+
+{% block content %}
+<div>
+  <div class="w-50 mx-auto">
+    <form class="needs-validation" method='post' enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      {% for field in form.visible_fields %}
+        <div class="form-group">
+          {{ field.label_tag }}
+          {% render_field field class="form-control" %}
+          {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <span class="text-danger">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <button name="submit" class="btn btn-primary text-light my-3">Calculate Results</button>
+
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,62 @@
+{% extends "calculator/base.html" %}
+{% load tz %}
+
+{% block page_header %}
+<div>
+  <h1>Reports</h1>
+</div>
+
+{% endblock page_header %}
+
+{% block content %}
+<div>
+  <ul class="reportList">
+    <!-- {% for report in  reports %}
+    <li>
+      <a href="{% url 'calculator:report' report.id %}">{{ report.report_title }}</a>
+    </li>
+    {% endfor %} -->
+    {% for report in  reports %}
+    <li>
+      <div class="card bg-dark mb-3">
+        <a href="{% url 'calculator:report' report.id %}">
+        
+          <div class="row g-0">
+            <div class="col-md-4">
+              {% if report.prop_photo %}
+                <img src="{{ report.prop_photo.url }}" class="img-fluid rounded-start">
+              {% else %}
+                <img src="https://via.placeholder.com/150" class="img-fluid rounded-start">
+              {% endif %}
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{ report.report_title }}</h5>
+                {% if report.prop_address %}
+                  <p class="card-text">{{ report.prop_address }}, {{ report.prop_city }}, {{ report.prop_state }} {{ report.prop_zip }}</p>
+                {% endif %}
+                <p class="card-text">
+                  <small class="text-muted">
+                  {% timezone "America/New_York" %}
+                  Created: {{ report.created_at|date:'n/j/Y g:i a' }}
+                  {% endtimezone %}
+                  </small><br>
+                  <small class="text-muted">
+                  {% timezone "America/New_York" %}
+                  Updated: {{ report.updated_at|date:'n/j/Y g:i a' }}
+                  {% endtimezone %}
+                  </small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      
+    </li>
+    {% endfor %}
+  </ul>
+  
+</div>
+
+{% endblock content %}

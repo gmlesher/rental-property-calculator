@@ -1,0 +1,354 @@
+<!-- Send form submissions to this page with calculated results, graphs, charts, etc -->
+<!-- button on this page to generate PDF of data show on this page. will send data to url that goes to view that pops up a downloadable pdf. -->
+
+{% extends "calculator/base.html" %}
+{% load static %}
+{% load humanize %}
+{% load plotly_dash %}
+
+
+{% block page_header %}
+<div>
+  <h2>{{ r.report_title }}</h2>
+  <div class="row property-info">
+    <div class="report-photo">
+      {% if r.prop_photo %}
+        <img src="{{ r.prop_photo.url }}">
+      {% endif %}
+    </div>
+
+    <div class="report-address">
+      {% if r.prop_address %}
+      <h5>{{ r.prop_address }}, {{ r.prop_city }}, {{ r.prop_state }} {{ r.prop_zip }}</h5>
+      {% endif %}
+    </div>
+
+    <div class="report-details">
+      <h5>
+        <span>
+          {% if r.bedrooms %}
+            {{ r.bedrooms }} bd |
+          {% endif %}
+          {% if r.bathrooms %}
+            {{ r.bathrooms }} ba |
+          {% endif %}
+          {% if r.sqft %}
+            {{ r.sqft }} sqft
+          {% endif %}
+        </span>
+      </h5>
+      <h6>
+        {% if r.prop_mls %}
+          MLS: {{ r.prop_mls }}
+        {% endif%}
+      </h6>
+      <h6>
+        {% if r.year_built %}
+          Year Built: {{ r.year_built }}
+        {% endif%}
+      </h6>
+    </div>
+
+    <div class="report-description w-75">
+      <p>{{ r.prop_description }}</p>
+    </div>
+
+    <div class="report-buttons">
+      <button type="button" class="btn btn-success text-light">
+        <span>&#8681; </span>Download PDF
+      </button>
+      <a role="button" class="btn btn-primary text-light" href="{% url 'calculator:edit-rental-prop-calc' r.pk %}">
+        Edit Report
+      </a>
+      <a role="button" class="btn btn-primary text-light" href="{% url 'calculator:rental-prop-calculator' %}">
+        Start New Report
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock page_header %}
+
+{% block content %}
+<div class="report-results">
+  <hr>
+  <div class="row align-items-start">
+    <div class="col-3">
+      <table class="me-5" id="purchasePriceTable">
+        <tr>
+          <th>
+            <h4>${{ r.purchase_price|intcomma }}</h4>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <small class="text-muted">PURCHASE PRICE</small>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <h4>&nbsp</h4>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            &nbsp
+          </td>
+        </tr>
+      </table>
+
+      <br>
+
+      <table class="me-5" id="purchaseInfoTable">
+        <tr>
+          <td class="text-muted">Purchase Closing Costs</td>
+          <td class="text-end">${{ ttl_clos_costs|intcomma }}</td>
+        </tr>
+        <tr>
+          <td class="text-muted">Estimated Repairs</td>
+          <td class="text-end">${{ r.est_repair_cost|intcomma }}</td>
+        </tr>
+        <tr>
+          <td class="text-muted">Total Project Cost</td>
+          <td class="text-end">${{ total_cost|intcomma }}</td>
+        </tr>
+        <tr>
+          <td class="text-muted">After Repair Value</td>
+          <td class="text-end">${{ r.after_repair_value|intcomma }}</td>
+        </tr>
+        <tr>
+          <td>&nbsp</td>
+        </tr>
+        <tr>
+          <td class="text-muted">Down Payment</td>
+          <td class="text-end">${{ dwn_pmt|intcomma }}</td>
+        </tr>
+        <tr>
+          <td class="text-muted">Loan Amount</td>
+          <td class="text-end">${{ loan_amt|intcomma }}</td>
+        </tr>
+        <tr>
+          <td class="text-muted text-decoration-underline">
+            <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Loan Points" data-bs-placement="bottom" data-bs-content="Fees paid directly to the lender at closing in exchange for a reduced interest rate.<br/><br/> One point costs 1 percent of your mortgage amount. In general, the longer you plan to own the home, the more points help you save on interest over the life of the loan." data-bs-html="true">Loan Points</a>
+          </td>
+          <td class="text-end">${{ loan_pts|intcomma }}</td>
+        </tr>
+        <tr>
+          <td class="text-muted">Amortized Over</td>
+          <td class="text-end">{{ r.loan_term|intcomma }} years</td>
+        </tr>
+        <tr>
+          <td class="text-muted">Loan Interest Rate</td>
+          <td class="text-end">{{ r.loan_int_rate.normalize }}%</td>
+        </tr>
+        <tr>
+          <td class="text-muted">Monthly P&I</td>
+          <td class="text-end">${{ p_i|intcomma }}</td>
+        </tr>
+        <tr>
+          <td class="text-muted">Monthly Operating Expenses</td>
+          <td class="text-end">${{ total_op_exp|intcomma }}</td>
+        </tr>
+        <tr>
+          <td class="text-muted">Total Cash Needed</td>
+          <td class="text-end">${{ total_cash|intcomma }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="col-9">
+      <table class="ms-5" id="calulationsTable">
+        <tr>
+          <th>
+            <h4>${{ mo_income|intcomma }}</h4>
+          </th>
+          <th>
+            <h4>${{ mo_exp|intcomma }}</h4>
+          </th>
+          <th>
+            <h4>${{ cashflow|intcomma }}</h4>
+          </th>
+          <th>
+            <h4>{{ pro_forma_cap_rt }}%</h4>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <small class="text-muted">MONTHLY INCOME</small>
+          </td>
+          <td>
+            <small class="text-muted">MONTHLY EXPENSES</small>
+          </td>
+          <td>
+            <small class="text-muted">MONTHLY CASHFLOW</small>
+          </td>
+          <td>
+            <small class="text-muted text-decoration-underline">
+              <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Pro Forma Cap Rate" data-bs-placement="bottom" data-bs-content="Net operating income (NOI) / after repair value (ARV).<br/><br/> Measures a property's value relative to its income. Pro Forma Cap considers the repairs done on the unit and how much those repairs increased the value of unit." data-bs-html="true">PRO FORMA CAP</a>
+            </small>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            &nbsp
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <h4>${{ n_o_i|intcomma }}</h4>
+          </th>
+          <th>
+            <h4>${{ total_cash|intcomma }}</h4>
+          </th>
+          <th>
+            <h4>{{ coc_roi }}%</h4>
+          </th>
+          <th>
+            <h4>{{ purchase_cap_rt }}%</h4>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <small class="text-muted text-decoration-underline">
+              <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Net Operating Income" data-bs-placement="bottom" data-bs-content="Gross annual income - annual operating expenses.<br/><br/> No debt factored into calculation. Compares the income a property generates to others around it." data-bs-html="true">NOI</a>
+            </small>
+          </td>
+          <td>
+            <small class="text-muted">TOTAL CASH NEEDED</small>
+          </td>
+          <td>
+            <small class="text-muted text-decoration-underline">
+              <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Cash on Cash Return on Investment" data-bs-placement="bottom" data-bs-content="Annual cash flow (before tax) / total cash invested. <br/><br/> Measures the performance of the real estate investment. Shows the potential % of cash distributions based on initial investment." data-bs-html="true">CASH ON CASH ROI</a>
+            </small>
+          </td>
+          <td>
+            <small class="text-muted text-decoration-underline">
+              <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Purchase Cap Rate" data-bs-placement="bottom" data-bs-content="Net operating income (NOI) / purchase price.<br/><br/> Measures a property's value relative to its income. The purchase cap rate does not consider repairs." data-bs-html="true">PURCHASE CAP RATE</a>
+            </small>
+          </td>
+        </tr>
+      </table>
+      <br>
+      <div class='text-center pt-4'>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+          <label class="btn btn-outline-primary" for="btnradio1">Expenses</label>
+
+          <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+          <label class="btn btn-outline-primary" for="btnradio2">Income</label>
+        </div>
+      </div>
+      <div class="expenses-pie-chart">
+        {% plotly_app name="MonthlyExpenses" %}
+      </div>
+      <div class="income-pie-chart">
+        {% plotly_app name="MonthlyIncome" %}
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class='financialInfo'>
+    <h3>Financial Info</h3>
+    <table class="me-5 pt-4" id="financialInfoTable">
+      <tr>
+        <th class='pt-5'>
+          <h4>{{ two_pct_rule|floatformat:"2" }}%</h4>
+        </th>
+        <th class='pt-5'>
+          <h4>${{ total_init_equity|intcomma }}</h4>
+        </th>
+        <th class='pt-5'>
+          <h4>{{ grm|floatformat:"2" }}</h4>
+        </th>
+        <th class='pt-5'>
+          <h4>{{ debt_cov_rto|floatformat:"2" }}</h4>
+        </th>
+      </tr>
+      <tr>
+        <td>
+          <small class="text-muted text-decoration-underline">
+            <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="2% Rule" data-bs-placement="bottom" data-bs-content="Monthly income / total property cost.<br/><br/>General guideline for finding profitable rental properties.<br/><br/>The goal is to buy a property that produces 2% of the total property price (including initial purchase price, repairs, closing costs, etc.) in monthly rents.<br/><br/>Disclaimer: very few properties meet the 2% rule. Usually, the 1% rule is more feasible and will still remain a good investment. Percentages above 1% are good." data-bs-html="true">2% RULE</a>
+          </small>
+        </td>
+        <td>
+          <small class="text-muted">TOTAL INITIAL EQUITY</small>
+        </td>
+        <td>
+          <small class="text-muted text-decoration-underline">
+            <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Gross Rent Multiplier" data-bs-placement="bottom" data-bs-content="Purchase price / annual income.<br/><br/>Used as a comparison metric to other similar market properties. The lower the GRM is compared to other properties, the more attractive the investment is. Lower values indicate higher rental income streams." data-bs-html="true">GROSS RENT MULTIPLIER</a>
+          </small>
+        </td>
+        <td>
+          <small class="text-muted text-decoration-underline">
+            <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Debt Coverage Ratio" data-bs-placement="bottom" data-bs-content="Net operating income (NOI) / annual mortgage payments.<br/><br/>Measures ability of income to pay mortgage debts. A ratio greater than 1 means debts are able to be paid by income. Ratios less than 1 mean income not sufficient to pay debts.<br/><br/>Typically, a higher debt coverage ratio is desireable." data-bs-html="true">DEBT COVERAGE RATIO</a>
+          </small>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <hr>
+
+  <div class="aot">
+    <h3>Analysis Over Time</h3>
+    <table class="me-5" id="financialInfoTable">
+      <tr>
+        <th class='pt-5'>
+          <h4>{{ r.annual_expenses_growth|floatformat:"0" }}%
+            <span>
+              <small> /year</small>
+            </span>
+          </h4>
+        </th>
+        <th class='pt-5'>
+          <h4>{{ r.annual_income_growth|floatformat:"0" }}%
+            <span>
+              <small> /year</small>
+            </span>
+          </h4>
+        </th>
+        <th class='pt-5'>
+          <h4>{{ r.annual_pv_growth|floatformat:"0" }}%
+            <span>
+              <small> /year</small>
+            </span>
+          </h4>
+        </th>
+      </tr>
+      <tr>
+        <td class='pb-5'>
+          <small class="text-muted">EXPENSE INCREASE</small>
+        </td>
+        <td class='pb-5'>
+          <small class="text-muted">INCOME INCREASE</small>
+        </td>
+        <td class='pb-5'>
+          <small class="text-muted">PROPERTY VALUE INCREASE</small>
+        </td>
+      </tr>
+    </table>
+    <div class="aot-table">
+      {% plotly_app name="AOTTable" %}
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <div class="IEO-graph">
+          {% plotly_app name="IncExpCashflow" %}
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="LBVE-graph">
+          {% plotly_app name="LoanBalanceValueEquity" %}
+        </div>
+      </div>
+    </div>
+    <hr>
+  </div>
+  
+</div>
+
+
+{% endblock content %}

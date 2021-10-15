@@ -1,0 +1,65 @@
+{% load static %}
+<!doctype html>
+<html lang ="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Rental Property Calculator</title>
+
+  {# favicon #}
+
+  {# Global stylesheets #}
+  <!-- bootstrap 5.0 css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{% static 'calculator/styles.css' %}">
+
+  {% block extra_css %}
+      {# Override this in templates to add extra stylesheets #}
+  {% endblock %}
+
+</head>
+
+<body>
+
+  <!--Navbar features-->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-2 border-info">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Logo Here</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navButton" aria-controls="navButton" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navButton">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'calculator:rental-prop-calculator' %}">Rental Calculator</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!--Page header features-->
+  <main role="main" class="container">
+    <div class="py-2 my-2">
+        {% block page_header %}{% endblock page_header %}
+    </div>
+
+    <!--Main content section-->
+    <div class="py-2 my-2">
+      {% block content %}{% endblock content %}
+    </div>
+  </main>
+
+  {# Global scripts #}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="{% static 'calculator/script.js' %}"></script>
+  
+  
+  {% block extra_js %}
+      {# Override this in templates to add extra stylesheets #}
+  {% endblock %}
+
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+"""Defines URL patterns for calculator."""
+from django.urls import path
+from . import views
+
+app_name = 'calculator'
+urlpatterns = [
+    # Home Page
+    path('', views.index, name='index'),
+    # Calculator Page
+    path('rental-prop-calculator/', views.rental_prop_calculator, name='rental-prop-calculator'),
+    # Report Page
+    path('report/<int:pk>/', views.report, name='report'),
+    # Edit Report Page
+    path('edit-rental-prop-calc/<int:pk>/', views.edit_rental_prop_calc, name='edit-rental-prop-calc'),
+]
