@@ -1,5 +1,7 @@
 from .dataframes import *
 
+"""Basic Calculations Section"""
+
 def monthly_income(gross_rent, other_income):
     """Returns sum of all property income"""
     income = [gross_rent, other_income]
@@ -185,7 +187,7 @@ def debt_coverage_ratio(noi, p_i):
     except ZeroDivisionError:
         return 0
 
-"""Analysis over time section"""
+"""Analysis Over Time Section"""
 
 def analysis_over_time(annual_income_growth, annual_pv_growth, annual_expenses_growth, sales_expenses, loan_term, loan_amount, int_rate, monthly_income, operating_expenses, p_i, total_cash, after_repair_value):
     """Returns data in lists for each year the length of the loan term. To be used in dataframe for graphs"""
@@ -366,10 +368,10 @@ def aot_annualized_total_return(total_profit_if_sold, total_cash):
     return aot_annualized_total_return 
 
 
-# debt_coverage_ratio(16200, 10214)
+# debt_coverage_ratio(-2600, 210000)
 # gross_rent_multiplier(2600, 210000)
-# total_initial_equity(280000, 210000, 42000)
-# two_percent_rule(210000, 2600)
+# total_initial_equity(0, 210000, 0)
+# two_percent_rule(216000, 2600)
 
 # aot_annualized_total_return([85600, 102300], None)
 # aot_total_profit_if_sold([180000, 190000], [100000, 99000], [5600, 5700], None, None)

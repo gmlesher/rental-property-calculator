@@ -2,6 +2,9 @@ from django.test import TestCase
 from calculator import calc
 
 class TestCalc(TestCase):
+    """Tests for calc.py"""
+
+    """Basic Calculations Section"""
     def test_monthly_income(self):
         self.assertEqual(calc.monthly_income(1200, 200), 1400)
 
@@ -45,6 +48,12 @@ class TestCalc(TestCase):
         self.assertEqual(calc.total_cash_needed(50000, 0, None), 50000)
         self.assertEqual(calc.total_cash_needed(32489, 1, 1), 32491)
 
+    def test_monthly_expenses(self):
+        self.assertEqual(calc.monthly_expenses(1, 1), 2)
+        self.assertEqual(calc.monthly_expenses(-1, -1), -2)
+        self.assertEqual(calc.monthly_expenses(0, 0), 0)
+        self.assertEqual(calc.monthly_expenses(-1, 1), 0)
+
     def test_monthly_cashflow(self):
         self.assertEqual(calc.monthly_cashflow(1200, 1100), 100)
         self.assertEqual(calc.monthly_cashflow(1000, 1200), -200)
@@ -78,48 +87,122 @@ class TestCalc(TestCase):
         self.assertEqual(calc.total_project_cost(120000, 1200, None), 121200)
         self.assertEqual(calc.total_project_cost(120000, None, 1200), 121200)
 
+    """Financial Info Section"""
+
+    def test_two_percent_rule(self):
+        self.assertAlmostEqual(calc.two_percent_rule(216000, 2600), 1.2037, \
+            places=3)
+        self.assertEqual(calc.two_percent_rule(0, 2600), 0)
+        self.assertEqual(calc.two_percent_rule(216000, 0), 0)
+
+    def test_total_initial_equity(self):
+        self.assertEqual(calc.total_initial_equity(280000, 210000, 42000), 112000)
+        self.assertEqual(calc.total_initial_equity(280000, 0, 42000), 322000)
+        self.assertEqual(calc.total_initial_equity(280000, 210000, 0), 70000)
+        self.assertEqual(calc.total_initial_equity(0, 210000, 0), -210000)
+
+    def test_gross_rent_multiplier(self):
+        self.assertAlmostEqual(calc.gross_rent_multiplier(2600, 210000), 6.7307, \
+            places=3)
+        self.assertEqual(calc.gross_rent_multiplier(0, 260000), 0)
+        self.assertEqual(calc.gross_rent_multiplier(216000, 0), 0)
+        self.assertAlmostEqual(calc.gross_rent_multiplier(-2600, 210000), -6.7307, \
+            places=3)
+
+    def test_debt_coverage_ratio(self):
+        self.assertAlmostEqual(calc.debt_coverage_ratio(16200, 10214), 0.1321, \
+            places=3)
+        self.assertAlmostEqual(calc.debt_coverage_ratio(16200, 851), 1.5863, \
+            places=3)
+        self.assertAlmostEqual(calc.debt_coverage_ratio(16200, -851), -1.5863, \
+            places=3)
+        self.assertAlmostEqual(calc.debt_coverage_ratio(-2600, 210000), -0.0010, \
+            places=3)
+
+
+    """Analysis Over Time Section"""
+
     def test_aot_annual_income(self):
-        self.assertEqual(calc.aot_annual_income(2, 2500, 30), [30000, 30600, 31212, 31836, 32473, 33122, 33785, 34461, 35150, 35853, 36570, 37301, 38047, 38808, 39584, 40376, 41184, 42007, 42847, 43704, 44578, 45470, 46379, 47307, 48253, 49218, 50203, 51207, 52231, 53275])
-        self.assertEqual(calc.aot_annual_income(None, 2500, 30), [30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000])
-        self.assertEqual(calc.aot_annual_income(2, None, 30), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        self.assertEqual(calc.aot_annual_income(2, 2500, 30), [30000, 30600, \
+            31212, 31836, 32473, 33122, 33785, 34461, 35150, 35853, 36570, \
+            37301, 38047, 38808, 39584, 40376, 41184, 42007, 42847, 43704, \
+            44578, 45470, 46379, 47307, 48253, 49218, 50203, 51207, 52231, 53275])
+        self.assertEqual(calc.aot_annual_income(None, 2500, 30), [30000, 30000, \
+            30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, \
+            30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, \
+            30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000])
+        self.assertEqual(calc.aot_annual_income(2, None, 30), [0, 0, 0, 0, 0, \
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
+            0, 0, 0])
         self.assertEqual(calc.aot_annual_income(2, 2500, None), [])
         self.assertEqual(calc.aot_annual_income(None, None, None), [])
     def test_aot_annual_expenses(self):
-        self.assertEqual(calc.aot_annual_expenses(2, 1500, 850, 15), [28200, 28560, 28927, 29302, 29684, 30073, 30471, 30876, 31290, 31712, 32142, 32581, 33028, 33485, 33951])
-        self.assertEqual(calc.aot_annual_expenses(None, 1500, 850, 15), [28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200])
-        self.assertEqual(calc.aot_annual_expenses(2, 1200, None, 15), [14400, 14688, 14982, 15281, 15587, 15899, 16217, 16541, 16872, 17209, 17554, 17905, 18263, 18628, 19000])
-        self.assertEqual(calc.aot_annual_expenses(2, 0, None, 15), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        self.assertEqual(calc.aot_annual_expenses(2, 1500, 850, 15), [28200, \
+            28560, 28927, 29302, 29684, 30073, 30471, 30876, 31290, 31712, \
+            32142, 32581, 33028, 33485, 33951])
+        self.assertEqual(calc.aot_annual_expenses(None, 1500, 850, 15), [28200, \
+            28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200, 28200, \
+            28200, 28200, 28200, 28200, 28200])
+        self.assertEqual(calc.aot_annual_expenses(2, 1200, None, 15), [14400, \
+            14688, 14982, 15281, 15587, 15899, 16217, 16541, 16872, 17209, \
+            17554, 17905, 18263, 18628, 19000])
+        self.assertEqual(calc.aot_annual_expenses(2, 0, None, 15), [0, 0, 0, 0, \
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         self.assertEqual(calc.aot_annual_expenses(2, 1500, 800, None), [])
 
     def test_aot_annual_cashflow(self):
-        self.assertEqual(calc.aot_annual_cashflow([1200, 1500], [1000, 1200]), [200, 300])
-        self.assertEqual(calc.aot_annual_cashflow([0, 0], [1000, 1200]), [-1000, -1200])
+        self.assertEqual(calc.aot_annual_cashflow([1200, 1500], [1000, 1200]), \
+            [200, 300])
+        self.assertEqual(calc.aot_annual_cashflow([0, 0], [1000, 1200]), \
+            [-1000, -1200])
         self.assertEqual(calc.aot_annual_cashflow([0, 0], [0, 0]), [0, 0])
         self.assertEqual(calc.aot_annual_cashflow(None, None), [0])
 
     def test_aot_cash_on_cash_ROI(self):
-        self.assertEqual(calc.aot_cash_on_cash_ROI([10500, 10600], 48000), [21.88, 22.08])
+        self.assertEqual(calc.aot_cash_on_cash_ROI([10500, 10600], 48000), \
+            [21.88, 22.08])
         self.assertEqual(calc.aot_cash_on_cash_ROI(None, 48000), [])
 
     def test_aot_property_value(self):
-        self.assertEqual(calc.aot_property_value(2, 280000, 30), [285600, 291312, 297138, 303081, 309143, 315325, 321632, 328065, 334626, 341318, 348145, 355108, 362210, 369454, 376843, 384380, 392068, 399909, 407907, 416065, 424387, 432874, 441532, 450362, 459370, 468557, 477928, 487487, 497237, 507181])
-        self.assertEqual(calc.aot_property_value(None, 280000, 5), [280000, 280000, 280000, 280000, 280000])
+        self.assertEqual(calc.aot_property_value(2, 280000, 30), [285600, \
+            291312, 297138, 303081, 309143, 315325, 321632, 328065, 334626, \
+            341318, 348145, 355108, 362210, 369454, 376843, 384380, 392068, \
+            399909, 407907, 416065, 424387, 432874, 441532, 450362, 459370, \
+            468557, 477928, 487487, 497237, 507181])
+        self.assertEqual(calc.aot_property_value(None, 280000, 5), \
+            [280000, 280000, 280000, 280000, 280000])
         self.assertEqual(calc.aot_property_value(2, None, 5), [0, 0, 0, 0, 0])
         self.assertEqual(calc.aot_property_value(2, 150000, None), [])
 
     def test_aot_loan_balance(self):
-        self.assertEqual(calc.aot_loan_balance(1200, 160000, 15, 4.5), [152650, 144962, 136920, 128510, 119713, 110512, 100888, 90822, 80293, 69281, 57763, 45716, 33116, 19936, 6151])
+        self.assertEqual(calc.aot_loan_balance(1200, 160000, 15, 4.5), [152650, \
+            144962, 136920, 128510, 119713, 110512, 100888, 90822, 80293, \
+            69281, 57763, 45716, 33116, 19936, 6151])
         self.assertEqual(calc.aot_loan_balance(1200, 160000, 0, 4.5), [])
-        self.assertEqual(calc.aot_loan_balance(1200, 0, 15, 4.5), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-        self.assertEqual(calc.aot_loan_balance(1200, 120000, 15, 0), [105600, 91200, 76800, 62400, 48000, 33600, 19200, 4800, 0, 0, 0, 0, 0, 0, 0])
+        self.assertEqual(calc.aot_loan_balance(1200, 0, 15, 4.5), [0, 0, 0, 0, \
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        self.assertEqual(calc.aot_loan_balance(1200, 120000, 15, 0), [105600, \
+            91200, 76800, 62400, 48000, 33600, 19200, 4800, 0, 0, 0, 0, 0, 0, 0])
 
     def test_aot_equity(self):
-        self.assertEqual(calc.aot_equity([280000, 286000], [160000, 155000]), [120000, 131000])
+        self.assertEqual(calc.aot_equity(
+            [280000, 286000], [160000, 155000]), [120000, 131000]
+        )
 
     def test_aot_total_profit_if_sold(self):
-        self.assertEqual(calc.aot_total_profit_if_sold([180000, 190000], [100000, 99000], [5600, 5700], 9, 48000), [21400, 37200])
-        self.assertEqual(calc.aot_total_profit_if_sold([180000, 190000], [100000, 99000], [5600, 5700], None, None), [85600, 102300])
+        self.assertEqual(calc.aot_total_profit_if_sold(
+            [180000, 190000], [100000, 99000], [5600, 5700], 9, 48000), \
+            [21400, 37200]
+        )
+        self.assertEqual(calc.aot_total_profit_if_sold(
+            [180000, 190000], [100000, 99000], [5600, 5700], None, None), \
+            [85600, 102300]
+        )
 
     def test_aot_annualized_total_return(self):
-        self.assertEqual(calc.aot_annualized_total_return([85600, 102300], 48000), [178.33, 76.95])
-        self.assertEqual(calc.aot_annualized_total_return([85600, 102300], None), [0, 0])
+        self.assertEqual(calc.aot_annualized_total_return(
+            [85600, 102300], 48000), [178.33, 76.95]
+        )
+        self.assertEqual(calc.aot_annualized_total_return(
+            [85600, 102300], None), [0, 0]
+        )
