@@ -1,0 +1,20 @@
+<div class="modal" tabindex="-1" id="">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        {% if report.report_title %}
+          <h3>{{ report.report_title }}</h3>
+        {% endif %}
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% if report.report_title %}
+          <a href="{% url 'calculator:delete-report' report.pk %}" role='button' class='btn btn-danger'>Delete</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

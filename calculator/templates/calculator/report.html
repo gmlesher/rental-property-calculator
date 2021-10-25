@@ -54,13 +54,13 @@
     </div>
 
     <div class="report-buttons">
-      <button type="button" class="btn btn-success text-light">
+      <button type="button" class="btn btn-dark text-light">
         <span>&#8681; </span>Download PDF
       </button>
-      <a role="button" class="btn btn-primary text-light" href="{% url 'calculator:edit-rental-prop-calc' r.pk %}">
+      <a role="button" class="btn text-light" href="{% url 'calculator:edit-rental-prop-calc' r.pk %}">
         Edit Report
       </a>
-      <a role="button" class="btn btn-primary text-light" href="{% url 'calculator:rental-prop-calculator' %}">
+      <a role="button" class="btn text-light" href="{% url 'calculator:rental-prop-calculator' %}">
         Start New Report
       </a>
     </div>
@@ -103,56 +103,56 @@
       <table class="me-5" id="purchaseInfoTable">
         <tr>
           <td class="text-muted">Purchase Closing Costs</td>
-          <td class="text-end">${{ ttl_clos_costs|intcomma }}</td>
+          <td class="text-end">${{ ttl_clos_costs|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td class="text-muted">Estimated Repairs</td>
-          <td class="text-end">${{ r.est_repair_cost|intcomma }}</td>
+          <td class="text-end">${{ r.est_repair_cost|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td class="text-muted">Total Project Cost</td>
-          <td class="text-end">${{ total_cost|intcomma }}</td>
+          <td class="text-end">${{ total_cost|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td class="text-muted">After Repair Value</td>
-          <td class="text-end">${{ r.after_repair_value|intcomma }}</td>
+          <td class="text-end">${{ r.after_repair_value|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td>&nbsp</td>
         </tr>
         <tr>
           <td class="text-muted">Down Payment</td>
-          <td class="text-end">${{ dwn_pmt|intcomma }}</td>
+          <td class="text-end">${{ dwn_pmt|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td class="text-muted">Loan Amount</td>
-          <td class="text-end">${{ loan_amt|intcomma }}</td>
+          <td class="text-end">${{ loan_amt|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td class="text-muted text-decoration-underline">
             <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Loan Points" data-bs-placement="bottom" data-bs-content="Fees paid directly to the lender at closing in exchange for a reduced interest rate.<br/><br/> One point costs 1 percent of your mortgage amount. In general, the longer you plan to own the home, the more points help you save on interest over the life of the loan." data-bs-html="true">Loan Points</a>
           </td>
-          <td class="text-end">${{ loan_pts|intcomma }}</td>
+          <td class="text-end">${{ loan_pts|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td class="text-muted">Amortized Over</td>
-          <td class="text-end">{{ r.loan_term|intcomma }} years</td>
+          <td class="text-end">{{ r.loan_term|default_if_none:"0"|intcomma }} years</td>
         </tr>
         <tr>
           <td class="text-muted">Loan Interest Rate</td>
-          <td class="text-end">{{ r.loan_int_rate.normalize }}%</td>
+          <td class="text-end">{{ r.loan_int_rate.normalize|default_if_none:"0" }}%</td>
         </tr>
         <tr>
           <td class="text-muted">Monthly P&I</td>
-          <td class="text-end">${{ p_i|intcomma }}</td>
+          <td class="text-end">${{ p_i|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td class="text-muted">Monthly Operating Expenses</td>
-          <td class="text-end">${{ total_op_exp|intcomma }}</td>
+          <td class="text-end">${{ total_op_exp|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td class="text-muted">Total Cash Needed</td>
-          <td class="text-end">${{ total_cash|intcomma }}</td>
+          <td class="text-end">${{ total_cash|default_if_none:"0"|intcomma }}</td>
         </tr>
       </table>
     </div>
@@ -231,7 +231,7 @@
       </table>
       <br>
       <div class='text-center pt-4'>
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <div class="btn-group" role="group">
           <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
           <label class="btn btn-outline-primary" for="btnradio1">Expenses</label>
 
@@ -297,21 +297,21 @@
     <table class="me-5" id="financialInfoTable">
       <tr>
         <th class='pt-5'>
-          <h4>{{ r.annual_expenses_growth|floatformat:"0" }}%
+          <h4>{{ r.annual_expenses_growth|default_if_none:"0"|floatformat:"0" }}%
             <span>
               <small> /year</small>
             </span>
           </h4>
         </th>
         <th class='pt-5'>
-          <h4>{{ r.annual_income_growth|floatformat:"0" }}%
+          <h4>{{ r.annual_income_growth|default_if_none:"0"|floatformat:"0" }}%
             <span>
               <small> /year</small>
             </span>
           </h4>
         </th>
         <th class='pt-5'>
-          <h4>{{ r.annual_pv_growth|floatformat:"0" }}%
+          <h4>{{ r.annual_pv_growth|default_if_none:"0"|floatformat:"0" }}%
             <span>
               <small> /year</small>
             </span>

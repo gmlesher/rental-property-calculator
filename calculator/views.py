@@ -8,14 +8,14 @@ from . import plotly_app
 
 def index(request):
     """The home page for the Rental Property Calculator."""
-    reports = RentalPropCalcReport.objects.all().order_by('-id')
+    reports = RentalPropCalcReport.objects.all().order_by('-updated_at')
     context = {'reports': reports}
     return render(request, 'calculator/index.html', context)
     
 
 def rental_prop_calculator(request):
     """The calculator page"""
-    form = RentalPropForm(request.POST or None)
+    form = RentalPropForm(request.POST, request.FILES or None)
     if form.is_valid():
         new_form = form.save()
         pk = new_form.pk
@@ -93,6 +93,15 @@ def report(request, pk):
     }
     return render(request, 'calculator/report.html', context)
 
+def delete_report(request, pk):
+    """Delete report"""
+    try:
+        report = RentalPropCalcReport.objects.get(id=pk)
+    except:
+        raise Http404
+    RentalPropCalcReport.objects.filter(id=pk).delete()
+    return redirect('calculator:index')
+
 
 def edit_rental_prop_calc(request, pk):
     """Edit a report"""
@@ -102,7 +111,7 @@ def edit_rental_prop_calc(request, pk):
         raise Http404
     if request.method == 'POST':
         # Initial request; pre-fill form with the current entry.
-        form = RentalPropForm(instance=item, data=request.POST)
+        form = RentalPropForm(request.POST, request.FILES, instance=item)
         if form.is_valid():
             form.save()
             return redirect(f'/report/{pk}')
@@ -113,4 +122,4 @@ def edit_rental_prop_calc(request, pk):
 
     # Display a blank or invalid form.
     context = {'item': item,'form': form}
-    return render(request, 'calculator/edit_rental_prop_calc.html', context)
+    return render(request, 'calculator/rental_prop_calculator.html', context)

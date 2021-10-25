@@ -84,8 +84,9 @@ def loan_principal_interest(loan_amount, loan_int_rate, loan_term):
             ((1 + monthly_rate)**months_to_repay - 1)
             )
         create_combine_pi_dataframe(mortgage_pmt)
+        
         return round(mortgage_pmt)
-    except ZeroDivisionError:
+    except (ZeroDivisionError, Exception):
         create_combine_pi_dataframe(0)
         return 0
 
@@ -98,7 +99,6 @@ def total_cash_needed(down_payment, purchase_closing_cost, est_repair_cost):
 def monthly_expenses(op_expenses, p_i):
     """Returns sum of all expenses.
     Monthly expenses = sum of operating expenses + mortgage expenses"""
-    # print("monthly expenses =", op_expenses + p_i)
     return op_expenses + p_i
 
 def monthly_cashflow(monthly_income, monthly_expenses):
@@ -219,6 +219,8 @@ def aot_annual_income(annual_income_growth, monthly_income, loan_term):
 
     aot_annual_income = []
     current_year_income = 0
+    if loan_term == 0:
+        aot_annual_income.append(round(monthly_income * 12))
     for year in range(loan_term):
         if year == 0:
             annual_income = monthly_income * 12
@@ -227,7 +229,6 @@ def aot_annual_income(annual_income_growth, monthly_income, loan_term):
         else:
             current_year_income += (annual_income_growth/100) * current_year_income
             aot_annual_income.append(round(current_year_income))
-    # print(aot_annual_income)
     return aot_annual_income
 
 def aot_annual_expenses(annual_expenses_growth, operating_expenses, p_i, loan_term):
@@ -242,6 +243,8 @@ def aot_annual_expenses(annual_expenses_growth, operating_expenses, p_i, loan_te
     aot_annual_expenses = []
     annual_operating_expenses = 0
     annual_pi = p_i * 12
+    if loan_term == 0 or p_i == 0:
+        aot_annual_expenses.append(round(operating_expenses * 12))
     for year in range(loan_term):
         if year == 0:
             annual_operating_expenses = (operating_expenses * 12)
@@ -251,7 +254,6 @@ def aot_annual_expenses(annual_expenses_growth, operating_expenses, p_i, loan_te
             annual_operating_expenses += (annual_expenses_growth/100) * annual_operating_expenses
             op_and_p_i = annual_operating_expenses + annual_pi
             aot_annual_expenses.append(round(op_and_p_i))
-    # print(aot_annual_expenses)
     return aot_annual_expenses
 
 def aot_annual_cashflow(total_annual_income, total_annual_expenses):
@@ -266,7 +268,6 @@ def aot_annual_cashflow(total_annual_income, total_annual_expenses):
     for list1, list2 in zip_object:
         aot_annual_cashflow.append(list1-list2)
 
-    # print(aot_annual_cashflow)
     return aot_annual_cashflow
 
 def aot_cash_on_cash_ROI(total_annual_cashflow, total_cash):
@@ -281,7 +282,6 @@ def aot_cash_on_cash_ROI(total_annual_cashflow, total_cash):
                 aot_cash_on_cash_ROI.append(coc_roi)
             except ZeroDivisionError:
                 aot_cash_on_cash_ROI.append(0)
-    # print(aot_cash_on_cash_ROI)
     return aot_cash_on_cash_ROI
 
 def aot_property_value(annual_pv_growth, after_repair_value, loan_term):
@@ -295,10 +295,12 @@ def aot_property_value(annual_pv_growth, after_repair_value, loan_term):
 
     aot_property_value = []
     current_year_pv = after_repair_value
+    if loan_term == 0:
+        current_year_pv += (annual_pv_growth/100) * current_year_pv
+        aot_property_value.append(round(current_year_pv))
     for year in range(loan_term):
         current_year_pv += (annual_pv_growth/100) * current_year_pv
         aot_property_value.append(round(current_year_pv))
-    # print(aot_property_value)
     return aot_property_value
 
 def aot_loan_balance(p_i, loan_amount, loan_term, int_rate):
@@ -308,6 +310,8 @@ def aot_loan_balance(p_i, loan_amount, loan_term, int_rate):
     monthly_balances = []
     annual_balances = []
     balance = loan_amount
+    if loan_term == 0:
+        annual_balances.append(0)
     for month in range(loan_term*12):
         principal = p_i - (balance * ((int_rate/100)/12))
         balance -= principal
@@ -319,7 +323,6 @@ def aot_loan_balance(p_i, loan_amount, loan_term, int_rate):
             annual_balances.append(monthly_amount)
         else:
             annual_balances.append(monthly_amount)
-    # print(annual_balances)
     return annual_balances
 
 def aot_equity(property_value, loan_balance):
@@ -328,8 +331,6 @@ def aot_equity(property_value, loan_balance):
     zip_object = zip(property_value, loan_balance)
     for list1, list2 in zip_object:
         aot_equity.append(list1-list2)
-
-    # print(aot_equity)
     return aot_equity
 
 def aot_total_profit_if_sold(property_value, loan_balance, cashflow, sales_expenses, total_cash):
@@ -348,7 +349,6 @@ def aot_total_profit_if_sold(property_value, loan_balance, cashflow, sales_expen
         profit = (list1 - sales_exp - list2 - total_cash) + list3
         aot_total_profit_if_sold.append(round(profit))
 
-    # print(aot_total_profit_if_sold)
     return aot_total_profit_if_sold
 
 def aot_annualized_total_return(total_profit_if_sold, total_cash):
@@ -364,7 +364,6 @@ def aot_annualized_total_return(total_profit_if_sold, total_cash):
         except ZeroDivisionError:
             aot_annualized_total_return.append(0)
 
-    # print(aot_annualized_total_return)
     return aot_annualized_total_return 
 
 

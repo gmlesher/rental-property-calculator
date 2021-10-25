@@ -31,7 +31,7 @@ class RentalPropCalcReport(models.Model):
     est_repair_cost         = models.IntegerField(blank=True, null=True)
     after_repair_value      = models.IntegerField(blank=True, null=True)
     annual_pv_growth        = models.DecimalField(max_digits=4, decimal_places=2, \
-                                blank=True, null=True)
+                                blank=True, null=True, default=2)
 
     # Loan Details
     cash_purchase           = models.BooleanField(blank=True) ###########################
@@ -46,7 +46,7 @@ class RentalPropCalcReport(models.Model):
     gross_monthly_rent      = models.SmallIntegerField()
     other_monthly_income    = models.SmallIntegerField(blank=True, null=True)
     annual_income_growth    = models.DecimalField(max_digits=4, decimal_places=2, \
-                                blank=True, null=True)
+                                blank=True, null=True, default=2)
 
     # Expenses
     prop_annual_taxes       = models.IntegerField()
@@ -74,9 +74,9 @@ class RentalPropCalcReport(models.Model):
     other_monthly_expenses  = models.DecimalField(max_digits=7, decimal_places=2, \
                                 blank=True, null=True)
     annual_expenses_growth  = models.DecimalField(max_digits=4, decimal_places=2, \
-                                blank=True, null=True)
+                                blank=True, null=True, default=2)
     sales_expenses          = models.DecimalField(max_digits=4, decimal_places=2, \
-                                blank=True, null=True)
+                                blank=True, null=True, default=7.5)
 
     def __str__(self):
         """Return a string representation of the model."""

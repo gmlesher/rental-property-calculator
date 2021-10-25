@@ -1,9 +1,10 @@
 {% extends "calculator/base.html" %}
 {% load tz %}
+{% load static %}
 
 {% block page_header %}
 <div>
-  <h1>Reports</h1>
+  <h1 class="reportsTitle text-center">Reports</h1>
 </div>
 
 {% endblock page_header %}
@@ -11,26 +12,24 @@
 {% block content %}
 <div>
   <ul class="reportList">
-    <!-- {% for report in  reports %}
-    <li>
-      <a href="{% url 'calculator:report' report.id %}">{{ report.report_title }}</a>
-    </li>
-    {% endfor %} -->
     {% for report in  reports %}
     <li>
-      <div class="card bg-dark mb-3">
-        <a href="{% url 'calculator:report' report.id %}">
+      <div class="card indexCard bg-dark mb-3">
         
-          <div class="row g-0">
-            <div class="col-md-4">
+        
+        <div class="row g-0 indexCardInfo">
+          <div class="col-md-4 indexCardImgContainer">
+            <a href="{% url 'calculator:report' report.id %}">
               {% if report.prop_photo %}
                 <img src="{{ report.prop_photo.url }}" class="img-fluid rounded-start">
               {% else %}
                 <img src="https://via.placeholder.com/150" class="img-fluid rounded-start">
               {% endif %}
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
+            </a>
+          </div>
+          <div class="col-md-7 indexCardDetailsContainer">
+            <a href="{% url 'calculator:report' report.id %}">
+              <div class="card-body text-white">
                 <h5 class="card-title">{{ report.report_title }}</h5>
                 {% if report.prop_address %}
                   <p class="card-text">{{ report.prop_address }}, {{ report.prop_city }}, {{ report.prop_state }} {{ report.prop_zip }}</p>
@@ -48,14 +47,24 @@
                   </small>
                 </p>
               </div>
-            </div>
+            </a>
           </div>
-        </a>
-      </div>
-      
+          <div class="col-1 editDeleteButtons"> 
+            <a class="modalLink" data-bs-toggle="modal" data-bs-target="#deleteModal">
+              <div class="bg-danger h-50 d-flex flex-end justify-content-center align-items-center rounded-top-right-1">X</div>
+            </a>
+            <a href="{% url 'calculator:edit-rental-prop-calc' report.pk %}">
+              <div class="bg-secondary h-50 d-flex flex-end justify-content-center align-items-center rounded-bottom-right-1">Edit</div> 
+            </a>
+          </div>
+          {% include "calculator/modal.html" %}
+        </div>  
+      </div> 
     </li>
     {% endfor %}
   </ul>
+
+  
   
 </div>
 

@@ -19,17 +19,20 @@
 
 </head>
 
-<body>
+<body data-bs-spy="scroll" data-bs-target="#scroll-list" data-bs-offset="200" tabindex="0">
 
   <!--Navbar features-->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-2 border-info">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">Logo Here</a>
+      <a class="navbar-brand" href="/">Rise</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navButton" aria-controls="navButton" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navButton">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'calculator:index' %}">Home</a>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'calculator:rental-prop-calculator' %}">Rental Calculator</a>
           </li>
@@ -49,6 +52,49 @@
       {% block content %}{% endblock content %}
     </div>
   </main>
+
+  <footer id="footer">
+    <div class="footer-sections d-flex jutify-content-center text-light py-5">
+      <div class="footer-section mx-auto">
+        <h4>Explore</h4>
+        <ul>
+          <li>
+            <a href="">Link</a>
+          </li>
+          <li>
+            <a href="">Link</a>
+          </li>
+          <li>
+            <a href="">Link</a>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-section mx-auto">
+        <h4>Company</h4>
+        <ul>
+          <li>
+            <a href="">Link</a>
+          </li>
+          <li>
+            <a href="">Link</a>
+          </li>
+          <li>
+            <a href="">Link</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-sitename d-flex jutify-content-center bg-dark text-light py-3">
+      <div class="mx-auto">
+        <span class="copyright">© 2021 Rise, LLC.</span>
+        <span class="rights-reserved">All Rights Reserved.</span>
+        
+      </div>
+      
+      
+    </div>
+    
+  </footer>
 
   {# Global scripts #}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

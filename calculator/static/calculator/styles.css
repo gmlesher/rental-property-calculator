@@ -1,4 +1,45 @@
+/*Global*/
+body {
+  box-sizing: border-box;
+}
+footer ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+footer li a {
+  text-decoration: none;
+  color:  inherit;
+}
+footer li a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+.navbar {
+  background:  linear-gradient(to right, #001510 0%, #2c3e50 50%, #00bf8f 100%);
+}
+.footer-sections {
+  background-color: #00bf8f;
+}
+.rounded-top-right-1 {
+    border-top-right-radius: .25rem;
+}
+.rounded-bottom-right-1 {
+    border-bottom-right-radius: .25rem;
+}
+
 /*Index Page*/
+h1.reportsTitle {
+  font-size: 72px;
+  background: linear-gradient(to right, #001510 0%, #2c3e50 25%, #00bf8f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.editDeleteButtons:hover {
+  cursor: pointer;
+}
+.indexCardDetailsContainer > a > .card-body {
+  min-height: 100%;
+}
 .reportList {
   list-style-type: none;
   padding-left: 0;
@@ -7,19 +48,80 @@
   text-decoration: none;
   color: white;
 }
-.img-fluid {
+.indexCard {
+  border: none;
+  max-width: 540px;
+  height: 175px;
+}
+.indexCardInfo {
+  position:  absolute;
+  width: 100%;
+  height: 100%;
+}
+.indexCardImgContainer {
+  max-width: 100%;
+  max-height: 100%;
+}
+.indexCardImgContainer img {
   object-fit: cover;
   background-repeat: no-repeat;
   background-position: center;
-  min-height: 100%;
-  min-width: 100%;
+  height: 100%;
+  width: 100%;
 }
-.card {
-  border: none;
-  max-width: 540px;
+.indexCardDetailsContainer {
+  max-width: 100%;
+  max-height: 100%;
 }
 
+
 /*Calculator Page*/
+aside > .modalLink {
+  text-decoration: none;
+  color: #00bf8f;
+}
+aside > .modalLink:hover {
+  text-decoration: none;
+  color: #00bf8f;
+  filter: brightness(90%);
+}
+.modal-body > p > iframe {
+  width:  100%;
+}
+h1.rentalCalculatorTitle {
+  font-size: 72px;
+  background: linear-gradient(to right, #001510 0%, #2c3e50 25%, #00bf8f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.list-group-item.active {
+  background: none;
+  font-weight: 600;
+  color: inherit;
+}
+.imgContainer {
+  padding: 15px;
+}
+.card-img-top {
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 200px;
+  width: 100%;
+}
+.imagePlaceholder {
+  position:  relative;
+  height: 200px;
+  width: 100%;
+  background-color: #F1F1F1;
+  border-radius: 3px;
+}
+.imagePlaceholder > img {
+  border-radius: 3px;
+}
+.sticky-top {
+  top: 3.5rem;
+}
 textarea {
   max-height:  8em;
 }
@@ -27,18 +129,63 @@ label.required::after {
   content: '*';
   color: red;
 }
-form > div.row, .sticky-top {
+form > div.row, .toggleLoanDetails > div.row, #collapseOptionalPropInfo > div.row, #collapseOptionalPurchaseInfo > div.row {
   padding: 0 0 2rem 0;
 }
-/*form > div.utilities > div {
-  padding-top: 15px;
-  padding-bottom: 15px;
-}*/
+a[data-bs-toggle="collapse"] + div {
+  padding: 2rem 0 0 0;
+}
 aside > a {
-  text-decoration: none;
+  text-decoration: none !important;
+}
+.rounded-right {
+  border-top-right-radius: .2rem !important;
+  border-bottom-right-radius: .2rem !important;
+}
+#cash_purchase::after {
+  content: "Cash Purchase?";
+  color: inherit;
+  padding-left: .5rem;
+}
+.btn-outline-secondary:hover {
+  background-color: inherit;
+  color: #6c757d;
+}
+.btn-outline-secondary:after  {
+  content: '\25b2';
+  margin-left: 10px;
+  transform: rotate(180deg);
+  transition: .3s transform ease-in-out;
+  display: inline-block;
+}
+.btn-outline-secondary[aria-expanded="true"]:after {
+  transform: rotate(0deg);
 }
 
+
 /*Report Page*/
+.report-buttons > a, .analysisButton > button {
+   background-color: #00bf8f;
+   border-color: #00bf8f;
+}
+.report-buttons > a:hover, .analysisButton > button:hover {
+   filter: brightness(95%);
+}
+.btn-group > label {
+  border-color: #00bf8f;
+  background-color: none;
+  color: #00bf8f;
+}
+.btn-group > label:hover {
+  border-color: #00bf8f;
+  background-color: #00bf8f;
+  color: white;
+}
+.btn-group > .btn-check:checked+.btn-outline-primary {
+  background-color: #00bf8f;
+  border-color: #00bf8f;
+  color: white;
+}
 table td, table th {
   padding:  0 30px 0 0;
 }
@@ -62,7 +209,7 @@ table td, table th {
   height: 1px;
   bottom: 0;
   left: 0;
-  border-bottom: 2px solid steelblue;
+  border-bottom: 2px solid #00bf8f;
 }
 .report-buttons button {
   width: 180px;
@@ -108,7 +255,7 @@ table td, table th {
   height: 1px;
   bottom: 0;
   left: 0;
-  border-bottom: 2px solid steelblue;
+  border-bottom: 2px solid #00bf8f;
 }
 hr {
   margin-top: 3rem;

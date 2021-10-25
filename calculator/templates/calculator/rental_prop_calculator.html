@@ -1,33 +1,65 @@
 {% extends "calculator/base.html" %}
+{% load static %}
 {% load widget_tweaks %}
 
 {% block page_header %}
 <div>
-  <h1>Rental Calculator</h1>
+  <h1 class="text-center rentalCalculatorTitle pb-4">Rental Calculator</h1>
 </div>
 
 {% endblock page_header %}
 
 {% block content %}
 <div class="row w-75 mx-auto">
-  <div class="col-4"> 
-    <div class="sticky-top">This will be a little bit of dummy text just to see what happens</div>
+  <div class="col-4 list-group" id="scroll-list"> 
+    <div class="card sticky-top justify-content-center" style="width: 18rem;">
+      {% if item.prop_photo %}
+        <div class="imgContainer">
+          <div class="imagePlaceholder text-center">
+            <img src="{{ item.prop_photo.url }}" class="card-img-top" id="previewImage">
+            <button onclick="addPhoto()" class="photoButton position-absolute top-50 start-50 translate-middle btn btn-sm btn-secondary" style="display: none">Add photo</button>
+            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3 w-100">
+              <button onclick="addPhoto()" class="editPhotoButton btn btn-sm btn-light me-1">Change</button>
+              <button onclick="clearPhoto()" class="clearPhotoButton btn btn-sm btn-danger ms-1">Delete</button> 
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="imgContainer">
+          <div class="imagePlaceholder text-center" style="border: 1px dashed grey;">
+              <button onclick="addPhoto()" class="photoButton position-absolute top-50 start-50 translate-middle btn btn-sm btn-secondary">Add photo</button>
+              <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3 w-100"></div>
+          </div>
+        </div>
+      {% endif %}
+
+        
+      <div class="card-body" >
+        <a href="#list-item-1" class="list-group-item list-group-item-action text-start border-0 border-bottom">Property Info</a>
+        <a href="#list-item-2" class="list-group-item list-group-item-action text-start border-0 border-bottom">Purchase</a>
+        <a href="#list-item-3" class="list-group-item list-group-item-action text-start border-0 border-bottom">Loan Details</a>
+        <a href="#list-item-4" class="list-group-item list-group-item-action text-start border-0 border-bottom">Rental Income</a>
+        <a href="#list-item-5" class="list-group-item list-group-item-action text-start border-0">Expenses</a>
+      </div>
+
+    </div>
   </div>
+
   <div class="col-8">
     <form class="needs-validation" method='post' enctype="multipart/form-data" novalidate>
       {% csrf_token %}
       <div class="row">
         <div class="col-6">
           <label class="form-label required" for="id_report_title">Report Title</label>
-          {{ form.report_title|add_class:"form-control" }}
-          <div class="invalid-feedback">
-            Please provide a report title.
-          </div>
+            {{ form.report_title|add_class:"form-control" }}
+            <div class="invalid-feedback">
+              Please provide a report title.
+            </div>
         </div>
       </div>
 
       <!-- Property Information -->
-      <h3 class="pt-5 pb-3">Property Information</h3>
+      <h3 class="pt-5 pb-3" id="list-item-1">Property Information</h3>
 
       <div class="row">
         <div class="col-6">
@@ -51,64 +83,67 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-2">
-          <label for="id_category">Bedrooms</label>
-          {{ form.bedrooms|add_class:"form-control" }}
-        </div>
-        <div class="col-2">
-          <label for="id_category">Bathrooms</label>
-          {{ form.bathrooms|add_class:"form-control" }}
-        </div>
-        <div class="col-4">
-          <label for="id_category">Sq. Ft.</label>
-          {{ form.sqft|add_class:"form-control" }}
-        </div>
-      </div>
+      <a class="btn btn-outline-secondary my-3" href="#collapseOptionalPropInfo" role="button" data-bs-toggle="collapse">Optional: property features, description</a>
 
-      <div class="row">
-        <div class="col-4">
-          <label for="id_category">Year Built</label>
-          {{ form.year_built|add_class:"form-control" }}
+      <div class="collapse" id="collapseOptionalPropInfo">
+        <div class="row">
+          <div class="col-2">
+            <label for="id_category">Bedrooms</label>
+            {{ form.bedrooms|add_class:"form-control" }}
+          </div>
+          <div class="col-2">
+            <label for="id_category">Bathrooms</label>
+            {{ form.bathrooms|add_class:"form-control" }}
+          </div>
+          <div class="col-4">
+            <label for="id_category">Sq. Ft.</label>
+            {{ form.sqft|add_class:"form-control" }}
+          </div>
         </div>
-        <div class="col-4">
-          <label for="id_category">MLS</label>
-          {{ form.prop_mls|add_class:"form-control" }}
-        </div>
-      </div>
 
-      <!-- ***********maybe move property photo to left column as sticky scroll with preview after upload************ -->
-      <div class="row">
-        <div class="col-8">
-          <label for="id_category">Property Photo</label>
-          {{ form.prop_photo|add_class:"form-control" }}
+        <div class="row">
+          <div class="col-4">
+            <label for="id_category">Year Built</label>
+            {{ form.year_built|add_class:"form-control" }}
+          </div>
+          <div class="col-4">
+            <label for="id_category">MLS</label>
+            {{ form.prop_mls|add_class:"form-control" }}
+          </div>
         </div>
-      </div>
+        <div class="row">
+          <div class="col-8">
+            <label for="id_category" >Property Photo</label>
+            {{ form.prop_photo|add_class:"form-control"|attr:"onchange:readURL(this)" }}
+          </div>
+        </div>
 
-      <div class="row">
-        <div class="col-8">
-          <label for="id_category">Description</label>
-          {{ form.prop_description|add_class:"form-control" }}
+        <div class="row">
+          <div class="col-8">
+            <label for="id_category">Description</label>
+            {{ form.prop_description|add_class:"form-control" }}
+          </div>
         </div>
+        
       </div>
 
       <!-- Purchase -->
-      <h3 class="pt-5 pb-3">Purchase</h3>
+      <h3 class="pt-5 pb-3" id="list-item-2">Purchase</h3>
 
       <div class="row">
-        <div class="col-4">
-          <label class="required" for="id_category">Purchase Price</label>
-          {{ form.purchase_price|add_class:"form-control" }}
+        <div class="col-4 currency">
+          <label class="required" for="id_purchase_price">Purchase Price</label>
+          {{ form.purchase_price|add_class:"form-control rounded-right" }}
           <div class="invalid-feedback">
-            Please provide a purchase price.
+           Please provide a purchase price.
           </div>
         </div>
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-4">
-          <label class="required" for="id_category">Purchase Closing Costs</label>
-          {{ form.purchase_closing_cost|add_class:"form-control" }}
+        <div class="col-4 currency">
+          <label class="required" for="id_purchase_closing_cost">Purchase Closing Costs</label>
+          {{ form.purchase_closing_cost|add_class:"form-control rounded-right" }}
           <div class="invalid-feedback">
             Please provide purchase closing costs.
           </div>
@@ -116,13 +151,14 @@
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">Calculating closing costs</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_1">Calculating closing costs</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row">
-        <div class="col-4">
+        <div class="col-4 currency">
           <label for="id_category">Repair Costs</label>
           {{ form.est_repair_cost|add_class:"form-control" }}
           
@@ -130,100 +166,136 @@
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-4">
+        <div class="col-4 currency">
           <label for="id_category">After Repair Value (ARV)</label>
           {{ form.after_repair_value|add_class:"form-control" }}
         </div>
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">How do I estimate a property's ARV?</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_2">How do I estimate a property's ARV?</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
-      <div class="row justify-content-between">
-        <div class="col-2">
-          <label for="id_category">Annual Property Value Growth (Appreciation)</label>
-          {{ form.annual_pv_growth|add_class:"form-control" }}
+      <a class="btn btn-outline-secondary my-3" href="#collapseOptionalPurchaseInfo" role="button" data-bs-toggle="collapse">Optional: property value growth</a>
+
+      <div  class="collapse" id="collapseOptionalPurchaseInfo">
+        <div class="row justify-content-between">
+          <div class="col-3 percentage">
+            <label for="id_category">Annual Property Value Growth (Appreciation)</label>
+            {{ form.annual_pv_growth|add_class:"form-control" }}
+          </div>
+          <div class="col-4">
+            <aside>
+              <div><small class="text-muted">HELP</small></div>
+              <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_3">How to determine property growth</a>
+            </aside>
+          </div>
         </div>
-        <div class="col-4">
-          <aside>
-            <div><small class="text-muted">HELP</small></div>
-            <a href="#">How to determine property growth</a>
-          </aside>
-        </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <!-- Loan Details -->
-      <h3 class="pt-5 pb-3">Loan Details</h3>
-
-      <div class="row justify-content-between">
-        <div class="col-4">
-          <label for="id_category">Down Payment</label>
-          {{ form.down_payment|add_class:"form-control" }}
-        </div>
-        <div class="col-4">
-          <aside>
-            <div><small class="text-muted">HELP</small></div>
-            <a href="#">What's this?</a>
-          </aside>
-        </div>
-      </div>
+      <h3 class="pt-5 pb-3" id="list-item-3">Loan Details</h3>
 
       <div class="row">
         <div class="col-4">
-          <label for="id_category">Down Payment</label>
-          {{ form.down_payment_2|add_class:"form-control" }}
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label class="required" for="id_category">Interest Rate</label>
-          {{ form.loan_int_rate|add_class:"form-control" }}
-          <div class="invalid-feedback">
-            Please provide an interest rate.
+          {{ form.cash_purchase|attr:"onclick:toggleLoanInfo()" }}
+          <label for="id_cash_purchase" id="cash_purchase"></label>
+          <div class="form-text">
+            Warning! This will reset all "Loan Details" fields to default. <br/>
           </div>
         </div>
       </div>
 
-      <div class="row justify-content-between">
-        <div class="col-2">
-          <label for="id_category">Points</label>
-          {{ form.points|add_class:"form-control" }}
-        </div>
-        <div class="col-4">
-          <aside>
-            <div><small class="text-muted">HELP</small></div>
-            <a href="#">What are loan points?</a>
-          </aside>
-        </div>
-      </div>
+      <div class="toggleLoanDetails">
+        <div class="btn-group pb-2" role="group">
+          <input type="radio" class="btn-check" name="btnradio" id="radio1" autocomplete="off" checked>
+          <label class="btn btn-outline-primary" for="radio1">%</label>
 
-      <div class="row justify-content-between">
-        <div class="col-2">
-          <label class="required" for="id_category">Loan Term</label>
-          {{ form.loan_term|add_class:"form-control" }}
-          <div class="invalid-feedback">
-            Please provide a loan term.
+          <input type="radio" class="btn-check" name="btnradio" id="radio2" autocomplete="off">
+          <label class="btn btn-outline-primary" for="radio2">$</label>
+        </div>
+
+        <div class="row justify-content-between downPayment1">
+          <div class="col-4">
+            <label for="id_category">Down Payment</label>
+            {{ form.down_payment|add_class:"form-control" }}
+          </div>
+          <div class="col-4">
+            <aside>
+              <div><small class="text-muted">HELP</small></div>
+              <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_4">What's this?</a>
+            </aside>
+          </div>
+          {% include "calculator/modal.html" %}
+        </div>
+
+        <div class="row justify-content-between downPayment2">
+          <div class="col-4 currency">
+            <label for="id_category">Down Payment</label>
+            {{ form.down_payment_2|add_class:"form-control" }}
+          </div>
+          <div class="col-4">
+            <aside>
+              <div><small class="text-muted">HELP</small></div>
+              <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_5">What's this?</a>
+            </aside>
+          </div>
+          {% include "calculator/modal.html" %}
+        </div>
+          
+        <div class="row">
+          <div class="col-3 percentage">
+            <label class="required" for="id_loan_int_rate">Interest Rate</label>
+            {{ form.loan_int_rate|add_class:"form-control" }}
+            <div class="invalid-feedback">
+              Please provide an interest rate.
+            </div>
           </div>
         </div>
-        <div class="col-4">
-          <aside>
-            <div><small class="text-muted">HELP</small></div>
-            <a href="#">What loan terms are most common?</a>
-          </aside>
+
+        <div class="row justify-content-between">
+          <div class="col-2">
+            <label for="id_category">Points</label>
+            {{ form.points|add_class:"form-control" }}
+          </div>
+          <div class="col-4">
+            <aside>
+              <div><small class="text-muted">HELP</small></div>
+              <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_6">What are loan points?</a>
+            </aside>
+          </div>
+          {% include "calculator/modal.html" %}
+        </div>
+
+        <div class="row justify-content-between">
+          <div class="col-2">
+            <label class="required" for="id_loan_term">Loan Term</label>
+            {{ form.loan_term|add_class:"form-control" }}
+            <div class="invalid-feedback">
+              Please provide a loan term.
+            </div>
+          </div>
+          <div class="col-4">
+            <aside>
+              <div><small class="text-muted">HELP</small></div>
+              <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_7">What loan terms are most common?</a>
+            </aside>
+          </div>
+          {% include "calculator/modal.html" %}
         </div>
       </div>
 
       <!-- Rental Income -->
-      <h3 class="pt-5 pb-3">Rental Income</h3>
+      <h3 class="pt-5 pb-3" id="list-item-4">Rental Income</h3>
 
       <div class="row justify-content-between">
-        <div class="col-4">
-          <label class="required" for="id_category">Gross Monthly Income</label>
-          {{ form.gross_monthly_rent|add_class:"form-control" }}
+        <div class="col-4 currency">
+          <label class="required" for="id_gross_monthly_rent">Gross Monthly Income</label>
+          {{ form.gross_monthly_rent|add_class:"form-control rounded-right" }}
           <div class="invalid-feedback">
             Please provide a gross monthly income.
           </div>
@@ -231,44 +303,51 @@
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">How to calculate gross monthly income</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_8">How to calculate gross monthly income</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-4">
+        <div class="col-4 currency">
           <label for="id_category">Other Monthly Income</label>
           {{ form.other_monthly_income|add_class:"form-control" }}
         </div>
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">How much rent can I charge?</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_9">How much rent can I charge?</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
-      <div class="row justify-content-between">
-        <div class="col-2">
-          <label for="id_category">Annual Income Growth</label>
-          {{ form.annual_income_growth|add_class:"form-control" }}
+      <a class="btn btn-outline-secondary my-3" href="#collapseOptionalIncomeGrowth" role="button" data-bs-toggle="collapse">Optional: income growth</a>
+
+      <div  class="collapse" id="collapseOptionalIncomeGrowth">
+        <div class="row justify-content-between">
+          <div class="col-3 percentage">
+            <label for="id_category">Annual Income Growth</label>
+            {{ form.annual_income_growth|add_class:"form-control" }}
+          </div>
+          <div class="col-4">
+            <aside>
+              <div><small class="text-muted">HELP</small></div>
+              <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_10">What's income growth?</a>
+            </aside>
+          </div>
         </div>
-        <div class="col-4">
-          <aside>
-            <div><small class="text-muted">HELP</small></div>
-            <a href="#">What's income growth?</a>
-          </aside>
-        </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <!-- Expenses -->
-      <h3 class="pt-5 pb-3">Expenses</h3>
+      <h3 class="pt-5 pb-3" id="list-item-5">Expenses</h3>
 
       <div class="row justify-content-between">
-        <div class="col-4">
-          <label class="required" for="id_category">Annual Property Taxes</label>
-          {{ form.prop_annual_taxes|add_class:"form-control" }}
+        <div class="col-4 currency">
+          <label class="required" for="id_prop_annual_taxes">Annual Property Taxes</label>
+          {{ form.prop_annual_taxes|add_class:"form-control rounded-right" }}
           <div class="invalid-feedback">
             Please provide annual property taxes.
           </div>
@@ -276,15 +355,16 @@
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">How to determine your property's tax bill</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_11">How to determine your property's tax bill</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-4">
-          <label class="required" for="id_category">Monthly Insurance</label>
-          {{ form.monthly_insurance|add_class:"form-control" }}
+        <div class="col-4 currency">
+          <label class="required" for="id_monthly_insurance">Monthly Insurance</label>
+          {{ form.monthly_insurance|add_class:"form-control rounded-right" }}
           <div class="invalid-feedback">
             Please provide monthly insurance.
           </div>
@@ -292,9 +372,10 @@
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">How to determine your property's insurance costs</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_12">How to determine your property's insurance costs</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row">
@@ -306,142 +387,163 @@
       
 
       <div class="row justify-content-between">
-        <div class="col-2">
+        <div class="col-3 percentage">
           <label for="id_category">Repairs & Maintenance</label>
           {{ form.repairs_maint|add_class:"form-control" }}
         </div>
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">Ongoing maintenance and repairs</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_13">Ongoing maintenance and repairs</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-2">
+        <div class="col-3 percentage">
           <label for="id_category">Vacancy</label>
           {{ form.vacancy|add_class:"form-control" }}
         </div>
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">Vacancy rates</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_14">Vacancy rates</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-2">
+        <div class="col-3 percentage">
           <label for="id_category">Capital Expenditures</label>
           {{ form.cap_expenditures|add_class:"form-control" }}
         </div>
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">What are capital expenditures?</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_15">What are capital expenditures?</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-2">
+        <div class="col-3 percentage">
           <label for="id_category">Management Fees</label>
           {{ form.mgmt_fees|add_class:"form-control" }}
         </div>
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">How much do property managers charge?</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_16">How much do property managers charge?</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-4">
+        <div class="col-4 currency">
           <label for="id_category">Electricity</label>
           {{ form.electricity|add_class:"form-control" }}
         </div>
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">What monthly expenses should I expect?</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_17">What monthly expenses should I expect?</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row">
-        <div class="col-4">
+        <div class="col-4 currency">
           <label for="id_category">Gas</label>
           {{ form.gas|add_class:"form-control" }}
         </div>
       </div>
       
       <div class="row">
-        <div class="col-4">
+        <div class="col-4 currency">
           <label for="id_category">Water & Sewer</label>
           {{ form.water_sewer|add_class:"form-control" }}
         </div>
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-4">
+        <div class="col-4 currency">
           <label for="id_category">HOA Fees</label>
           {{ form.hoa|add_class:"form-control" }}
         </div>
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
-            <a href="#">What to expect with an HOA</a>
+            <a href="#" class="modalLink" data-bs-toggle="modal" data-bs-target="#infoModal_18">What to expect with an HOA</a>
           </aside>
         </div>
+        {% include "calculator/modal.html" %}
       </div>
 
       <div class="row">
-        <div class="col-4">
+        <div class="col-4 currency">
           <label for="id_category">Garbage</label>
           {{ form.garbage|add_class:"form-control" }}
         </div>
       </div>
 
       <div class="row">
-        <div class="col-4">
-          <label for="id_category">PMI</label>
+        <div class="col-4 currency">
+          <label class="text-decoration-underline">
+            <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Private Mortgage Insurance" data-bs-placement="bottom" data-bs-content="This is required insurance to be paid by the homeowner to insure the lender against default on the mortgage. Usually only applies on down payments less than 20%. Does not provide coverage of any kind for the home owner." data-bs-html="true">PMI</a>
+          </label>
+          <!-- <label for="id_category">PMI</label> -->
           {{ form.pmi|add_class:"form-control" }}
         </div>
       </div>
 
       <div class="row">
-        <div class="col-4">
+        <div class="col-4 currency">
           <label for="id_category">Other</label>
           {{ form.other_monthly_expenses|add_class:"form-control" }}
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-2">
-          <label for="id_category">Annual Expenses Growth</label>
-          {{ form.annual_expenses_growth|add_class:"form-control" }}
+      <a class="btn btn-outline-secondary my-3" href="#collapseOptionalExpenseGrowth" role="button" data-bs-toggle="collapse">Optional: expense growth, sales expenses</a>
+
+      <div  class="collapse" id="collapseOptionalExpenseGrowth">
+        <div class="row">
+          <div class="col-3 percentage">
+            <label for="id_category">Annual Expenses Growth</label>
+            {{ form.annual_expenses_growth|add_class:"form-control" }}
+          </div>
+          <div class="form-text">
+            Expenses tend to go up, but by how much? In this field, enter a percentage you think inflation will cause your expenses to rise over time.
+          </div>
         </div>
-        <div class="form-text">
-          Expenses tend to go up, but by how much? In this field, enter a percentage you think inflation will cause your expenses to rise over time.
+
+        <div class="row">
+          <div class="col-3 percentage">
+            <label for="id_category">Sales Expenses</label>
+            {{ form.sales_expenses|add_class:"form-control" }}
+          </div>
+          <div class="form-text">
+            How much will it cost to sell the property? In this field, enter the sales costs as a percentage of the final sale price
+          </div>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-2">
-          <label for="id_category">Sales Expenses</label>
-          {{ form.sales_expenses|add_class:"form-control" }}
-        </div>
-        <div class="form-text">
-          How much will it cost to sell the property? In this field, enter the sales costs as a percentage of the final sale price
-        </div>
+      <div class="analysisButton d-flex justify-content-end pt-5">
+        <button name="submit" class="btn text-light my-3">Finish Analysis</button>
       </div>
 
-      <button name="submit" class="btn btn-primary text-light my-3">Calculate Results</button>
+      
 
     </form>
   </div>
 </div>
 
 {% endblock content %}
+
+{% block extra_js %}
+  <script src="{% static 'calculator/modal_data.js' %}"></script>
+{% endblock %}
