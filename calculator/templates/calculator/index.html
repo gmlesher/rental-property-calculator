@@ -4,68 +4,11 @@
 
 {% block page_header %}
 <div>
-  <h1 class="reportsTitle text-center">Reports</h1>
+  <h1 class="reportsTitle text-center vh-100">Home Page</h1>
 </div>
 
 {% endblock page_header %}
 
 {% block content %}
-<div>
-  <ul class="reportList">
-    {% for report in  reports %}
-    <li>
-      <div class="card indexCard bg-dark mb-3">
-        
-        
-        <div class="row g-0 indexCardInfo">
-          <div class="col-md-4 indexCardImgContainer">
-            <a href="{% url 'calculator:report' report.id %}">
-              {% if report.prop_photo %}
-                <img src="{{ report.prop_photo.url }}" class="img-fluid rounded-start">
-              {% else %}
-                <img src="https://via.placeholder.com/150" class="img-fluid rounded-start">
-              {% endif %}
-            </a>
-          </div>
-          <div class="col-md-7 indexCardDetailsContainer">
-            <a href="{% url 'calculator:report' report.id %}">
-              <div class="card-body text-white">
-                <h5 class="card-title">{{ report.report_title }}</h5>
-                {% if report.prop_address %}
-                  <p class="card-text">{{ report.prop_address }}, {{ report.prop_city }}, {{ report.prop_state }} {{ report.prop_zip }}</p>
-                {% endif %}
-                <p class="card-text">
-                  <small class="text-muted">
-                  {% timezone "America/New_York" %}
-                  Created: {{ report.created_at|date:'n/j/Y g:i a' }}
-                  {% endtimezone %}
-                  </small><br>
-                  <small class="text-muted">
-                  {% timezone "America/New_York" %}
-                  Updated: {{ report.updated_at|date:'n/j/Y g:i a' }}
-                  {% endtimezone %}
-                  </small>
-                </p>
-              </div>
-            </a>
-          </div>
-          <div class="col-1 editDeleteButtons"> 
-            <a class="modalLink" data-bs-toggle="modal" data-bs-target="#deleteModal">
-              <div class="bg-danger h-50 d-flex flex-end justify-content-center align-items-center rounded-top-right-1">X</div>
-            </a>
-            <a href="{% url 'calculator:edit-rental-prop-calc' report.pk %}">
-              <div class="bg-secondary h-50 d-flex flex-end justify-content-center align-items-center rounded-bottom-right-1">Edit</div> 
-            </a>
-          </div>
-          {% include "calculator/modal.html" %}
-        </div>  
-      </div> 
-    </li>
-    {% endfor %}
-  </ul>
-
-  
-  
-</div>
 
 {% endblock content %}

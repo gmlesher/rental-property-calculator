@@ -6,6 +6,8 @@ app_name = 'calculator'
 urlpatterns = [
     # Home Page
     path('', views.index, name='index'),
+    # Dashboard Page
+    path('dashboard/', views.dashboard, name='dashboard'),
     # Calculator Page
     path('rental-prop-calculator/', views.rental_prop_calculator, name='rental-prop-calculator'),
     # Report Page
