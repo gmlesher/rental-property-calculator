@@ -1,0 +1,22 @@
+{% extends "calculator/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block page_header %}
+  <h2 class="text-center">Log in to your account</h2>
+{% endblock page_header %}
+
+{% block content %}
+  <form method="post" action="{% url 'users:login' %}" class="form vh-100 needs-validation" novalidate>
+    {% csrf_token %} 
+    <div class="mx-auto w-25">
+      {{ form|crispy }}
+      <button name="submit" type="submit" class="btn btn-dark mt-3 mx-auto">Log in</button>
+      {% if request.GET.next %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}" />
+      {% else %}
+        <input type="hidden" name="next" value="{% url 'calculator:dashboard' %}" />
+      {% endif %}
+    </div> 
+  </form>
+
+{% endblock content %}

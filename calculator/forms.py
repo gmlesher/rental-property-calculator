@@ -6,3 +6,4 @@ class RentalPropForm(forms.ModelForm):
     class Meta:
         model = RentalPropCalcReport
         fields = '__all__'
+        widgets = {'owner': forms.HiddenInput()}

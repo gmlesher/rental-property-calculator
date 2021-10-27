@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # my files
 from .choices import *
@@ -7,6 +8,8 @@ class RentalPropCalcReport(models.Model):
     """A rental property report the user would like to create"""
     created_at              = models.DateTimeField(auto_now_add=True)
     updated_at              = models.DateTimeField(auto_now=True)
+    owner                   = models.ForeignKey(User, on_delete=models.CASCADE, \
+                                blank=True, null=True)
 
     # Property Info
     report_title            = models.CharField(max_length=75)

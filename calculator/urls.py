@@ -6,13 +6,10 @@ app_name = 'calculator'
 urlpatterns = [
     # Home Page
     path('', views.index, name='index'),
-<<<<<<< Updated upstream
-=======
     # Dashboard Page
     path('dashboard/', views.dashboard, name='dashboard'),
     # Reports Page
     path('reports/', views.reports, name='reports'),
->>>>>>> Stashed changes
     # Calculator Page
     path('rental-prop-calculator/', views.rental_prop_calculator, name='rental-prop-calculator'),
     # Report Page

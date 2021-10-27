@@ -36,8 +36,11 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # my apps
     'calculator',
+    'users',
 
     # 3rd party apps
+    'crispy_forms',
+    'crispy_bootstrap5',
     'widget_tweaks',
     'livereload',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
@@ -137,3 +140,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # for plotly
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# My settings
+LOGIN_URL = 'users:login'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"

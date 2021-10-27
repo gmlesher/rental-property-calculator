@@ -16,7 +16,7 @@ $('.editDeleteButtons').each(function(i, obj) {
 // validation for forms
 $(document).ready(function () {
   // hide prop_photo form field. 
-  // $('#id_prop_photo').parent().parent().hide();
+  $('#id_prop_photo').parent().parent().hide();
   // hide down payment 2
   $('.downPayment2').hide();
   if ($('#id_cash_purchase').is(':checked')) {

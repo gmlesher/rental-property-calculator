@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 # My files
 from .models import RentalPropCalcReport
@@ -6,13 +8,9 @@ from .forms import RentalPropForm
 from .calc import *
 from . import plotly_app
 
+
 def index(request):
     """The home page for the Rental Property Calculator."""
-<<<<<<< Updated upstream
-    reports = RentalPropCalcReport.objects.all().order_by('-updated_at')
-    context = {'reports': reports}
-    return render(request, 'calculator/index.html', context)
-=======
     return render(request, 'calculator/index.html')
 
 @login_required
@@ -134,31 +132,31 @@ def reports(request):
     reports = RentalPropCalcReport.objects.filter(owner=request.user).order_by('-updated_at')
     context = {'reports': reports}
     return render(request, 'calculator/reports.html', context)
->>>>>>> Stashed changes
     
-
+@login_required
 def rental_prop_calculator(request):
     """The calculator page"""
-    form = RentalPropForm(request.POST, request.FILES or None)
-    if form.is_valid():
-        new_form = form.save()
-        pk = new_form.pk
-        return redirect(f'/report/{pk}')
+    if request.method != 'POST':
+        form = RentalPropForm()
+    else:
+        form = RentalPropForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_form = form.save(commit=False)
+            new_form.owner = request.user
+            new_form.save()
+            pk = new_form.pk    
+            return redirect(f'/report/{pk}')
 
     context = {'form': form}
     return render(request, 'calculator/rental_prop_calculator.html', context)
 
-
+@login_required
 def report(request, pk):
     """The report page"""
     r = RentalPropCalcReport.objects.get(id=pk)
-<<<<<<< Updated upstream
-    if r.after_repair_value == None:
-        r.after_repair_value = r.purchase_price
-=======
     if r.owner != request.user:
         raise Http404
->>>>>>> Stashed changes
+        
     mo_income = monthly_income(r.gross_monthly_rent, r.other_monthly_income)
     total_op_exp = total_operating_expenses(
         mo_income, 
@@ -222,21 +220,26 @@ def report(request, pk):
     }
     return render(request, 'calculator/report.html', context)
 
+@login_required
 def delete_report(request, pk):
     """Delete report"""
     try:
         report = RentalPropCalcReport.objects.get(id=pk)
     except:
         raise Http404
-    RentalPropCalcReport.objects.filter(id=pk).delete()
-    return redirect('calculator:index')
+    if report.owner != request.user:
+        raise Http404
+    report.delete()
+    return redirect('calculator:dashboard')
 
-
+@login_required
 def edit_rental_prop_calc(request, pk):
     """Edit a report"""
     try:
         item = RentalPropCalcReport.objects.get(id=pk)
     except:
+        raise Http404
+    if item.owner != request.user:
         raise Http404
     if request.method == 'POST':
         # Initial request; pre-fill form with the current entry.
