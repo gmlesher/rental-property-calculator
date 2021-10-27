@@ -1,0 +1,100 @@
+{% extends "calculator/base.html" %}
+{% load tz %}
+{% load humanize %}
+{% load static %}
+
+{% block page_header %}
+<div>
+  <h1 class="reportsTitle text-center">Dashboard</h1>
+</div>
+
+{% endblock page_header %}
+
+{% block content %}
+<div class="container">
+  <div class="row g-4">
+    <div class="dashboardBox col-6">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="">Portfolio Value</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-text text-center largeBox">${{ portfolio_value|intcomma|default_if_none:"0" }}</h1>
+        </div>
+      </div>
+    </div>  
+    <div class="dashboardBox col-6">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="">Total Equity</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-text text-center largeBox">${{ total_equity|intcomma|default_if_none:"0" }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="dashboardBox col-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="">Monthly Income</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-text text-center smallBox">${{ total_monthly_income|intcomma|default_if_none:"0" }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="dashboardBox col-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="">Monthly Expenses</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-text text-center smallBox">${{ total_expenses|intcomma|default_if_none:"0" }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="dashboardBox col-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="">Cashflow</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-text text-center smallBox">${{ total_cashflow|intcomma|default_if_none:"0" }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="dashboardBox col-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="">Debt</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-text text-center smallBox">${{ debt|intcomma|default_if_none:"0" }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="dashboardBox col-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="">Cash on Cash ROI</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-text text-center smallBox">{{ coc_roi|default_if_none:"0" }}%</h1>
+        </div>
+      </div>
+    </div>
+    <div class="dashboardBox col-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="">Properties</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-text text-center smallBox">{{ properties|default_if_none:"0" }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}

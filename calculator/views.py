@@ -8,9 +8,133 @@ from . import plotly_app
 
 def index(request):
     """The home page for the Rental Property Calculator."""
+<<<<<<< Updated upstream
     reports = RentalPropCalcReport.objects.all().order_by('-updated_at')
     context = {'reports': reports}
     return render(request, 'calculator/index.html', context)
+=======
+    return render(request, 'calculator/index.html')
+
+@login_required
+def dashboard(request):
+    """The dashboard page for a user"""
+    reports = RentalPropCalcReport.objects.filter(owner=request.user)
+    portfolio_values = [getattr(report, "after_repair_value") for report in reports]
+    portfolio_value = sum(portfolio_values)
+
+    purchase_prices = [getattr(report, "purchase_price") for report in reports]
+    down_payments_percentage = [getattr(report, "down_payment") for report in reports]
+    down_payments_2 = [getattr(report, "down_payment_2") for report in reports]
+    
+    down_payment_groups = list(zip(purchase_prices, down_payments_percentage, down_payments_2))
+    down_payments_amounts = [down_payment(group[0], group[1], group[2]) for group in down_payment_groups]
+    
+    loan_calc_groups = list(zip(purchase_prices, down_payments_amounts))
+    debt_values = [loan_amount(group[0], group[1]) for group in loan_calc_groups]
+    debt = sum(debt_values)
+    
+    total_equity_values = aot_equity(portfolio_values, debt_values)
+    total_equity = sum(total_equity_values)
+
+    mnthly_income = [getattr(report, 'gross_monthly_rent') for report in reports]
+    othr_income = [getattr(report, 'other_monthly_income') for report in reports]
+
+    monthly_incomes_values = list(zip(mnthly_income, othr_income))
+    total_monthly_incomes = [monthly_income(group[0], group[1]) for group in monthly_incomes_values]
+    total_monthly_income = sum(total_monthly_incomes)
+
+    elec = [getattr(report, "electricity") for report in reports]
+    gas = [getattr(report, "gas") for report in reports]
+    water_sewer = [getattr(report, "water_sewer") for report in reports]
+    pmi = [getattr(report, "pmi") for report in reports]
+    garbage = [getattr(report, "garbage") for report in reports]
+    hoa = [getattr(report, "hoa") for report in reports]
+    insurance = [getattr(report, "monthly_insurance") for report in reports]
+    tax = [getattr(report, "prop_annual_taxes") for report in reports]
+    other_expenses = [getattr(report, "other_monthly_expenses") for report in reports]
+    vacancy = [getattr(report, "vacancy") for report in reports]
+    repairs = [getattr(report, "repairs_maint") for report in reports]
+    cap_ex = [getattr(report, "cap_expenditures") for report in reports]
+    mgmt_fees = [getattr(report, "mgmt_fees") for report in reports]
+
+    op_ex = list(zip(
+        total_monthly_incomes, 
+        elec,
+        gas,
+        water_sewer,
+        pmi,
+        garbage,
+        hoa,
+        insurance,
+        tax,
+        other_expenses,
+        vacancy,
+        repairs,
+        cap_ex,
+        mgmt_fees
+        ))
+    expenses = [total_operating_expenses(
+        group[0], 
+        group[1],
+        group[2],
+        group[3],
+        group[4],
+        group[5],
+        group[6],
+        group[7],
+        group[8],
+        group[9],
+        group[10],
+        group[11],
+        group[12],
+        group[13],
+        ) for group in op_ex]
+
+    loan_int_rate = [getattr(report, "loan_int_rate") for report in reports]
+    loan_term = [getattr(report, "loan_term") for report in reports]
+
+    loan_p_i = list(zip(debt_values, loan_int_rate, loan_term))    
+    p_i = [loan_principal_interest(group[0], group[1], group[2]) for group in loan_p_i]
+
+    total_expenses = sum(expenses) + sum(p_i)
+    total_cashflow = total_monthly_income - total_expenses
+
+    points = [getattr(report, "points") for report in reports]
+    loan_pts = list(zip(purchase_prices, points))
+    final_loan_points = [loan_points(group[0], group[1]) for group in loan_pts]
+
+
+    closing_costs = [getattr(report, "purchase_closing_cost") for report in reports]
+    repair_costs = [getattr(report, "est_repair_cost") for report in reports]
+
+    total_cash_invested =  list(zip(down_payments_amounts, closing_costs, repair_costs))
+    total_cash = [total_cash_needed(group[0], group[1], group[2]) for group in total_cash_invested]
+    total_cash_sum = sum(total_cash)
+
+    coc_roi = cash_on_cash_ROI(total_cashflow, total_cash_sum)
+
+    properties = len(reports)
+
+    context = {
+        'reports': reports, 
+        'portfolio_value': portfolio_value, 
+        'total_equity': total_equity, 
+        'total_monthly_income': total_monthly_income,
+        'total_expenses': total_expenses,
+        'total_cashflow': total_cashflow,
+        'properties': properties,
+        'coc_roi': coc_roi,
+        'debt': debt,
+        }
+    return render(request, 'calculator/dashboard.html', context)
+
+@login_required
+def reports(request):
+    """The reports page for a user"""
+    reports = RentalPropCalcReport.objects.filter(owner=request.user).order_by('-updated_at')
+    context = {'reports': reports}
+    return render(request, 'calculator/reports.html', context)
+>>>>>>> Stashed changes
     
 
 def rental_prop_calculator(request):
@@ -28,8 +152,13 @@ def rental_prop_calculator(request):
 def report(request, pk):
     """The report page"""
     r = RentalPropCalcReport.objects.get(id=pk)
+<<<<<<< Updated upstream
     if r.after_repair_value == None:
         r.after_repair_value = r.purchase_price
+=======
+    if r.owner != request.user:
+        raise Http404
+>>>>>>> Stashed changes
     mo_income = monthly_income(r.gross_monthly_rent, r.other_monthly_income)
     total_op_exp = total_operating_expenses(
         mo_income, 
