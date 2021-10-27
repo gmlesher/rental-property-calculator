@@ -8,6 +8,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     # Dashboard Page
     path('dashboard/', views.dashboard, name='dashboard'),
+    # Reports Page
+    path('reports/', views.reports, name='reports'),
     # Calculator Page
     path('rental-prop-calculator/', views.rental_prop_calculator, name='rental-prop-calculator'),
     # Report Page

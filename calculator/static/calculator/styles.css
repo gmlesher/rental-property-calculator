@@ -81,6 +81,22 @@ h1.reportsTitle {
   max-height: 100%;
 }
 
+/*Dashboard Page*/
+.dashboardBox > .card {
+  height: 200px;
+}
+.dashboardBox > .card > .card-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.dashboardBox > .card > .card-body > h1.largeBox {
+  font-size: 90px;
+}
+.dashboardBox > .card > .card-body > h1.smallBox {
+  font-size: 60px;
+}
 
 /*Calculator Page*/
 aside > .modalLink {

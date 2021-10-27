@@ -43,6 +43,7 @@
             <a role="button" class="text-white nav-link me-2 dropdown-toggle" href="#" data-bs-toggle="dropdown">Hello, {{ user.username }}</a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{% url 'calculator:dashboard' %}">Dashboard</a></li>
+              <li><a class="dropdown-item" href="{% url 'calculator:reports' %}">Reports</a></li>
               <li><a class="dropdown-item" href="#">Settings</a></li>
             </ul>
           </li>
