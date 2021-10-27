@@ -34,7 +34,7 @@ footer li a:hover {
     border-bottom-right-radius: .25rem;
 }
 
-/*Index Page*/
+/*Reports Page*/
 h1.reportsTitle {
   font-size: 72px;
   background: linear-gradient(to right, #001510 0%, #2c3e50 25%, #00bf8f 100%);
@@ -57,8 +57,9 @@ h1.reportsTitle {
 }
 .indexCard {
   border: none;
-  max-width: 540px;
+  max-width: 700px;
   height: 175px;
+  margin: auto;
 }
 .indexCardInfo {
   position:  absolute;
@@ -167,6 +168,11 @@ aside > a {
 }
 #cash_purchase::after {
   content: "Cash Purchase?";
+  color: inherit;
+  padding-left: .5rem;
+}
+#owned::after {
+  content: "I own this property";
   color: inherit;
   padding-left: .5rem;
 }

@@ -15,7 +15,7 @@
   <ul class="reportList">
     {% for report in  reports %}
     <li>
-      <div class="card indexCard bg-dark mb-3">
+      <div class="card indexCard bg-dark mb-3 position-relative">
         
         
         <div class="row g-0 indexCardInfo">
@@ -60,7 +60,13 @@
           </div>
           {% include "calculator/modal.html" %}
         </div>  
+        {% if report.owned %}
+          <!-- <small> -->
+            <span class="position-absolute top-0 start-0 translate-middle badge bg-info">Owned</span>
+          <!-- </small> -->
+        {% endif %}
       </div> 
+      
     </li>
     {% endfor %}
   </ul>

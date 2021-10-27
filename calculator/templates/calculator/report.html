@@ -6,7 +6,13 @@
 
 {% block page_header %}
 <div>
-  <h2>{{ r.report_title }}</h2>
+  <h2>
+    {{ r.report_title }}
+    {% if r.owned %}
+      <span class="badge bg-info ms-3">Owned</span>
+    {% endif %}
+  </h2>
+
   <div class="row property-info">
     <div class="report-photo">
       {% if r.prop_photo %}

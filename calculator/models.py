@@ -13,6 +13,7 @@ class RentalPropCalcReport(models.Model):
 
     # Property Info
     report_title            = models.CharField(max_length=75)
+    owned                   = models.BooleanField(blank=True)
     prop_address            = models.CharField(max_length=75, blank=True)
     prop_city               = models.CharField(max_length=50, blank=True)
     prop_state              = models.CharField(max_length=25, blank=True)
@@ -37,7 +38,7 @@ class RentalPropCalcReport(models.Model):
                                 blank=True, null=True, default=2)
 
     # Loan Details
-    cash_purchase           = models.BooleanField(blank=True) ###########################
+    cash_purchase           = models.BooleanField(blank=True)
     down_payment            = models.CharField(max_length=10, \
                                 choices=DOWN_PMT_PERCENT, default='', blank=True)
     down_payment_2          = models.IntegerField(blank=True, null=True)

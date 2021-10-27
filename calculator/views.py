@@ -15,8 +15,8 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    """The dashboard page for a user"""
-    reports = RentalPropCalcReport.objects.filter(owner=request.user)
+    """The dashboard page for a user. Filtered by owned properties for reports"""
+    reports = RentalPropCalcReport.objects.filter(owner=request.user).filter(owned=True)
     portfolio_values = [getattr(report, "after_repair_value") for report in reports]
     portfolio_value = sum(portfolio_values)
 
