@@ -19,7 +19,7 @@
 
 </head>
 
-<body data-bs-spy="scroll" data-bs-target="#scroll-list" data-bs-offset="200" tabindex="0">
+<body class="d-flex flex-column min-vh-100" data-bs-spy="scroll" data-bs-target="#scroll-list" data-bs-offset="200" tabindex="0">
 
   <!--Navbar features-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -64,7 +64,7 @@
   </nav>
 
   <!--Page header features-->
-  <main role="main" class="container">
+  <main role="main" class="container flex-fill">
     <div class="py-2 my-2">
         {% block page_header %}{% endblock page_header %}
     </div>
@@ -75,7 +75,7 @@
     </div>
   </main>
 
-  <footer id="footer">
+  <footer class="" id="footer">
     <div class="footer-sections d-flex jutify-content-center text-light py-5">
       <div class="footer-section mx-auto">
         <h4>Explore</h4>

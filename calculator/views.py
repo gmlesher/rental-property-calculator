@@ -175,6 +175,7 @@ def report(request, pk):
         r.mgmt_fees
         )
     dwn_pmt = down_payment(r.purchase_price, r.down_payment, r.down_payment_2)
+    dwn_pmt_percent = f'{round((dwn_pmt/r.purchase_price) * 100, 2):g}'
     loan_amt = loan_amount(r.purchase_price, dwn_pmt)
     loan_pts = loan_points(r.purchase_price, r.points)
     ttl_clos_costs = total_closing_costs(r.purchase_closing_cost, loan_pts)
@@ -199,6 +200,7 @@ def report(request, pk):
         'mo_income': mo_income,
         'total_op_exp': total_op_exp,
         'dwn_pmt': dwn_pmt,
+        'dwn_pmt_percent': dwn_pmt_percent,
         'loan_amt': loan_amt,
         'loan_pts': loan_pts,
         'ttl_clos_costs': ttl_clos_costs,

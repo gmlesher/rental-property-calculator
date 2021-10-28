@@ -88,6 +88,6 @@ class RentalPropCalcReport(models.Model):
 
     def save(self, *args, **kwargs):
         """Saves model. Sets ARV equal to purchase price if ARV is blank"""
-        if self.after_repair_value == 0 or self.after_repair_value == None:
+        if self.after_repair_value == None:
             self.after_repair_value = self.purchase_price
         super(RentalPropCalcReport, self).save(*args, **kwargs)

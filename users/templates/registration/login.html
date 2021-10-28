@@ -6,7 +6,7 @@
 {% endblock page_header %}
 
 {% block content %}
-  <form method="post" action="{% url 'users:login' %}" class="form vh-100 needs-validation" novalidate>
+  <form method="post" action="{% url 'users:login' %}" class="form needs-validation" novalidate>
     {% csrf_token %} 
     <div class="mx-auto w-25">
       {{ form|crispy }}

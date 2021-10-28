@@ -453,10 +453,12 @@
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-4 currency">
+        <div class="col-4 currency position-relative">
           <label for="id_category">Electricity</label>
           {{ form.electricity|add_class:"form-control" }}
+          <small class="text-muted position-absolute top-50 start-100 translate-end"><span>/month</span></small>
         </div>
+
         <div class="col-4">
           <aside>
             <div><small class="text-muted">HELP</small></div>
@@ -467,23 +469,26 @@
       </div>
 
       <div class="row">
-        <div class="col-4 currency">
+        <div class="col-4 currency position-relative">
           <label for="id_category">Gas</label>
           {{ form.gas|add_class:"form-control" }}
+          <small class="text-muted position-absolute top-50 start-100 translate-end"><span>/month</span></small>
         </div>
       </div>
       
       <div class="row">
-        <div class="col-4 currency">
+        <div class="col-4 currency position-relative">
           <label for="id_category">Water & Sewer</label>
           {{ form.water_sewer|add_class:"form-control" }}
+          <small class="text-muted position-absolute top-50 start-100 translate-end"><span>/month</span></small>
         </div>
       </div>
 
       <div class="row justify-content-between">
-        <div class="col-4 currency">
+        <div class="col-4 currency position-relative">
           <label for="id_category">HOA Fees</label>
           {{ form.hoa|add_class:"form-control" }}
+          <small class="text-muted position-absolute top-50 start-100 translate-end"><span>/month</span></small>
         </div>
         <div class="col-4">
           <aside>
@@ -495,26 +500,29 @@
       </div>
 
       <div class="row">
-        <div class="col-4 currency">
+        <div class="col-4 currency position-relative">
           <label for="id_category">Garbage</label>
           {{ form.garbage|add_class:"form-control" }}
+          <small class="text-muted position-absolute top-50 start-100 translate-end"><span>/month</span></small>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-4 currency">
+        <div class="col-4 currency position-relative">
           <label class="text-decoration-underline">
             <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Private Mortgage Insurance" data-bs-placement="bottom" data-bs-content="This is required insurance to be paid by the homeowner to insure the lender against default on the mortgage. Usually only applies on down payments less than 20%. Does not provide coverage of any kind for the home owner." data-bs-html="true">PMI</a>
           </label>
           <!-- <label for="id_category">PMI</label> -->
           {{ form.pmi|add_class:"form-control" }}
+          <small class="text-muted position-absolute top-50 start-100 translate-end"><span>/month</span></small>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-4 currency">
+        <div class="col-4 currency position-relative">
           <label for="id_category">Other</label>
           {{ form.other_monthly_expenses|add_class:"form-control" }}
+          <small class="text-muted position-absolute top-50 start-100 translate-end"><span>/month</span></small>
         </div>
       </div>
 

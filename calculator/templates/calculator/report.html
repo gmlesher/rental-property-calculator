@@ -124,7 +124,7 @@
           <td>&nbsp</td>
         </tr>
         <tr>
-          <td class="text-muted">Down Payment</td>
+          <td class="text-muted">Down Payment <span><small>({{ dwn_pmt_percent }}%)</small></span></td>
           <td class="text-end">${{ dwn_pmt|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
@@ -281,7 +281,7 @@
         </td>
         <td>
           <small class="text-muted text-decoration-underline">
-            <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Gross Rent Multiplier" data-bs-placement="bottom" data-bs-content="Purchase price / annual income.<br/><br/>Used as a comparison metric to other similar market properties. The lower the GRM is compared to other properties, the more attractive the investment is. Lower values indicate higher rental income streams." data-bs-html="true">GROSS RENT MULTIPLIER</a>
+            <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="Gross Rent Multiplier" data-bs-placement="bottom" data-bs-content="Purchase price / annual income.<br/><br/>Used as a comparison metric to other similar market properties. The lower the GRM is compared to other properties, the more attractive the investment is. Lower values indicate higher rental income streams.<br/><br/>Can also be thought of as the number of years it takes to pay back the purchase price." data-bs-html="true">GROSS RENT MULTIPLIER</a>
           </small>
         </td>
         <td>
