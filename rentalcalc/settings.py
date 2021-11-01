@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     # my apps
     'calculator',
     'users',
+    'bot',
 
     # 3rd party apps
     'crispy_forms',
