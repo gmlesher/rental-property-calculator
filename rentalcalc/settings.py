@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     # my apps
     'calculator',
     'users',
+    'bot',
 
     # 3rd party apps
     'crispy_forms',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'livereload',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+    'multiselectfield',
     
     # django apps
     'django.contrib.admin',

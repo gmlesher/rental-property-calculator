@@ -1,3 +1,6 @@
+# headers file
+headers.py
+
 # vs code settings
 .vscode
 
@@ -7,8 +10,11 @@ media/
 # root static directory for uploaded images
 /static/
 
-# csv files
+# image/csv files
 *.csv
+*.jpg
+*.jpeg
+*.png
 
 # node 
 node_modules/

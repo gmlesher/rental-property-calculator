@@ -18,4 +18,6 @@ urlpatterns = [
     path('edit-rental-prop-calc/<int:pk>/', views.edit_rental_prop_calc, name='edit-rental-prop-calc'),
     # Delete Report Page
     path('delete-report/<int:pk>/', views.delete_report, name='delete-report'),
+    # User Settings Page
+    path('settings/', views.settings, name='settings'),
 ]

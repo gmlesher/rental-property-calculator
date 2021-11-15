@@ -3,8 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 
 # My files
-from .models import RentalPropCalcReport
-from .forms import RentalPropForm
+from .models import RentalPropCalcReport, UserSettings
+from bot.models import BotRentalReport
+from .forms import RentalPropForm, UserSettingsForm
 from .calc import *
 from . import plotly_app
 
@@ -130,14 +131,19 @@ def dashboard(request):
 def reports(request):
     """The reports page for a user"""
     reports = RentalPropCalcReport.objects.filter(owner=request.user).order_by('-updated_at')
-    context = {'reports': reports}
+    bot_reports = BotRentalReport.objects.filter(owner=request.user).order_by('-updated_at')
+    context = {'reports': reports, 'bot_reports': bot_reports}
     return render(request, 'calculator/reports.html', context)
     
 @login_required
 def rental_prop_calculator(request):
     """The calculator page"""
+    try:
+        user_settings = UserSettings.objects.get(user=request.user)
+    except:
+        user_settings = None
     if request.method != 'POST':
-        form = RentalPropForm()
+        form = RentalPropForm(instance=user_settings)
     else:
         form = RentalPropForm(request.POST, request.FILES)
         if form.is_valid():
@@ -232,7 +238,7 @@ def delete_report(request, pk):
     if report.owner != request.user:
         raise Http404
     report.delete()
-    return redirect('calculator:dashboard')
+    return redirect('calculator:reports')
 
 @login_required
 def edit_rental_prop_calc(request, pk):
@@ -257,3 +263,27 @@ def edit_rental_prop_calc(request, pk):
     # Display a blank or invalid form.
     context = {'item': item,'form': form}
     return render(request, 'calculator/rental_prop_calculator.html', context)
+
+@login_required
+def settings(request):
+    """User Settings Page"""
+    item, _ = UserSettings.objects.get_or_create(
+                user=request.user, 
+                defaults={'user': request.user}
+                )
+    if item.user != request.user:
+        raise Http404
+    if request.method == 'POST':
+        # Initial request; pre-fill form with the current entry.
+        form = UserSettingsForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect('calculator:settings')
+
+    else:
+        # POST data submitted; process data.
+        form = UserSettingsForm(instance=item)
+
+    # Display a blank or invalid form.
+    context = {'item': item,'form': form}
+    return render(request, 'calculator/settings.html', context)

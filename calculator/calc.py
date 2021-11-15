@@ -360,7 +360,7 @@ def aot_annualized_total_return(total_profit_if_sold, total_cash):
     for count, profit in enumerate(total_profit_if_sold):
         try:
             ann_return = ((1+(profit/total_cash))**(1/(count+1))-1) * 100
-            aot_annualized_total_return.append(round(ann_return, 2))
+            aot_annualized_total_return.append(round(ann_return.real, 2))
         except ZeroDivisionError:
             aot_annualized_total_return.append(0)
 
