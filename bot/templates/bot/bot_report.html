@@ -56,17 +56,17 @@
       <p>{{ r.prop_description }}</p>
     </div>
 
-    {% if r.listing_url %}
-      <div class="report-urls">
-        <p><strong>Listing URL:</strong> <a href="{{ r.listing_url }}" target="_blank">{{ r.listing_url }}</a></p>
-      </div>
-    {% endif %}
+    <div class="report-urls">
+      <p><strong>Redfin Listing:</strong> <a href="{{ r.redfin_listing_url }}" target="_blank">{{ r.redfin_listing_url }}</a></p>
+      <p><strong>Zillow Rent Zestimate:</strong> <a href="{{ r.zillow_zestimate_url }}" target="_blank">{{ r.zillow_zestimate_url }}<a/></p>
+
+    </div>
 
     <div class="report-buttons">
       <button type="button" class="btn btn-dark text-light">
         <span>&#8681; </span>Download PDF
       </button>
-      <a role="button" class="btn text-light" href="{% url 'calculator:edit-rental-prop-calc' r.pk %}">
+      <a role="button" class="btn text-light" href="{% url 'bot:bot-edit-rental-prop-calc' r.pk %}">
         Edit Report
       </a>
       <a role="button" class="btn text-light" href="{% url 'calculator:rental-prop-calculator' %}">

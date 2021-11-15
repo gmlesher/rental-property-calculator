@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'livereload',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+    'multiselectfield',
     
     # django apps
     'django.contrib.admin',

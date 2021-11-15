@@ -15,11 +15,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='RentalPropCalcReport',
+            name='BotRentalReport',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
+                ('bot_generated', models.BooleanField(default=True)),
                 ('report_title', models.CharField(max_length=75)),
                 ('owned', models.BooleanField(blank=True)),
                 ('prop_address', models.CharField(blank=True, max_length=75)),
@@ -38,7 +39,7 @@ class Migration(migrations.Migration):
                 ('est_repair_cost', models.IntegerField(blank=True, null=True)),
                 ('after_repair_value', models.IntegerField(blank=True, null=True)),
                 ('annual_pv_growth', models.DecimalField(blank=True, decimal_places=2, default=2, max_digits=4, null=True)),
-                ('cash_purchase', models.BooleanField(blank=True)),
+                ('cash_purchase', models.BooleanField(blank=True, default=False)),
                 ('down_payment', models.CharField(blank=True, choices=[('', 'Select...'), ('0%', '0%'), ('3%', '3%'), ('3.5%', '3.5%'), ('5%', '5%'), ('7.5%', '7.5%'), ('10%', '10%'), ('15%', '15%'), ('20%', '20%'), ('25%', '25%'), ('30%', '30%'), ('35%', '35%'), ('40%', '40%'), ('45%', '45%'), ('50%', '50%')], default='', max_length=10)),
                 ('down_payment_2', models.IntegerField(blank=True, null=True)),
                 ('loan_int_rate', models.DecimalField(decimal_places=3, max_digits=5)),
@@ -62,6 +63,8 @@ class Migration(migrations.Migration):
                 ('other_monthly_expenses', models.DecimalField(blank=True, decimal_places=2, max_digits=7, null=True)),
                 ('annual_expenses_growth', models.DecimalField(blank=True, decimal_places=2, default=2, max_digits=4, null=True)),
                 ('sales_expenses', models.DecimalField(blank=True, decimal_places=2, default=7.5, max_digits=4, null=True)),
+                ('redfin_listing_url', models.URLField(blank=True)),
+                ('zillow_zestimate_url', models.URLField(blank=True)),
                 ('owner', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

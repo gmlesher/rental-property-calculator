@@ -11,19 +11,15 @@ class Parse():
 
     def parse_csv(self):
         """parses most recent csv files in downloads folder"""
-        print('running parse_csv')
+        print('Parsing downloaded csv file...')
         os.chdir(self.read_path)
         result = glob.glob(f'*.{self.extension}')
 
         for file in result:
             df = pd.read_csv(file)
             self.data = df.T.to_dict('dict')
-        return self.data
 
-    # *Dont need this function if running through another class *
     def run(self):
         """runs Parse class"""
         self.parse_csv()
-        
-
-# Parse().run()
+        return self.data

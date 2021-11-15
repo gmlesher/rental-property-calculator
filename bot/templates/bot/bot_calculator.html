@@ -56,17 +56,8 @@
               Please provide a report title.
             </div>
         </div>
-
-
         <div class="col-6">
             {{ form.owner|add_class:"form-control" }}
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12">
-          <label for="id_listing_url">Listing URL</label>
-          {{ form.listing_url|add_class:"form-control" }}
         </div>
       </div>
 
@@ -141,6 +132,20 @@
           <div class="col-8">
             <label for="id_prop_description">Description</label>
             {{ form.prop_description|add_class:"form-control" }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-8">
+            <label for="id_redfin_listing_url">Redfin Listing:</label>
+            {{ form.redfin_listing_url|add_class:"form-control" }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-8">
+            <label for="id_zillow_zestimate_url">Zillow Rent Zestimate:</label>
+            {{ form.zillow_zestimate_url|add_class:"form-control" }}
           </div>
         </div>
         

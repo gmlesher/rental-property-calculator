@@ -1,4 +1,6 @@
 from django.contrib import admin
-from .models import RentalPropCalcReport
+from .models import *
+
 
 admin.site.register(RentalPropCalcReport)
+admin.site.register(UserSettings)

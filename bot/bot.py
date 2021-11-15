@@ -1,33 +1,21 @@
 from selenium import webdriver
 from time import sleep
+import json
 
 # my files
-from parse import Parse
-from scrape import RedfinScraper
-
-# replace with city from settings
-city = 'Louisburg'
-city_code = str(10915)
-state = 'KS'
-city_url = f'city/{city_code}/{state}/{city}/'
-
-# replace with zipcode from settings
-zipcode = '04981'
-zip_code_url = f'zipcode/{zipcode}/'
-
-# replace with filters from settings
-filters = 'property-type=house,max-price=300k' 
-filters_url = f'filter/{filters}'
-
-# complete_url = f'https://www.redfin.com/{zip_code_url}{filters_url}'
-complete_url = f'https://www.redfin.com/{city_url}{filters_url}'
+from .parse import Parse
+from .scrape import RedfinScraper, ZillowScraper
+from .search import CreateSearchUrl
+from .models import BotRentalReport
 
 
 class RedfinBot():
-    def __init__(self):
-        self.url = complete_url
+    def __init__(self, user):
+        self.user = user
+        self.url = CreateSearchUrl.get_complete_url(CreateSearchUrl(self.user))
         self.driver = webdriver.Chrome()
         self.parsed_urls = []
+        self.all_data = None
 
     def webdriver(self):
         """Opens chrome webpage, downloads csv file"""
@@ -35,28 +23,50 @@ class RedfinBot():
         # op = webdriver.ChromeOptions() # chrome options
         # op.add_argument('headless') # add headles option
         # self.driver = webdriver.Chrome(options=op) # open chrome driver headless
+        print("Opening webpage with search URL...")
         self.driver.get(self.url)
         sleep(2)
         self.driver.find_element_by_xpath("//a[@id=\"download-and-save\"]")\
             .click()
+        print("Downloading csv file...")
         sleep(5)
 
     def parse_csv_data(self):
         """Parses csv file downloaded in 'webdriver' function above"""
-        self.parsed_data = Parse.parse_csv(Parse())
+        self.parsed_data = Parse.run(Parse())
+        current_urls = []
+        # check current redfin urls. avoid scraping urls already in reports
+        objs = BotRentalReport.objects.filter(owner=self.user).values()
+        for obj in objs:
+            current_urls.append(obj['redfin_listing_url'])
+        # only scrape urls for reports not already added
         for key in self.parsed_data:
             parsed_url = self.parsed_data[key]['URL (SEE http://www.redfin.com/buy-a-home/comparative-market-analysis FOR INFO ON PRICING)']
-            self.parsed_urls.append(parsed_url)
+            if not parsed_url in current_urls:
+                self.parsed_urls.append(parsed_url)
 
     def scrape(self):
         """scrapes all webpages from list of parsed csv file urls"""
+        print("Scraping Redfin URLs...")
         self.scraped_data = RedfinScraper().run(self.parsed_urls)
 
     def combine(self):
         """combines parsed and scraped data into one dictionary"""
         final_copy = self.parsed_data.copy()
         scraped = self.scraped_data.copy()
-        
+        keep_list = []
+        # get final copy items that need to be created that aren't duplicates
+        for i in list(final_copy):
+            for url in self.parsed_urls:
+                if url == final_copy[i]['URL (SEE http://www.redfin.com/buy-a-home/comparative-market-analysis FOR INFO ON PRICING)']:
+                    keep_list.append(i)
+            # delete duplicates
+            if i not in keep_list:
+                del final_copy[i]
+
+        for i, v in enumerate(list(final_copy.keys())):
+            final_copy[i] = final_copy.pop(v, None)
+
         # adds values of each dictionary in 'scraped' to end of each respective \
         # 'final copy' dictionary based on key values
         for key, value in enumerate(scraped): 
@@ -66,15 +76,28 @@ class RedfinBot():
             final_copy[key]['HOA'] = value['HOA']
             final_copy[key]['IMAGE NAME'] = value['IMAGE NAME']
 
-        print(final_copy)
+            street = '-'.join(i for i in final_copy[key]['ADDRESS'].split(' '))
+            city = f"-{final_copy[key]['CITY']}"
+            state = f"-{final_copy[key]['STATE OR PROVINCE']}"
+            zip = f"-{final_copy[key]['ZIP OR POSTAL CODE']}"
+            addr = street.lower() + city.lower() +  state.lower() + zip.lower()
+            zest_url = f'https://www.zillow.com/rental-manager/price-my-rental/results/{addr}/'
+            final_copy[key]['ZESTIMATE URL'] = zest_url
+            final_copy[key]['ZESTIMATE'] = ZillowScraper().run(zest_url)
         
+        self.all_data = final_copy
 
     def run(self):
         """runs RedfinBot"""
+        print(f'Running bot for {self.user.username}')
+        print(f'Search URL: {self.url}')
         self.webdriver()
         self.parse_csv_data()
-        self.scrape()
-        self.combine()
-
-
-RedfinBot().run()
+        if self.parsed_urls:
+            self.scrape()
+            print("Scraping Zillow URLs...")
+            self.combine()
+            return self.all_data
+        else: 
+            print("No new properties to report on")
+            return

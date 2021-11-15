@@ -11,9 +11,16 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        {% if report.report_title %}
-          <a href="{% url 'calculator:delete-report' report.pk %}" role='button' class='btn btn-danger'>Delete</a>
+        {% if bot_reports %}
+          {% if report.report_title %}
+            <a href="{% url 'bot:bot-delete-report' report.pk %}" role='button' class='btn btn-danger'>Delete</a>
+          {% endif %}
+        {% else %}
+          {% if report.report_title %}
+            <a href="{% url 'calculator:delete-report' report.pk %}" role='button' class='btn btn-danger'>Delete</a>
+          {% endif %}
         {% endif %}
+        
       </div>
     </div>
   </div>

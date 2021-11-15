@@ -2,19 +2,20 @@ import requests, urllib.request, time, re
 from bs4 import BeautifulSoup
 
 # my files
-from headers import headers
+from .headers import redfin_headers, zillow_headers
 
 
 class RedfinScraper():
-    """Scrapes websites for property data"""
+    """Scrapes redfin websites for property data"""
     def __init__(self):
         self.results = []
-        self.headers = headers
+        self.headers = redfin_headers
+
 
     def fetch(self, url):
         """fetch url"""
         response = requests.get(url, headers=self.headers)
-        print(response.status_code)
+        print("Redfin fetch response code -", response.status_code, url)
         return response
 
     def parse(self, response):
@@ -22,17 +23,19 @@ class RedfinScraper():
         content = BeautifulSoup(response, 'html.parser')
         desc = content.select_one('div.remarks > p.text-base > span').text
 
-        find_taxes = content.find_all(text=re.compile('^Full Tax Amount: $|^Tax Annual Amount: $'))
+        find_taxes = content.find_all(text=re.compile('^Full Tax Amount: $|^Tax Annual Amount: $|^Annual Amount: $|^Tax Amount: $'))
         taxes = [tax.parent for tax in find_taxes]
         if taxes:
-            tax_amt = taxes[0].find('span').text
+            amt = taxes[0].find('span').text
+            tax_amt = int(float(amt.strip('$').replace(',','')))
         else:
             tax_amt = 0
 
         find_hi = content.find_all(text=re.compile("^Homeowners' Insurance$"))
         h_i = [hi.parent.parent.parent.parent for hi in find_hi]
         if h_i:
-            hi_amt = h_i[0].find('span', {'class': 'Row--content text-right'}).text
+            amt = h_i[0].find('span', {'class': 'Row--content text-right'}).text
+            hi_amt = int(amt.strip('$').replace(',', ''))
         else:
             hi_amt = 0
 
@@ -64,14 +67,14 @@ class RedfinScraper():
         prop_image = content.select_one('img.img-card').get('src')
         image_name = '_'.join(prop_image.split('/')[5:])
 
-        # saves image to downloads folder
-        urllib.request.urlretrieve(prop_image, image_name)
+        # saves image to media folder
+        urllib.request.urlretrieve(prop_image, f"/Users/garrettlesher/github_repos/rentalpropcalculator/media/property_photos/{image_name}")
 
         self.results.append({
             'DESCRIPTION': desc,
             'ANNUAL TAXES': tax_amt,
             'HOMEOWNERS INSURANCE': hi_amt,
-            'HOA': str(cleaned_hoa_amt),
+            'HOA': cleaned_hoa_amt,
             'IMAGE NAME': image_name,
         })
     
@@ -85,6 +88,31 @@ class RedfinScraper():
         return self.results
 
 
-# if __name__ == '__main__':
-#     scraper = RedfinScraper()
-#     scraper.run()
+class ZillowScraper():
+    """Scrapes zillow rental manager site for rent Zestimate"""
+    def __init__(self):
+        self.result = None
+        self.headers = zillow_headers
+
+    def fetch(self, url):
+        """fetch url"""
+        response = requests.get(url, headers=self.headers)
+        print("Zillow fetch response code -", response.status_code, url)
+        return response
+
+    def parse(self, response):
+        """parse given html responses for data"""
+        content = BeautifulSoup(response, 'html.parser')
+        if content.select_one('h2.ddOsiB'):
+            zestimate = content.select_one('h2.ddOsiB').text.split('/', 1)
+            zestimate = int(zestimate[0].strip("$").replace(',', ''))
+        else:
+            zestimate = 0
+        self.result = zestimate
+
+    def run(self, url):
+        """run Redfin Scraper"""
+        res = self.fetch(url)
+        self.parse(res.text)
+        time.sleep(2)
+        return self.result
