@@ -1,7 +1,9 @@
 import pandas as pd
-import plotly.express as px
+import os
+from rentalcalc.settings import BASE_DIR
 
 """Functions for creating and combining dataframes"""
+root_path = BASE_DIR
 
 def create_opex_dataframe(categorys, amounts):
     """creates operating expenses dataframe"""
@@ -9,18 +11,18 @@ def create_opex_dataframe(categorys, amounts):
         'expense': categorys,
         '$': amounts
         })
-    return df.to_csv("expense_report.csv", index=False)
+    return df.to_csv(os.path.join(root_path, 'expense_report.csv'), index=False)
 
 def create_combine_pi_dataframe(mortgage_pmt):
     """creates principal and insurance dataframe
     and combines it with operating expenses dataframe"""
-    df = pd.read_csv('expense_report.csv')
+    df = pd.read_csv(os.path.join(root_path, 'expense_report.csv'))
     df_2 = pd.DataFrame({
         'expense': ['P&I'],
         '$': [round(mortgage_pmt)],
         },
         index=[13])
-    return pd.concat([df, df_2]).to_csv('expense_report.csv')
+    return pd.concat([df, df_2]).to_csv(os.path.join(root_path, 'expense_report.csv'))
 
 def create_income_dataframe(income):
     """creates dataframe for all income"""
@@ -28,7 +30,7 @@ def create_income_dataframe(income):
         'income': ['Gross Rent', 'Other'],
         '$': income
         })
-    return df.to_csv("income_report.csv", index=True)
+    return df.to_csv(os.path.join(root_path, 'income_report.csv'), index=True)
 
 def create_aot_dataframe(aot_tuples):
     """creates dataframe for analysis over time"""
@@ -103,7 +105,7 @@ def create_aot_dataframe(aot_tuples):
         'Annualized Total Return'
         ]
     df.insert(0, " ", cats, True)
-    return df.to_csv('aot_report.csv', index=False)
+    return df.to_csv(os.path.join(root_path,'aot_report.csv'), index=False)
 
 def create_inc_exp_cashflow_dataframe(iec_tuples):
     """Creates dataframe for income, expenses and cashflow"""
@@ -122,7 +124,7 @@ def create_inc_exp_cashflow_dataframe(iec_tuples):
                 'Cashflow'
             ])
 
-    return df.to_csv("inc_exp_cashflow_report.csv", index=True)
+    return df.to_csv(os.path.join(root_path, 'inc_exp_cashflow_report.csv'), index=True)
 
 def create_loanbalance_value_equity_dataframe(lbve_tuples):
     """Creates dataframe for loan balance, property value and equity"""
@@ -142,4 +144,4 @@ def create_loanbalance_value_equity_dataframe(lbve_tuples):
             ])
     # print(df)
 
-    return df.to_csv("loanbal_value_equity_report.csv", index=True)
+    return df.to_csv(os.path.join(root_path, 'loanbal_value_equity_report.csv'), index=True)
