@@ -222,35 +222,32 @@
             </div>
         </div>
 
-        <h5 class="pt-3 pb-3" id="list-item-2">Auto Search Frequency</h5>
+        {% if item.user.is_superuser %}
+            <h5 class="pt-3 pb-3" id="list-item-2">Auto Search Frequency</h5>
 
-        <div class="row">
-            <div class="col-4">
-                <label class="form-label" for="id_bot_frequency"
-                    >Frequency
-                </label>
-                {{ form.bot_frequency|add_class:"form-control" }}
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label" for="id_bot_frequency"
+                        >Frequency
+                    </label>
+                    {{ form.bot_frequency|add_class:"form-control" }}
+                </div>
             </div>
-        </div>
+
+            <div class="row">
+                <div class="col-12">
+                <small class="text-muted">*Make sure any updated settings are saved before running the bot!
+                </small>
+                    <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
+                </div>
+            </div>
+        {% endif %}
 
         <div class="row">
             <div class="col">
             {{ form.user }}
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-12">
-            <small class="text-muted">*Make sure any updated settings are saved before running the bot!
-            </small>
-                <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
-            </div>
-        </div>
-
-        
-
-
-      
 
       <div class="settingsButton d-flex justify-content-end pt-5">
         <button type="submit" name="submit" class="btn text-light my-3">Save Settings</button>

@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 # my files
 from .headers import redfin_headers, zillow_headers
 
+zillow_class_name = 'h2.delXcJ'
 
 class RedfinScraper():
     """Scrapes redfin websites for property data"""
@@ -103,8 +104,8 @@ class ZillowScraper():
     def parse(self, response):
         """parse given html responses for data"""
         content = BeautifulSoup(response, 'html.parser')
-        if content.select_one('h2.ddOsiB'):
-            zestimate = content.select_one('h2.ddOsiB').text.split('/', 1)
+        if content.select_one(zillow_class_name):
+            zestimate = content.select_one(zillow_class_name).text.split('/', 1)
             zestimate = int(zestimate[0].strip("$").replace(',', ''))
         else:
             zestimate = 0
