@@ -1,6 +1,12 @@
 # headers file
 headers.py
 
+# crontab save file
+*.save
+
+# env variables file
+environment.txt
+
 # vs code settings
 .vscode
 

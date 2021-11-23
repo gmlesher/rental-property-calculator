@@ -1,51 +1,15 @@
 import pandas as pd
-import schedule, time
+from datetime import datetime
+import pytz
 
 # my files
 from .models import BotRentalReport
 from calculator.models import UserSettings
 from .bot import RedfinBot
 
-def bot_scheduler(user):
-    settings = UserSettings.objects.get(user=user)
-    # every hour
-    if settings.bot_frequency == "Every hour":
-        schedule.every().hour.at(":00").do(run_bot_logic, user)
-
-    # every 6 hours
-    if settings.bot_frequency == "Every 6 hours":
-        schedule.every().day.at("00:00").do(run_bot_logic, user)
-        schedule.every().day.at("06:00").do(run_bot_logic, user)
-        schedule.every().day.at("12:00").do(run_bot_logic, user)
-        schedule.every().day.at("18:00").do(run_bot_logic, user)
-
-    # every 12 hours
-    if settings.bot_frequency == "2x/day":
-        schedule.every().day.at("00:00").do(run_bot_logic, user)
-        schedule.every().day.at("12:00").do(run_bot_logic, user)
-    
-    # 1/day
-    if settings.bot_frequency == "1x/day":
-        schedule.every().day.at("17:00").do(run_bot_logic, user)
-    
-    # every other day
-    if settings.bot_frequency == "Every other day":
-        schedule.every(2).days.at("17:00").do(run_bot_logic, user)
-
-    # 1/week
-    if settings.bot_frequency == "1x/week":
-        schedule.every().week.do(run_bot_logic, user)
-
-    # 1/month
-    if settings.bot_frequency == "1x/month":
-        schedule.every(4).weeks.do(run_bot_logic, user)
-    
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
-
 
 def run_bot_logic(user):
+    print('Current time:', datetime.now(tz=pytz.timezone('US/Eastern')).strftime("%A, %B %d %Y %H:%M:%S ET (%-I:%M:%S %p)"))
     try:
         user_settings = UserSettings.objects.get(user=user)
         down_payment = user_settings.down_payment
@@ -75,6 +39,10 @@ def run_bot_logic(user):
                 data[key]['HOA/MONTH'] = None
             if data[key]['HOA/MONTH']:
                 data[key]['HOA'] = data[key]['HOA/MONTH']
+            if pd.isna(data[key]['YEAR BUILT']):
+                data[key]['YEAR BUILT'] = ''
+            else:
+                data[key]['YEAR BUILT'] = str(int(data[key]['YEAR BUILT']))
 
         objs = [
             BotRentalReport(
@@ -88,7 +56,7 @@ def run_bot_logic(user):
                 bedrooms = str(int(data[key]['BEDS'])),
                 bathrooms = str(int(data[key]['BATHS'])),
                 sqft = str(data[key]['SQUARE FEET']),
-                year_built = str(int(data[key]['YEAR BUILT'])),
+                year_built = data[key]['YEAR BUILT'],
                 prop_description = data[key]['DESCRIPTION'],
                 prop_photo = f"property_photos/{data[key]['IMAGE NAME']}",
                 prop_mls = str(data[key]['MLS#']),
@@ -123,4 +91,3 @@ def run_bot_logic(user):
             print(f'{len(new_reports)} new reports created')
     else:
         print("0 new reports created")
-

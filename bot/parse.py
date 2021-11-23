@@ -1,5 +1,5 @@
 import pandas as pd
-import os, glob
+import os
 
 
 class Parse():
@@ -7,13 +7,17 @@ class Parse():
     def __init__(self):
         self.data = None
         self.read_path = '/Users/garrettlesher/Downloads/'
-        self.extension = '*.csv'
+        self.extension = '.csv'
 
     def parse_csv(self):
         """parses most recent csv files in downloads folder"""
         print('Parsing downloaded csv file...')
-        files = glob.glob(self.read_path + self.extension)
-        latest_file = max(files, key=os.path.getctime)
+        csv_files = []
+        for file in os.listdir(self.read_path):
+            if file.endswith(self.extension):
+                csv_files.append(os.path.join(self.read_path, file))
+        latest_file = max(csv_files, key=os.path.getctime)
+
         df  = pd.read_csv(latest_file)
         self.data = df.T.to_dict('dict')
         try:

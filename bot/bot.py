@@ -80,7 +80,7 @@ class RedfinBot():
             city = f"-{final_copy[key]['CITY']}"
             state = f"-{final_copy[key]['STATE OR PROVINCE']}"
             zip = f"-{final_copy[key]['ZIP OR POSTAL CODE']}"
-            addr = street.lower() + city.lower() +  state.lower() + zip.lower()
+            addr = street.lower() + city.lower().replace(' ', '-') +  state.lower() + zip.lower()
             zest_url = f'https://www.zillow.com/rental-manager/price-my-rental/results/{addr}/'
             final_copy[key]['ZESTIMATE URL'] = zest_url
             final_copy[key]['ZESTIMATE'] = ZillowScraper().run(zest_url)

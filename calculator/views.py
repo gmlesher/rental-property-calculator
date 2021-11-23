@@ -4,10 +4,10 @@ from django.http import Http404
 
 # My files
 from .models import RentalPropCalcReport, UserSettings
+from bot.crons import clear_crons, make_crons
 from bot.models import BotRentalReport
 from .forms import RentalPropForm, UserSettingsForm
 from .calc import *
-from . import plotly_app
 
 
 def index(request):
@@ -250,14 +250,15 @@ def edit_rental_prop_calc(request, pk):
     if item.owner != request.user:
         raise Http404
     if request.method == 'POST':
-        # Initial request; pre-fill form with the current entry.
+        # POST data submitted; process data.
+        
         form = RentalPropForm(request.POST, request.FILES, instance=item)
         if form.is_valid():
             form.save()
             return redirect(f'/report/{pk}')
 
     else:
-        # POST data submitted; process data.
+        # Initial request; pre-fill form with the current entry.
         form = RentalPropForm(instance=item)
 
     # Display a blank or invalid form.
@@ -274,14 +275,17 @@ def settings(request):
     if item.user != request.user:
         raise Http404
     if request.method == 'POST':
-        # Initial request; pre-fill form with the current entry.
+        # POST data submitted; process data.
         form = UserSettingsForm(request.POST, instance=item)
         if form.is_valid():
             form.save()
+            if request.user.is_superuser:
+                clear_crons(request.user)
+                make_crons(request.user)
             return redirect('calculator:settings')
 
     else:
-        # POST data submitted; process data.
+        # Initial request; pre-fill form with the current entry.
         form = UserSettingsForm(instance=item)
 
     # Display a blank or invalid form.
