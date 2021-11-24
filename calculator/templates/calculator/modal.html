@@ -11,7 +11,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        {% if bot_reports %}
+        {% if bot_object_list %}
           {% if report.report_title %}
             <a href="{% url 'bot:bot-delete-report' report.pk %}" role='button' class='btn btn-danger'>Delete</a>
           {% endif %}

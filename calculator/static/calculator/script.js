@@ -154,6 +154,37 @@ var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
   return new bootstrap.Popover(popoverTriggerEl);
 });
 
+// Bot Report Page
+function adjustPagination() {
+  $("ul.pagination li.page-item-num").hide();
+  var li_len = $("ul.pagination li.page-item-num").length;
+  var active_id_num = parseInt(
+    $("ul.pagination li.active").attr("id").split("_")[1]
+  );
+  if (active_id_num < 5) {
+    var nums = [...Array(li_len + 1).keys()].slice(1, 6);
+    for (let i of nums) {
+      $(`li#paginator_${i}`).show();
+    }
+  } else if (active_id_num == 5 && li_len == 5) {
+    var nums = [...Array(li_len + 1).keys()].slice(1, li_len + 1);
+    for (let i of nums) {
+      $(`li#paginator_${i}`).show();
+    }
+  } else if (active_id_num == 5 && li_len > 5) {
+    var nums = [...Array(li_len + 1).keys()].slice(li_len - 5, li_len);
+    for (let i of nums) {
+      $(`li#paginator_${i}`).show();
+    }
+  } else if (active_id_num > 5) {
+    var nums = [...Array(li_len + 1).keys()].slice(li_len - 4, li_len + 1);
+    for (let i of nums) {
+      $(`li#paginator_${i}`).show();
+    }
+  }
+}
+adjustPagination();
+
 // Settings Page
 
 // toggle between city and zipcode for settings search area

@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.http import Http404
+from django.views.generic import ListView
 
 # My files
 from .models import RentalPropCalcReport, UserSettings
 from bot.crons import clear_crons, make_crons
-from bot.models import BotRentalReport
 from .forms import RentalPropForm, UserSettingsForm
 from .calc import *
 
+# must be here although not explicitly called in code. registers plotly apps in views
+from . import plotly_app
 
 def index(request):
     """The home page for the Rental Property Calculator."""
@@ -127,13 +130,15 @@ def dashboard(request):
         }
     return render(request, 'calculator/dashboard.html', context)
 
-@login_required
-def reports(request):
-    """The reports page for a user"""
-    reports = RentalPropCalcReport.objects.filter(owner=request.user).order_by('-updated_at')
-    bot_reports = BotRentalReport.objects.filter(owner=request.user).order_by('-updated_at')
-    context = {'reports': reports, 'bot_reports': bot_reports}
-    return render(request, 'calculator/reports.html', context)
+@method_decorator(login_required, name='dispatch')
+class ReportsView(ListView):
+    model = RentalPropCalcReport
+    template_name = 'calculator/reports.html'
+    paginate_by = 5
+    context_object_name = 'report_object_list'
+
+    def get_queryset(self):
+        return RentalPropCalcReport.objects.filter(owner=self.request.user).order_by('-updated_at')
     
 @login_required
 def rental_prop_calculator(request):
