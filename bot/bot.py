@@ -33,7 +33,7 @@ class RedfinBot():
 
     def parse_csv_data(self):
         """Parses csv file downloaded in 'webdriver' function above"""
-        self.parsed_data = Parse.run(Parse())
+        self.parsed_data = Parse.run(Parse(self.user))
         current_urls = []
         # check current redfin urls. avoid scraping urls already in reports
         objs = BotRentalReport.objects.filter(owner=self.user).values()

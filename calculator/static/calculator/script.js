@@ -154,8 +154,28 @@ var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
   return new bootstrap.Popover(popoverTriggerEl);
 });
 
+// Settings Page
+
+// toggle between city and zipcode for settings search area
+$(".toggleCityZip > .btn-group > input").click(function () {
+  var ix = $(this).index();
+
+  // prevents multiple entries for searches for bot. sets unused values to default
+  if (ix == 0) {
+    $("#id_zipcode").val("");
+  } else if (ix == 2) {
+    $("#id_city").val("");
+    $("#id_minor_civil_div").prop("checked", false);
+    $("#id_city_code").val("");
+    $("#id_state").val("");
+  }
+
+  $(".city").toggle(ix === 0);
+  $(".zipcode").toggle(ix === 2);
+});
+
 // Bot Report Page
-function adjustPagination() {
+(function () {
   $("ul.pagination li.page-item-num").hide();
   var li_len = $("ul.pagination li.page-item-num").length;
   var active_id_num = parseInt(
@@ -182,25 +202,4 @@ function adjustPagination() {
       $(`li#paginator_${i}`).show();
     }
   }
-}
-adjustPagination();
-
-// Settings Page
-
-// toggle between city and zipcode for settings search area
-$(".toggleCityZip > .btn-group > input").click(function () {
-  var ix = $(this).index();
-
-  // prevents multiple entries for searches for bot. sets unused values to default
-  if (ix == 0) {
-    $("#id_zipcode").val("");
-  } else if (ix == 2) {
-    $("#id_city").val("");
-    $("#id_minor_civil_div").prop("checked", false);
-    $("#id_city_code").val("");
-    $("#id_state").val("");
-  }
-
-  $(".city").toggle(ix === 0);
-  $(".zipcode").toggle(ix === 2);
-});
+})();

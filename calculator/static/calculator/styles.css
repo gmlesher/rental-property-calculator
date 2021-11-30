@@ -187,6 +187,11 @@ aside > a {
   color: inherit;
   padding-left: 0.5rem;
 }
+#blacklist_bool::after {
+  content: "Blacklist report addresses on delete?";
+  color: inherit;
+  padding-left: 0.5rem;
+}
 .btn-outline-secondary:hover {
   background-color: inherit;
   color: #6c757d;
