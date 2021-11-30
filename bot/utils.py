@@ -43,6 +43,8 @@ def run_bot_logic(user):
                 data[key]['YEAR BUILT'] = ''
             else:
                 data[key]['YEAR BUILT'] = str(int(data[key]['YEAR BUILT']))
+            if pd.isna(data[key]['SQUARE FEET']):
+                data[key]['SQUARE FEET'] = ''
 
         objs = [
             BotRentalReport(

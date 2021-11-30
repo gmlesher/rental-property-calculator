@@ -269,8 +269,7 @@ def delete_report(request, pk):
             }
         )
     
-
-    # report.delete()
+    report.delete()
     return redirect('calculator:reports')
 
 @login_required
