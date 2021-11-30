@@ -33,7 +33,7 @@ class RedfinBot():
 
     def parse_csv_data(self):
         """Parses csv file downloaded in 'webdriver' function above"""
-        self.parsed_data = Parse.run(Parse())
+        self.parsed_data = Parse.run(Parse(self.user))
         current_urls = []
         # check current redfin urls. avoid scraping urls already in reports
         objs = BotRentalReport.objects.filter(owner=self.user).values()
@@ -41,7 +41,7 @@ class RedfinBot():
             current_urls.append(obj['redfin_listing_url'])
         # only scrape urls for reports not already added
         for key in self.parsed_data:
-            parsed_url = self.parsed_data[key]['URL (SEE http://www.redfin.com/buy-a-home/comparative-market-analysis FOR INFO ON PRICING)']
+            parsed_url = self.parsed_data[key]['URL (SEE https://www.redfin.com/buy-a-home/comparative-market-analysis FOR INFO ON PRICING)']
             if not parsed_url in current_urls:
                 self.parsed_urls.append(parsed_url)
 
@@ -58,7 +58,7 @@ class RedfinBot():
         # get final copy items that need to be created that aren't duplicates
         for i in list(final_copy):
             for url in self.parsed_urls:
-                if url == final_copy[i]['URL (SEE http://www.redfin.com/buy-a-home/comparative-market-analysis FOR INFO ON PRICING)']:
+                if url == final_copy[i]['URL (SEE https://www.redfin.com/buy-a-home/comparative-market-analysis FOR INFO ON PRICING)']:
                     keep_list.append(i)
             # delete duplicates
             if i not in keep_list:

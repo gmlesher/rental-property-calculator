@@ -75,7 +75,7 @@ def run_bot_logic(user):
                 cap_expenditures = cap_expenditures,
                 mgmt_fees = mgmt_fees,
                 hoa = float(data[key]['HOA']),
-                redfin_listing_url = data[key]['URL (SEE http://www.redfin.com/buy-a-home/comparative-market-analysis FOR INFO ON PRICING)'],
+                redfin_listing_url = data[key]['URL (SEE https://www.redfin.com/buy-a-home/comparative-market-analysis FOR INFO ON PRICING)'],
                 zillow_zestimate_url = data[key]['ZESTIMATE URL']
             )
             if not BotRentalReport.objects.filter(owner=report_owner).filter(prop_address=data[key]['ADDRESS']).exists()

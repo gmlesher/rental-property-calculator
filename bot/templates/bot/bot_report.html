@@ -36,7 +36,7 @@
             {{ r.bathrooms }} ba |
           {% endif %}
           {% if r.sqft %}
-            {{ r.sqft }} sqft
+            {{ r.sqft|floatformat:"0" }} sqft
           {% endif %}
         </span>
       </h5>

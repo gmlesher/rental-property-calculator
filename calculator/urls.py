@@ -9,7 +9,7 @@ urlpatterns = [
     # Dashboard Page
     path('dashboard/', views.dashboard, name='dashboard'),
     # Reports Page
-    path('reports/', views.reports, name='reports'),
+    path('reports/', views.ReportsView.as_view(), name='reports'),
     # Calculator Page
     path('rental-prop-calculator/', views.rental_prop_calculator, name='rental-prop-calculator'),
     # Report Page

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from multiselectfield import MultiSelectField
+from requests.sessions import default_headers
 
 # my files
 from .choices import *
@@ -29,7 +30,7 @@ class UserSettings(models.Model):
     state               = models.CharField(max_length=10, \
                                 choices=STATES, default='', blank=True)
     city_code           = models.CharField(max_length=10, blank=True)                       
-    minor_civil_div     = models.BooleanField(blank=True, default=None)
+    minor_civil_div     = models.BooleanField(blank=True, default=False)
     zipcode             = models.CharField(max_length=5, blank=True)
 
     # Bot Filters
@@ -49,6 +50,10 @@ class UserSettings(models.Model):
     # Bot Schedule
     bot_frequency       = models.CharField(max_length=100, \
                                 choices=BOT_FREQUENCY, default='', blank=True)
+
+    # Address Blacklist
+    blacklist_bool      = models.BooleanField(blank=True)
+    addr_blacklist      = models.JSONField(blank=True)
 
 
     def __str__(self):

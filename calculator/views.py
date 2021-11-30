@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.http import Http404
+from django.views.generic import ListView
 
 # My files
 from .models import RentalPropCalcReport, UserSettings
 from bot.crons import clear_crons, make_crons
-from bot.models import BotRentalReport
 from .forms import RentalPropForm, UserSettingsForm
 from .calc import *
 
+# must be here although not explicitly called in code. registers plotly apps in views
+from . import plotly_app
 
 def index(request):
     """The home page for the Rental Property Calculator."""
@@ -127,13 +130,15 @@ def dashboard(request):
         }
     return render(request, 'calculator/dashboard.html', context)
 
-@login_required
-def reports(request):
-    """The reports page for a user"""
-    reports = RentalPropCalcReport.objects.filter(owner=request.user).order_by('-updated_at')
-    bot_reports = BotRentalReport.objects.filter(owner=request.user).order_by('-updated_at')
-    context = {'reports': reports, 'bot_reports': bot_reports}
-    return render(request, 'calculator/reports.html', context)
+@method_decorator(login_required, name='dispatch')
+class ReportsView(ListView):
+    model = RentalPropCalcReport
+    template_name = 'calculator/reports.html'
+    paginate_by = 5
+    context_object_name = 'report_object_list'
+
+    def get_queryset(self):
+        return RentalPropCalcReport.objects.filter(owner=self.request.user).order_by('-updated_at')
     
 @login_required
 def rental_prop_calculator(request):
@@ -237,7 +242,35 @@ def delete_report(request, pk):
         raise Http404
     if report.owner != request.user:
         raise Http404
-    report.delete()
+
+    usr_settings = UserSettings.objects.get(user=request.user)
+
+    if getattr(usr_settings, 'blacklist_bool'):
+        addr = getattr(report, 'prop_address')
+        city = getattr(report, 'prop_city')
+        state = getattr(report, 'prop_state')
+        zipcode = getattr(report, 'prop_zip')
+
+        current_json = getattr(usr_settings, 'addr_blacklist')
+
+        if not f'{addr} {city}, {state} {zipcode}' in current_json[request.user.username]['addresses']:
+            new_json = current_json[request.user.username]['addresses']
+            new_json.append(f'{addr} {city}, {state} {zipcode}')
+        else: 
+            new_json = current_json[request.user.username]['addresses']
+
+        obj, _ = UserSettings.objects.update_or_create(
+            user=request.user,
+            defaults={'addr_blacklist': {
+                    request.user.username: {
+                        'addresses': new_json,
+                    }
+                } 
+            }
+        )
+    
+
+    # report.delete()
     return redirect('calculator:reports')
 
 @login_required

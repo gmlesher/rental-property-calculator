@@ -243,6 +243,28 @@
             </div>
         {% endif %}
 
+        <h3 class="pt-5" id="list-item-2">Other Settings</h3>
+
+        <h5 class="pt-4" id="list-item-2">Blacklist Settings</h5>
+
+      
+        <div class="row">
+            <div class="col">
+                {{ form.blacklist_bool }}
+                <label for="id_blacklist_bool" id="blacklist_bool"></label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <label class="form-label" for="id_addr_blacklist"
+                    >Blacklisted Addresses
+                </label>
+                {{ form.addr_blacklist|add_class:"form-control" }}
+            </div>
+        </div>
+        
+
         <div class="row">
             <div class="col">
             {{ form.user }}

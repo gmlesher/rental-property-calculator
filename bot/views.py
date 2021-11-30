@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.http import Http404
+from django.views.generic import ListView
 
 from bot.forms import BotRentalPropForm
 from .utils import run_bot_logic
@@ -86,12 +88,15 @@ def bot_report(request, pk):
     }
     return render(request, 'bot/bot_report.html', context)
 
-@login_required
-def bot_reports(request):
-    """The reports page for a user"""
-    bot_reports = BotRentalReport.objects.filter(owner=request.user).order_by('-updated_at')
-    context = {'bot_reports': bot_reports}
-    return render(request, 'bot/bot_reports.html', context)
+@method_decorator(login_required, name='dispatch')
+class BotReportsView(ListView):
+    model = BotRentalReport
+    template_name = 'bot/bot_reports.html'
+    paginate_by = 5
+    context_object_name = 'bot_object_list'
+
+    def get_queryset(self):
+        return BotRentalReport.objects.filter(owner=self.request.user).order_by('-updated_at')
 
 @login_required
 def bot_delete_report(request, pk):

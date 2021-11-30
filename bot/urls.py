@@ -9,7 +9,7 @@ urlpatterns = [
     # Bot Report Page
     path('bot-report/<int:pk>/', views.bot_report, name='bot-report'),
     # Bot Reports Page
-    path('bot-reports/', views.bot_reports, name='bot-reports'),
+    path('bot-reports/', views.BotReportsView.as_view(), name='bot-reports'),
     # Edit Bot Report Page
     path('bot-edit-rental-prop-calc/<int:pk>/', views.bot_edit_rental_prop_calc, name='bot-edit-rental-prop-calc'),
     # Delete Bot Report Page
