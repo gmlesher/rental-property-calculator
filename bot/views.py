@@ -7,6 +7,7 @@ from django.views.generic import ListView
 from bot.forms import BotRentalPropForm
 from .utils import run_bot_logic
 from .models import BotRentalReport
+from calculator.models import UserSettings
 from calculator.calc import *
 
 @login_required
@@ -107,6 +108,33 @@ def bot_delete_report(request, pk):
         raise Http404
     if report.owner != request.user:
         raise Http404
+
+    usr_settings = UserSettings.objects.get(user=request.user)
+
+    if getattr(usr_settings, 'blacklist_bool'):
+        addr = getattr(report, 'prop_address')
+        city = getattr(report, 'prop_city')
+        state = getattr(report, 'prop_state')
+        zipcode = getattr(report, 'prop_zip')
+
+        current_json = getattr(usr_settings, 'addr_blacklist')
+
+        if not f'{addr} {city}, {state} {zipcode}' in current_json[request.user.username]['addresses']:
+            new_json = current_json[request.user.username]['addresses']
+            new_json.append(f'{addr} {city}, {state} {zipcode}')
+        else: 
+            new_json = current_json[request.user.username]['addresses']
+
+        obj, _ = UserSettings.objects.update_or_create(
+            user=request.user,
+            defaults={'addr_blacklist': {
+                    request.user.username: {
+                        'addresses': new_json,
+                    }
+                } 
+            }
+        )
+
     report.delete()
     return redirect('bot:bot-reports')
 

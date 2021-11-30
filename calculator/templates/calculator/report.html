@@ -31,12 +31,18 @@
         <span>
           {% if r.bedrooms %}
             {{ r.bedrooms }} bd |
+          {% else %}
+            -- bd |
           {% endif %}
           {% if r.bathrooms %}
             {{ r.bathrooms }} ba |
+          {% else %}
+            -- ba |
           {% endif %}
           {% if r.sqft %}
             {{ r.sqft|floatformat:"0" }} sqft
+          {% else %}
+            -- sqft
           {% endif %}
         </span>
       </h5>

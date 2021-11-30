@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from time import sleep
 import json
 
@@ -13,16 +14,23 @@ class RedfinBot():
     def __init__(self, user):
         self.user = user
         self.url = CreateSearchUrl.get_complete_url(CreateSearchUrl(self.user))
-        self.driver = webdriver.Chrome()
         self.parsed_urls = []
         self.all_data = None
 
     def webdriver(self):
         """Opens chrome webpage, downloads csv file"""
-        # needs work to operate headless with ability to download files
-        # op = webdriver.ChromeOptions() # chrome options
-        # op.add_argument('headless') # add headles option
-        # self.driver = webdriver.Chrome(options=op) # open chrome driver headless
+        # allows chrome to download csv file in headless mode
+        chrome_options = Options()
+        chrome_options.add_experimental_option("prefs", {
+        "download.default_directory": "/Users/garrettlesher/Downloads/",
+        "download.prompt_for_download": False,
+        })
+        chrome_options.add_argument("--headless")
+        self.driver = webdriver.Chrome(chrome_options=chrome_options)
+        self.driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
+        params = {'cmd': 'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': "/Users/garrettlesher/Downloads/"}}
+        self.driver.execute("send_command", params)
+
         print("Opening webpage with search URL...")
         self.driver.get(self.url)
         sleep(2)
