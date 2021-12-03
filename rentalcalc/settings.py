@@ -149,3 +149,5 @@ LOGIN_URL = 'users:login'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

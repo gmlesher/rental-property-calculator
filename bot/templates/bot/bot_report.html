@@ -7,75 +7,75 @@
 {% block page_header %}
 <div>
   <h2>
-    {{ r.report_title }}
-    {% if r.owned %}
+    {{ obj.report_title }}
+    {% if obj.owned %}
       <span class="badge bg-info ms-3">Owned</span>
     {% endif %}
   </h2>
 
   <div class="row property-info">
     <div class="report-photo">
-      {% if r.prop_photo %}
-        <img src="{{ r.prop_photo.url }}">
+      {% if obj.prop_photo %}
+        <img src="{{ obj.prop_photo.url }}">
       {% endif %}
     </div>
 
     <div class="report-address">
-      {% if r.prop_address %}
-      <h5>{{ r.prop_address }}, {{ r.prop_city }}, {{ r.prop_state }} {{ r.prop_zip }}</h5>
+      {% if obj.prop_address %}
+      <h5>{{ obj.prop_address }}, {{ obj.prop_city }}, {{ obj.prop_state }} {{ obj.prop_zip }}</h5>
       {% endif %}
     </div>
 
     <div class="report-details">
       <h5>
         <span>
-          {% if r.bedrooms %}
-            {{ r.bedrooms }} bd |
+          {% if obj.bedrooms %}
+            {{ obj.bedrooms }} bd |
           {% else %}
             -- bd |
           {% endif %}
-          {% if r.bathrooms %}
-            {{ r.bathrooms }} ba |
+          {% if obj.bathrooms %}
+            {{ obj.bathrooms }} ba |
           {% else %}
             -- ba |
           {% endif %}
-          {% if r.sqft %}
-            {{ r.sqft|floatformat:"0" }} sqft
+          {% if obj.sqft %}
+            {{ obj.sqft|floatformat:"0" }} sqft
           {% else %}
             -- sqft
           {% endif %}
         </span>
       </h5>
       <h6>
-        {% if r.prop_mls %}
-          MLS: {{ r.prop_mls }}
+        {% if obj.prop_mls %}
+          MLS: {{ obj.prop_mls }}
         {% endif%}
       </h6>
       <h6>
-        {% if r.year_built %}
-          Year Built: {{ r.year_built|floatformat:"0" }}
+        {% if obj.year_built %}
+          Year Built: {{ obj.year_built|floatformat:"0" }}
         {% endif%}
       </h6>
     </div>
 
     <div class="report-description w-75">
-      <p>{{ r.prop_description }}</p>
+      <p>{{ obj.prop_description }}</p>
     </div>
 
     <div class="report-urls">
-      <p><strong>Redfin Listing:</strong> <a href="{{ r.redfin_listing_url }}" target="_blank">{{ r.redfin_listing_url }}</a></p>
-      <p><strong>Zillow Rent Zestimate:</strong> <a href="{{ r.zillow_zestimate_url }}" target="_blank">{{ r.zillow_zestimate_url }}<a/></p>
+      <p><strong>Redfin Listing:</strong> <a href="{{ obj.redfin_listing_url }}" target="_blank">{{ obj.redfin_listing_url }}</a></p>
+      <p><strong>Zillow Rent Zestimate:</strong> <a href="{{ obj.zillow_zestimate_url }}" target="_blank">{{ obj.zillow_zestimate_url }}<a/></p>
 
     </div>
 
     <div class="report-buttons">
-      <button type="button" class="btn btn-dark text-light">
+      <a role="button" class="btn btn-dark text-light" href="{% url 'bot:bot-pdf-report' obj.pk %}">
         <span>&#8681; </span>Download PDF
-      </button>
-      <a role="button" class="btn text-light" href="{% url 'bot:bot-edit-rental-prop-calc' r.pk %}">
+      </a>
+      <a role="button" class="btn text-light primary" href="{% url 'bot:bot-edit-rental-prop-calc' obj.pk %}">
         Edit Report
       </a>
-      <a role="button" class="btn text-light" href="{% url 'calculator:rental-prop-calculator' %}">
+      <a role="button" class="btn text-light primary" href="{% url 'calculator:rental-prop-calculator' %}">
         Start New Report
       </a>
     </div>
@@ -93,7 +93,7 @@
       <table class="me-5" id="purchasePriceTable">
         <tr>
           <th>
-            <h4>${{ r.purchase_price|intcomma }}</h4>
+            <h4>${{ obj.purchase_price|intcomma }}</h4>
           </th>
         </tr>
         <tr>
@@ -122,7 +122,7 @@
         </tr>
         <tr>
           <td class="text-muted">Estimated Repairs</td>
-          <td class="text-end">${{ r.est_repair_cost|default_if_none:"0"|intcomma }}</td>
+          <td class="text-end">${{ obj.est_repair_cost|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td class="text-muted">Total Project Cost</td>
@@ -130,7 +130,7 @@
         </tr>
         <tr>
           <td class="text-muted">After Repair Value</td>
-          <td class="text-end">${{ r.after_repair_value|default_if_none:"0"|intcomma }}</td>
+          <td class="text-end">${{ obj.after_repair_value|default_if_none:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td>&nbsp</td>
@@ -151,11 +151,11 @@
         </tr>
         <tr>
           <td class="text-muted">Amortized Over</td>
-          <td class="text-end">{{ r.loan_term|default_if_none:"0"|intcomma }} years</td>
+          <td class="text-end">{{ obj.loan_term|default_if_none:"0"|intcomma }} years</td>
         </tr>
         <tr>
           <td class="text-muted">Loan Interest Rate</td>
-          <td class="text-end">{{ r.loan_int_rate.normalize|default_if_none:"0" }}%</td>
+          <td class="text-end">{{ obj.loan_int_rate.normalize|default_if_none:"0" }}%</td>
         </tr>
         <tr>
           <td class="text-muted">Monthly P&I</td>
@@ -312,21 +312,21 @@
     <table class="me-5" id="financialInfoTable">
       <tr>
         <th class='pt-5'>
-          <h4>{{ r.annual_expenses_growth|default_if_none:"0"|floatformat:"0" }}%
+          <h4>{{ obj.annual_expenses_growth|default_if_none:"0"|floatformat:"0" }}%
             <span>
               <small> /year</small>
             </span>
           </h4>
         </th>
         <th class='pt-5'>
-          <h4>{{ r.annual_income_growth|default_if_none:"0"|floatformat:"0" }}%
+          <h4>{{ obj.annual_income_growth|default_if_none:"0"|floatformat:"0" }}%
             <span>
               <small> /year</small>
             </span>
           </h4>
         </th>
         <th class='pt-5'>
-          <h4>{{ r.annual_pv_growth|default_if_none:"0"|floatformat:"0" }}%
+          <h4>{{ obj.annual_pv_growth|default_if_none:"0"|floatformat:"0" }}%
             <span>
               <small> /year</small>
             </span>

@@ -208,7 +208,7 @@ aside > a {
 }
 
 /*Report Page*/
-.report-buttons > a,
+.report-buttons > a.primary,
 .analysisButton > button {
   background-color: #00bf8f;
   border-color: #00bf8f;

@@ -13,11 +13,13 @@ urlpatterns = [
     # Calculator Page
     path('rental-prop-calculator/', views.rental_prop_calculator, name='rental-prop-calculator'),
     # Report Page
-    path('report/<int:pk>/', views.report, name='report'),
+    path('report/<int:pk>/', views.Report.as_view(), name='report'),
     # Edit Report Page
     path('edit-rental-prop-calc/<int:pk>/', views.edit_rental_prop_calc, name='edit-rental-prop-calc'),
     # Delete Report Page
     path('delete-report/<int:pk>/', views.delete_report, name='delete-report'),
+    # PDF report 
+    path('pdf-report/<int:pk>/', views.ViewReportPDF.as_view(), name='pdf-report'),
     # User Settings Page
     path('settings/', views.settings, name='settings'),
 ]
