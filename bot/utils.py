@@ -1,14 +1,25 @@
+# Django imports
+from django.http.response import Http404
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import get_template
+
+# 3rd party imports
 import pandas as pd
 from datetime import datetime
 import pytz
+from io import BytesIO
+from xhtml2pdf import pisa
 
-# my files
+# my file imports
 from .models import BotRentalReport
 from calculator.models import UserSettings
 from .bot import RedfinBot
+from calculator.calc import *
 
 
 def run_bot_logic(user):
+    """Runs bot logic"""
     print('Current time:', datetime.now(tz=pytz.timezone('US/Eastern')).strftime("%A, %B %d %Y %H:%M:%S ET (%-I:%M:%S %p)"))
     try:
         user_settings = UserSettings.objects.get(user=user)
@@ -92,4 +103,147 @@ def run_bot_logic(user):
         else:
             print(f'{len(new_reports)} new reports created')
     else:
-        print("0 new reports created")
+        print("0 new reports created\n")
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result, encoding='UTF-8')
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+def run_report_calc(obj):
+    """Run report calculations and return context"""
+    mo_income = monthly_income(obj.gross_monthly_rent, obj.other_monthly_income)
+    total_op_exp = total_operating_expenses(
+        mo_income, 
+        obj.electricity,
+        obj.gas,
+        obj.water_sewer,
+        obj.pmi,
+        obj.garbage,
+        obj.hoa,
+        obj.monthly_insurance,
+        obj.prop_annual_taxes,
+        obj.other_monthly_expenses,
+        obj.vacancy,
+        obj.repairs_maint,
+        obj.cap_expenditures,
+        obj.mgmt_fees
+        )
+    dwn_pmt = down_payment(obj.purchase_price, obj.down_payment, obj.down_payment_2)
+    dwn_pmt_percent = f'{round((dwn_pmt/obj.purchase_price) * 100, 2):g}'
+    loan_amt = loan_amount(obj.purchase_price, dwn_pmt)
+    loan_pts = loan_points(obj.purchase_price, obj.points)
+    ttl_clos_costs = total_closing_costs(obj.purchase_closing_cost, loan_pts)
+    p_i = loan_principal_interest(loan_amt, obj.loan_int_rate, obj.loan_term)
+    total_cash = total_cash_needed(dwn_pmt, ttl_clos_costs, obj.est_repair_cost)
+    mo_exp = monthly_expenses(total_op_exp, p_i)
+    cashflow = monthly_cashflow(mo_income, mo_exp)
+    n_o_i = noi(mo_income, total_op_exp)
+    purchase_cap_rt = purchase_cap(n_o_i, obj.purchase_price)
+    pro_forma_cap_rt = pro_forma_cap(n_o_i, obj.after_repair_value)
+    coc_roi = cash_on_cash_ROI(cashflow, total_cash)
+    total_cost = total_project_cost(obj.purchase_price, ttl_clos_costs, obj.est_repair_cost)
+    aot = analysis_over_time(obj.annual_income_growth, obj.annual_pv_growth, obj.annual_expenses_growth, obj.sales_expenses, obj.loan_term, loan_amt, obj.loan_int_rate, mo_income, total_op_exp, p_i, total_cash, obj.after_repair_value)
+
+    two_pct_rule = two_percent_rule(total_cost, mo_income)
+    total_init_equity = total_initial_equity(obj.after_repair_value, obj.purchase_price, dwn_pmt)
+    grm = gross_rent_multiplier(mo_income, obj.purchase_price)
+    debt_cov_rto = debt_coverage_ratio(n_o_i, p_i)
+
+    context = {
+        'obj': obj, 
+        'mo_income': mo_income,
+        'total_op_exp': total_op_exp,
+        'dwn_pmt': dwn_pmt,
+        'dwn_pmt_percent': dwn_pmt_percent,
+        'loan_amt': loan_amt,
+        'loan_pts': loan_pts,
+        'ttl_clos_costs': ttl_clos_costs,
+        'p_i': p_i,
+        'total_cash': total_cash,
+        'mo_exp': mo_exp,
+        'cashflow': cashflow,
+        'n_o_i': n_o_i,
+        'purchase_cap_rt': purchase_cap_rt,
+        'pro_forma_cap_rt': pro_forma_cap_rt,
+        'coc_roi': coc_roi,
+        'total_cost': total_cost,
+        'aot': aot,
+
+        'two_pct_rule': two_pct_rule,
+        'total_init_equity': total_init_equity,
+        'grm': grm, 
+        'debt_cov_rto': debt_cov_rto
+    }
+
+    return context
+
+
+class ProcessReportMixin:
+    model = None
+    template = None
+
+    def get(self, request, pk, *args, **kwargs):
+        obj = get_object_or_404(self.model, pk=pk)
+
+        if obj.owner != request.user:
+            raise Http404
+
+        context = run_report_calc(obj) # run calculations and retrieve context
+
+        return render(request, self.template, context)
+    
+        
+class CreatePdfMixin:
+    model = None
+    template = None
+
+    def get(self, request, pk, *args, **kwargs):
+        """Retrieves model based on pk if any, else raises 404"""
+        obj = get_object_or_404(self.model, pk=pk)
+
+        if obj.owner != request.user:
+            raise Http404
+            
+        context = run_report_calc(obj) # run calculations and retrieve context
+        
+        # reads expense report, gathers relevant non "nan" data and puts them
+        # in context for rendering
+        exp_report = pd.read_csv('expense_report.csv', index_col=0)
+        exp_pie_nums = []
+        for x in exp_report['expense']:
+            value = exp_report.loc[exp_report['expense'] == x, '$'].iloc[0]
+            if not pd.isna(value):
+                exp_pie_nums.append({"expense": x, "amount": str(value)})
+
+        # reads income report, gathers relevant non "nan" data and puts them
+        # in context for rendering
+        inc_report = pd.read_csv('income_report.csv', index_col=0)
+        inc_pie_nums = []
+        for x in inc_report['income']:
+            value = inc_report.loc[inc_report['income'] == x, '$'].iloc[0]
+            if not pd.isna(value):
+                inc_pie_nums.append({"income": x, "amount": str(value)})
+
+        context['exp_pie_nums'] = exp_pie_nums
+        context['inc_pie_nums'] = inc_pie_nums
+
+        pdf = render_to_pdf(self.template, context)
+        pdf.getvalue()
+
+        if pdf:
+            response = HttpResponse(pdf, content_type="application/pdf")
+
+            # names pdf file 
+            pdf_name = f'{obj.report_title.lower().replace(" ","_")}_'\
+                    f'{pk}.pdf'
+            content = f'inline; filename={pdf_name}'
+            response['Content-Disposition'] = content
+            return response
+
+        else:
+            return redirect(f'/report/{pk}')

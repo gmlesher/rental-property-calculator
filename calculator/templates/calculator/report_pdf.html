@@ -1,0 +1,371 @@
+{% load static %}
+{% load humanize %}
+{% load plotly_dash %}
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style>
+    @page {
+      size: a4 portrait;
+      @frame content_frame {
+        left: 30pt; right: 30pt; top: 30pt; height: 780pt;
+        {% comment %} border: 2px solid red; {% endcomment %}
+      }
+      @frame content_frame {
+        -pdf-frame-content: firstpage_content;
+        left: 30pt; right: 30pt; top: 30pt; height: 780pt;
+      }
+      @frame footer_frame {
+        -pdf-frame-content: footer_content;
+        left: 30pt; bottom: 0pt; height: 30pt;
+      }
+    }
+    @page secondpage {
+      size: a4 portrait;
+      @frame content_frame {
+        left: 30pt; right: 30pt; top: 30pt; height: 780pt;
+        {% comment %} border: 2px solid red; {% endcomment %}
+      }
+      @frame content_frame {
+        -pdf-frame-content: secondpage_content;
+        left: 30pt; right: 30pt; top: 30pt; height: 780pt;
+        display: none
+      }
+      @frame footer_frame {
+        -pdf-frame-content: footer_content;
+        left: 30pt; bottom: 0pt; height: 30pt;
+      }
+    }
+    body {
+      position: relative;
+    }
+    h1 {
+      font-size: 2em; 
+    }
+    #header-color {
+      color: #00bf8f;
+    }
+    #address {
+      padding-top: 0;
+      text-align: right;
+    }
+    .summary_table {
+      padding: 3px 0;
+    }
+    .summary_table td{
+      text-align: center;
+    }
+    .prop-image {
+      padding-top: 206px;
+      padding-left: 385px;
+      height: 250px;
+      width: auto;
+    } 
+    .align-left {
+      text-align: left;
+    }
+    .align-right {
+      text-align: right;
+    }
+    .align-center {
+      text-align: center;
+    }
+    .pad-r {
+      padding-right: 50px;
+    }
+    .w-50 {
+      width: 50%;
+    }
+    .w-100 {
+      width: 100%;
+    }
+    .bg-grey {
+      background-color: #f2f3f4;
+    }
+    .padding-top {
+      padding: 3px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <table>
+    <tr>
+      <td id="header_logo"><h1 id="header-color">Rental Report</h1></td>
+      <td id="header_report_title"><h1 class="align-right">{{ obj.report_title }}</h1></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td id="address">{{ obj.prop_address|default_if_none:"" }} {{ obj.prop_city|default_if_none:"" }},  {{ obj.prop_state|default_if_none:"" }} {{ obj.prop_zip|default_if_none:"" }}</td>
+    </tr>
+  </table><br>
+
+  <table class="summary_table bg-grey">
+    <tr>
+      <td><strong>Monthly Income</strong></td>
+      <td><strong>Monthly Expenses</strong></td>
+      <td><strong>Monthly Cashflow</strong></td>
+      <td><strong>Pro Forma Cap Rate</strong></td>
+    </tr>
+    <tr>
+      <td>${{ mo_income|default_if_none:"0"|intcomma }}</td>
+      <td>${{ mo_exp|default_if_none:"0"|intcomma }}</td>
+      <td>${{ cashflow|default_if_none:"0"|intcomma }}</td>
+      <td>{{ pro_forma_cap_rt|default_if_none:"0" }}%</td>
+    </tr>
+    <tr>
+      <td><strong>NOI</strong></td>
+      <td><strong>Total Cash Needed</strong></td>
+      <td><strong>Cash on Cash ROI</strong></td>
+      <td><strong>Purchase Cap Rate</strong></td>
+    </tr>
+    <tr>
+      <td>${{ n_o_i|default_if_none:"0"|intcomma }}</td>
+      <td>${{ total_cash|default_if_none:"0"|intcomma }}</td>
+      <td>{{ coc_roi|default_if_none:"0"}}%</td>
+      <td>{{ purchase_cap_rt|default_if_none:"0" }}%</td>
+    </tr>
+  </table><br>
+
+  {% if obj.prop_photo %}
+    <!-- Content for Static Frame 'footer_frame' -->
+    <div class="prop-image" id="firstpage_content">
+      <img src="{{ obj.prop_photo.path }}">
+    </div>
+  {% endif %}
+
+  <!-- uses second page layout to hide prop photo. everything else the same -->
+  <pdf:nexttemplate name="secondpage"/>
+
+  <table>
+    <tr>
+      <th class="align-left"><h2 id="header-color">Property Information</h2></th>
+    </tr>
+    <tr>
+      <td>
+        <table class="w-50">
+          <tr>
+            <td>Purchase Price:</td>
+            <td class="align-right pad-r">${{ obj.purchase_price|default_if_none:"0"|intcomma }}</td>
+          </tr>
+          <tr>
+            <td>Purchase Closing Costs:</td>
+            <td class="align-right pad-r">${{ ttl_clos_costs|default_if_none:"0"|intcomma }}</td>
+          </tr>
+          <tr>
+            <td>Estimated Repair Costs:</td>
+            <td class="align-right pad-r">${{ obj.est_repair_cost|default_if_none:"0"|intcomma }}</td>
+          </tr>
+          <tr>
+            <td><strong>Total Cost of Project:</strong></td>
+            <td class="align-right pad-r"><strong>${{ total_cost|default_if_none:"0"|intcomma }}</strong></td>
+          </tr>
+          <tr>
+            <td>After Repair Value:</td>
+            <td class="align-right pad-r">${{ obj.after_repair_value|default_if_none:"0"|intcomma }}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr></tr>
+    <tr>
+      <th class="align-left"><strong>Property Description</strong></th>
+    </tr>
+    <tr>
+      <td class="align-left">{{ obj.prop_description|default_if_none:""|intcomma }}</td>
+    </tr>
+    <tr></tr>
+    <tr>
+      <td>
+        <table class="w-50">
+          <tr>
+            <td>Down Payment:</td>
+            <td class="align-right pad-r">${{ dwn_pmt|default_if_none:"0"|intcomma }} ({{ dwn_pmt_percent|default_if_none:"0"|intcomma }}%)</td>
+          </tr>
+          <tr>
+            <td>Loan Amount:</td>
+            <td class="align-right pad-r">${{ loan_amt|default_if_none:"0"|intcomma }}</td>
+          </tr>
+          <tr>
+            <td>Loan Points:</td>
+            <td class="align-right pad-r">${{ loan_pts|default_if_none:"0"|intcomma }}</td>
+          </tr>
+          <tr>
+            <td>Amortized Over:</td>
+            <td class="align-right pad-r">{{ obj.loan_term|default_if_none:"0"|intcomma }} years</td>
+          </tr>
+          <tr>
+            <td>Loan Interest Rate:</td>
+            <td class="align-right pad-r">{{ obj.loan_int_rate|default_if_none:"0"|intcomma }}%</td>
+          </tr>
+           <tr>
+            <td><strong>Monthly P&I:</strong></td>
+            <td class="align-right pad-r"><strong>${{ p_i|default_if_none:"0"|intcomma }}</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Monthly Operating Expenses:</strong></td>
+            <td class="align-right pad-r"><strong>${{ total_op_exp|default_if_none:"0"|intcomma }}</strong></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr></tr>
+    <tr>
+      <th class="align-left"><h2 id="header-color">Expenses</h2></th>
+      <th class="align-left"><h2 id="header-color">Income</h2></th>
+    </tr>
+    <tr>
+      <td>
+        <img src="static/calculator/property_images/mo_exp.png">
+      </td>
+      <td>
+        <img src="static/calculator/property_images/mo_inc.png">
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <td style="vertical-align: top; border-right: 1px solid black;">
+        <table>
+          {% for value in exp_pie_nums %}
+            <tr>
+              <td>{{ value.expense }}:</td>
+              <td class="align-right pad-r">${{ value.amount|default_if_none:"0"|floatformat:"0"|intcomma }}</td>
+            </tr>
+          {% endfor %}
+          <tr>
+            <td><strong>Total:</strong></td>
+            <td class="align-right pad-r"><strong>${{ mo_exp|default_if_none:"0"|floatformat:"0"|intcomma }}</strong></td>
+          </tr>
+        </table>
+      </td>
+      <td style="vertical-align: top; border-left: 1px solid black; padding-left: 2px;">
+        <table>
+          {% for value in inc_pie_nums %}
+            <tr>
+              <td>{{ value.income }}:</td>
+              <td class="align-right pad-r">${{ value.amount|default_if_none:"0"|floatformat:"0"|intcomma }}</td>
+            </tr>
+          {% endfor %}
+          <tr>
+            <td><strong>Total:</strong></td>
+            <td class="align-right pad-r"><strong>${{ mo_income|default_if_none:"0"|floatformat:"0"|intcomma }}</strong></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <div>
+    <pdf:nextpage /> 
+  </div> 
+
+  <table>
+    <tr>
+      <th class="align-left"><h2 id="header-color">Financial Projections</h2></th>
+    </tr>
+    <tr>
+      <td>
+        <table class="w-50">
+          <tr>
+            <td>Income-Expense Ratio (2% Rule):</td>
+            <td class="align-right pad-r">{{ two_pct_rule|default_if_none:"0"|floatformat:2 }}%</td>
+          </tr>
+          <tr>
+            <td>Total Initial Equity:</td>
+            <td class="align-right pad-r">${{ total_init_equity|default_if_none:"0"|intcomma }}</td>
+          </tr>
+          <tr>
+            <td>Gross Rent Multiplier:</td>
+            <td class="align-right pad-r">{{ grm|default_if_none:"0"|floatformat:2 }}</td>
+          </tr>
+          <tr>
+            <td>Debt Coverage Ratio:</td>
+            <td class="align-right pad-r">{{ debt_cov_rto|default_if_none:"0"|floatformat:2 }}</td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="w-50">
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table><br>
+
+
+  <table>
+    <tr>
+      <th class="align-left"><h2 id="header-color">Analysis Over Time</h2></th>
+    </tr>
+    <tr>
+      <td>
+        <table class="w-100 padding-top">
+          <tr>
+            <td><strong>Annual Growth Assumptions:</strong></td>
+            <td>
+              <table class="bg-grey align-center">
+                <tr>
+                  <td>{{ obj.annual_expenses_growth|default_if_none:"0"|floatformat:"0" }}%</td>
+                </tr>
+                <tr>
+                  <td><strong>Expenses</strong></td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <table class="bg-grey align-center">
+                <tr>
+                  <td>{{ obj.annual_income_growth|default_if_none:"0"|floatformat:"0" }}%</td>
+                </tr>
+                <tr>
+                  <td><strong>Income</strong></td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <table class="bg-grey align-center">
+                <tr>
+                  <td>{{ obj.annual_pv_growth|default_if_none:"0"|floatformat:"0" }}%</td>
+                </tr>
+                <tr>
+                  <td><strong>Propery Value</strong></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr></tr>
+    <tr>
+      <td>
+        <img src="static/calculator/property_images/aot_table.png">
+      </td>
+    </tr>
+  </table><br>
+
+  <table>
+    <tr>
+      <td>
+        <img src="static/calculator/property_images/iec_report.png">
+      </td>
+      <td>
+        <img src="static/calculator/property_images/lve_report.png">
+      </td>
+    </tr>
+  </table>
+
+  <!-- Content for Static Frame 'footer_frame' -->
+  <div id="footer_content">Page <pdf:pagenumber>
+      of <pdf:pagecount>
+      | PDF report generated on 
+      {% load tz %}
+      {% timezone "America/New_York" %}
+        {% now "SHORT_DATETIME_FORMAT" %} ET
+      {% endtimezone %}
+  </div>
+  
+</body>

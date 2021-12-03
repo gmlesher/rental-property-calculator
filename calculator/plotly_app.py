@@ -2,6 +2,7 @@ import dash
 from dash import dcc
 from dash import dash_table
 import plotly.express as px
+import plotly.graph_objects as go
 from django_plotly_dash import DjangoDash
 import pandas as pd
 
@@ -19,6 +20,8 @@ def app1_serve_layout():
         hovertemplate="%{label}: %{value:$,.0f}"
         )
 
+    fig.write_image("static/calculator/property_images/mo_exp.png", scale=2)
+
     return dcc.Graph(id="expenses-pie-chart", figure=fig)
 
 app2 = DjangoDash('MonthlyIncome')
@@ -32,6 +35,8 @@ def app2_serve_layout():
         textinfo='percent+label', 
         hovertemplate="%{label}: %{value:$,.0f}"
         )
+
+    fig.write_image("static/calculator/property_images/mo_inc.png", scale=2)
 
     return dcc.Graph(id="income-pie-chart", figure=fig)
 
@@ -76,6 +81,30 @@ def app3_serve_layout():
         }
         )
 
+    # "layout" and "fig" section only for making png image for pdf report
+    layout = go.Layout(
+        autosize=False,
+        width=1500,
+        height=262, 
+        margin=go.layout.Margin(
+            l=0, #left margin
+            r=0, #right margin
+            b=0, #bottom margin
+            t=0, #top margin
+        )
+    )
+    col_headers = [x for x in df.columns]
+    fig = go.Figure(data=[go.Table(
+        columnwidth=[80, 50],
+        header=dict(values=list(df.columns),
+                    align='left'),
+        cells=dict(values=[df[x] for x in col_headers],
+                    align='left', 
+                    height=26))
+
+    ], layout=layout)
+    fig.write_image("static/calculator/property_images/aot_table.png", scale=2)
+
     return table
 
 app4 = DjangoDash('IncExpCashflow')
@@ -101,6 +130,8 @@ def app4_serve_layout():
     fig.update_xaxes(showticklabels=False, nticks=15, title='Year')
     fig.update_yaxes(title='$(USD)')
 
+    fig.write_image("static/calculator/property_images/iec_report.png", scale=2)
+
     return dcc.Graph(id="ieo-graph", figure=fig)
 
 app5 = DjangoDash('LoanBalanceValueEquity')
@@ -125,6 +156,8 @@ def app5_serve_layout():
     fig.update_traces(hovertemplate='%{x}: %{y:$,.0f}')
     fig.update_xaxes(showticklabels=False, nticks=15, title='Year')
     fig.update_yaxes(title='$(USD)')
+
+    fig.write_image("static/calculator/property_images/lve_report.png", scale=2)
 
     return dcc.Graph(id="lbve-graph", figure=fig)
 
