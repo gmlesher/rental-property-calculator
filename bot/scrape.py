@@ -1,7 +1,8 @@
+# 3rd party imports
 import requests, urllib.request, time, re
 from bs4 import BeautifulSoup
 
-# my files
+# My file imports
 from .headers import redfin_headers, zillow_headers
 
 zillow_class_name = 'h2.delXcJ'
@@ -11,7 +12,6 @@ class RedfinScraper():
     def __init__(self):
         self.results = []
         self.headers = redfin_headers
-
 
     def fetch(self, url):
         """fetch url"""
@@ -24,7 +24,8 @@ class RedfinScraper():
         content = BeautifulSoup(response, 'html.parser')
         desc = content.select_one('div.remarks > p.text-base > span').text
 
-        find_taxes = content.find_all(text=re.compile('^Full Tax Amount: $|^Tax Annual Amount: $|^Annual Amount: $|^Tax Amount: $'))
+        find_taxes = content.find_all(text=re.compile('^Full Tax Amount: \
+            $|^Tax Annual Amount: $|^Annual Amount: $|^Tax Amount: $'))
         taxes = [tax.parent for tax in find_taxes]
         if taxes:
             amt = taxes[0].find('span').text
@@ -80,7 +81,7 @@ class RedfinScraper():
         })
     
     def run(self, url_list):
-        """run Redfin Scraper"""
+        """run RedfinScraper"""
         for url in url_list:
             res = self.fetch(url)
             self.parse(res.text)
@@ -112,7 +113,7 @@ class ZillowScraper():
         self.result = zestimate
 
     def run(self, url):
-        """run Redfin Scraper"""
+        """run ZillowScraper"""
         res = self.fetch(url)
         self.parse(res.text)
         time.sleep(2)

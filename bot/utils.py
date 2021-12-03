@@ -11,16 +11,19 @@ import pytz
 from io import BytesIO
 from xhtml2pdf import pisa
 
-# my file imports
+# My file imports
 from .models import BotRentalReport
 from calculator.models import UserSettings
 from .bot import RedfinBot
 from calculator.calc import *
 
+closing_cost_percentage = 0.02 # add as setting?
+
 
 def run_bot_logic(user):
     """Runs bot logic"""
-    print('Current time:', datetime.now(tz=pytz.timezone('US/Eastern')).strftime("%A, %B %d %Y %H:%M:%S ET (%-I:%M:%S %p)"))
+    print('Current time:', datetime.now(tz=pytz.timezone('US/Eastern'))\
+        .strftime("%A, %B %d %Y %H:%M:%S ET (%-I:%M:%S %p)"))
     try:
         user_settings = UserSettings.objects.get(user=user)
         down_payment = user_settings.down_payment
@@ -44,7 +47,7 @@ def run_bot_logic(user):
     report_owner = user
     data = RedfinBot(user).run()
 
-    if data:
+    if data: # if data returned from Redfin Bot, clean up some fields
         for key in data:
             if pd.isna(data[key]['HOA/MONTH']):
                 data[key]['HOA/MONTH'] = None
@@ -57,6 +60,7 @@ def run_bot_logic(user):
             if pd.isna(data[key]['SQUARE FEET']):
                 data[key]['SQUARE FEET'] = ''
 
+        # creates list of new objects to be created in database
         objs = [
             BotRentalReport(
                 owner = report_owner,
@@ -74,7 +78,7 @@ def run_bot_logic(user):
                 prop_photo = f"property_photos/{data[key]['IMAGE NAME']}",
                 prop_mls = str(data[key]['MLS#']),
                 purchase_price = int(data[key]['PRICE']),
-                purchase_closing_cost = int(data[key]['PRICE'] * 0.05),
+                purchase_closing_cost = int(data[key]['PRICE'] * closing_cost_percentage),
                 after_repair_value = int(data[key]['PRICE']),
                 cash_purchase = False,
                 down_payment = down_payment,
@@ -98,7 +102,7 @@ def run_bot_logic(user):
 
         new_reports = list(filter(lambda obj: obj != None, objs))
         if new_reports:
-            BotRentalReport.objects.bulk_create(new_reports)
+            BotRentalReport.objects.bulk_create(new_reports) # creates objects
             print(f'{len(new_reports)} new reports created')
         else:
             print(f'{len(new_reports)} new reports created')
@@ -106,6 +110,7 @@ def run_bot_logic(user):
         print("0 new reports created\n")
 
 def render_to_pdf(template_src, context_dict={}):
+    """renders template data to PDF"""
     template = get_template(template_src)
     html  = template.render(context_dict)
     result = BytesIO()
@@ -184,6 +189,7 @@ def run_report_calc(obj):
 
 
 class ProcessReportMixin:
+    """Processes data to display on report page"""
     model = None
     template = None
 
@@ -199,6 +205,7 @@ class ProcessReportMixin:
     
         
 class CreatePdfMixin:
+    """Creates PDF of report data"""
     model = None
     template = None
 

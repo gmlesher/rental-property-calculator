@@ -1,3 +1,4 @@
+# My file imports
 from .dataframes import *
 
 """Basic Calculations Section"""
@@ -69,7 +70,7 @@ def loan_points(purchase_price, points):
     return 0
 
 def total_closing_costs(purchase_closing_cost, loan_pts):
-    """Closing costs + loan points if entered"""
+    """Returns closing costs + loan points if entered"""
     total_cc = [purchase_closing_cost, loan_pts]
     return round(sum([i if i != None else 0 for i in total_cc]))
 

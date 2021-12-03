@@ -1,5 +1,8 @@
+# 3rd party imports
 import pandas as pd
 import os
+
+# My file imports
 from rentalcalc.settings import BASE_DIR
 
 """Functions for creating and combining dataframes"""
@@ -89,9 +92,6 @@ def create_aot_dataframe(aot_tuples):
         df = df.iloc[:, lambda df: list_length_less_than_10(len(df.columns))]
     elif len(df.columns) <= 7:
         df = df.iloc[:, lambda df: list_length_less_than_7(len(df.columns))]
-
-
-    # print(df)
     
     cats = [
         'Total Annual Income', 
@@ -142,6 +142,5 @@ def create_loanbalance_value_equity_dataframe(lbve_tuples):
                 'Property Value', 
                 'Equity'
             ])
-    # print(df)
 
     return df.to_csv(os.path.join(root_path, 'loanbal_value_equity_report.csv'), index=True)

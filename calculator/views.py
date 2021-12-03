@@ -1,3 +1,4 @@
+# Django imports
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -5,14 +6,15 @@ from django.http import Http404
 from django.views.generic import ListView, View
 
 
-# My files
+# My file imports
 from .models import RentalPropCalcReport, UserSettings
 from bot.utils import CreatePdfMixin, ProcessReportMixin
 from bot.crons import clear_crons, make_crons
 from .forms import RentalPropForm, UserSettingsForm
 from .calc import *
 
-# must be here although not explicitly called in code. registers plotly apps in views
+# plotly app import must be here although not explicitly called in code. 
+# registers plotly apps in views
 from . import plotly_app
 
 def index(request):
@@ -134,12 +136,14 @@ def dashboard(request):
 
 @method_decorator(login_required, name='dispatch')
 class ReportsView(ListView):
+    """Page for listing all reports"""
     model = RentalPropCalcReport
     template_name = 'calculator/reports.html'
     paginate_by = 5
     context_object_name = 'report_object_list'
 
     def get_queryset(self):
+        """Returns all report objects from user. orders by -updated_at"""
         return RentalPropCalcReport.objects.filter(owner=self.request.user).order_by('-updated_at')
     
 @login_required
@@ -165,7 +169,7 @@ def rental_prop_calculator(request):
 
 @method_decorator(login_required, name='dispatch')
 class Report(ProcessReportMixin, View):
-    """The report Page"""
+    """The report page"""
     model = RentalPropCalcReport
     template = 'calculator/report.html'
 
@@ -220,7 +224,6 @@ def edit_rental_prop_calc(request, pk):
         raise Http404
     if request.method == 'POST':
         # POST data submitted; process data.
-        
         form = RentalPropForm(request.POST, request.FILES, instance=item)
         if form.is_valid():
             form.save()

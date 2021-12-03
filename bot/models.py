@@ -1,7 +1,8 @@
+# Django imports
 from django.db import models
 from django.contrib.auth.models import User
 
-# my files
+# My file imports
 from calculator.choices import *
 
 
