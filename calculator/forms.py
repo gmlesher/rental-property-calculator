@@ -1,8 +1,12 @@
+# Django imports
 from django import forms
 from django.forms import widgets
+
+# My file imports
 from .models import *
 
 class RentalPropForm(forms.ModelForm):
+    """Form for rental property calculator"""
     required_css_class = 'required'
     class Meta:
         model = RentalPropCalcReport
@@ -11,6 +15,7 @@ class RentalPropForm(forms.ModelForm):
 
 
 class UserSettingsForm(forms.ModelForm):
+    """Form for user settings"""
     class Meta:
         model = UserSettings
         fields = '__all__'

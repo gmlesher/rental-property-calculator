@@ -1,4 +1,7 @@
+# Django imports
 from django.test import TestCase
+
+# My file imports
 from calculator import calc
 
 class TestCalc(TestCase):
@@ -88,7 +91,6 @@ class TestCalc(TestCase):
         self.assertEqual(calc.total_project_cost(120000, None, 1200), 121200)
 
     """Financial Info Section"""
-
     def test_two_percent_rule(self):
         self.assertAlmostEqual(calc.two_percent_rule(216000, 2600), 1.2037, \
             places=3)
@@ -119,9 +121,7 @@ class TestCalc(TestCase):
         self.assertAlmostEqual(calc.debt_coverage_ratio(-2600, 210000), -0.0010, \
             places=3)
 
-
     """Analysis Over Time Section"""
-
     def test_aot_annual_income(self):
         self.assertEqual(calc.aot_annual_income(2, 2500, 30), [30000, 30600, \
             31212, 31836, 32473, 33122, 33785, 34461, 35150, 35853, 36570, \

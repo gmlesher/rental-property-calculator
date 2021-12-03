@@ -1,7 +1,7 @@
+# 3rd party imports
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from time import sleep
-import json
 
 # my files
 from .parse import Parse
@@ -11,6 +11,7 @@ from .models import BotRentalReport
 
 
 class RedfinBot():
+    """Redfin.com bot that gathers online property data"""
     def __init__(self, user):
         self.user = user
         self.url = CreateSearchUrl.get_complete_url(CreateSearchUrl(self.user))
@@ -27,8 +28,16 @@ class RedfinBot():
         })
         chrome_options.add_argument("--headless")
         self.driver = webdriver.Chrome(chrome_options=chrome_options)
-        self.driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
-        params = {'cmd': 'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': "/Users/garrettlesher/Downloads/"}}
+        self.driver.command_executor._commands["send_command"] = \
+            ("POST", '/session/$sessionId/chromium/send_command')
+        params = {
+            'cmd': 'Page.setDownloadBehavior', 
+            'params': 
+                {
+                    'behavior': 'allow', 
+                    'downloadPath': "/Users/garrettlesher/Downloads/"
+                }
+            }
         self.driver.execute("send_command", params)
 
         print("Opening webpage with search URL...")
@@ -75,7 +84,7 @@ class RedfinBot():
         for i, v in enumerate(list(final_copy.keys())):
             final_copy[i] = final_copy.pop(v, None)
 
-        # adds values of each dictionary in 'scraped' to end of each respective \
+        # adds values of each dictionary in 'scraped' to end of each respective
         # 'final copy' dictionary based on key values
         for key, value in enumerate(scraped): 
             final_copy[key]['DESCRIPTION'] = value['DESCRIPTION']

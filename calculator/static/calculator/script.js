@@ -174,7 +174,8 @@ $(".toggleCityZip > .btn-group > input").click(function () {
   $(".zipcode").toggle(ix === 2);
 });
 
-// Bot Report Page
+// For report pages
+// cleans up pagination look when clicking through options
 (function () {
   $("ul.pagination li.page-item-num").hide();
   var li_len = $("ul.pagination li.page-item-num").length;

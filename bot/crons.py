@@ -1,18 +1,25 @@
-from crontab import CronTab
+# Django imports
 from django.http.response import Http404
+
+# 3rd party imports
+from crontab import CronTab
+
+# My file imports
 from calculator.models import UserSettings
 
 def clear_crons(user):
+    """Deletes current crons"""
     try:
         cron = CronTab(user=user.username)
         cron.remove_all(comment=user.username)
         cron.write()
     except OSError:
-        print("User not admin status. Cannot auto-run bot in cron tab")
+        print("User not admin status. You cannot auto-run bot in cron tab")
         raise Http404
 
 
 def make_crons(user):
+    """Creates crons for selected user 'bot frequency' setting"""
     user_settings_obj = UserSettings.objects.get(user=user)
     settings_dict = dict(user_settings_obj.__dict__.items())
     if settings_dict['bot_frequency'] == 'Every hour':

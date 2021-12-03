@@ -1,17 +1,13 @@
-import dash
-from dash import dcc
-from dash import dash_table
+# 3rd party imports
+from dash import dcc, dash_table
 import plotly.express as px
 import plotly.graph_objects as go
 from django_plotly_dash import DjangoDash
 import pandas as pd
 
-
-
 app1 = DjangoDash('MonthlyExpenses')
 def app1_serve_layout():
     """Returns a pie chart from data in expense_report.csv"""
-    
     df = pd.read_csv('expense_report.csv')
     fig = px.pie(df, values='$', names='expense')
     fig.update_traces(
@@ -20,14 +16,13 @@ def app1_serve_layout():
         hovertemplate="%{label}: %{value:$,.0f}"
         )
 
+    # writes figure to png for PDF use
     fig.write_image("static/calculator/property_images/mo_exp.png", scale=2)
-
     return dcc.Graph(id="expenses-pie-chart", figure=fig)
 
 app2 = DjangoDash('MonthlyIncome')
 def app2_serve_layout():
     """Returns a pie chart from data in income_report.csv"""
-
     df = pd.read_csv('income_report.csv')
     fig = px.pie(df, values='$', names='income')
     fig.update_traces(
@@ -36,21 +31,14 @@ def app2_serve_layout():
         hovertemplate="%{label}: %{value:$,.0f}"
         )
 
+    # writes figure to png for PDF use
     fig.write_image("static/calculator/property_images/mo_inc.png", scale=2)
-
     return dcc.Graph(id="income-pie-chart", figure=fig)
-
 
 app3 = DjangoDash('AOTTable')
 def app3_serve_layout():
     """Returns a table of data from aot_report.csv"""
-
     df = pd.read_csv('aot_report.csv')
-    # print(df.columns)
-    # print(df.iloc[[3]], df.iloc[[8]])
-
-
-
     table = dash_table.DataTable(
         id='AOT-table',
         fixed_columns={'headers': True, 'data': 1},
@@ -103,14 +91,14 @@ def app3_serve_layout():
                     height=26))
 
     ], layout=layout)
-    fig.write_image("static/calculator/property_images/aot_table.png", scale=2)
 
+    # writes figure to png for PDF use
+    fig.write_image("static/calculator/property_images/aot_table.png", scale=2)
     return table
 
 app4 = DjangoDash('IncExpCashflow')
 def app4_serve_layout():
     """Returns a line graph from data in inc_exp_cashflow_report.csv"""
-
     df = pd.read_csv("inc_exp_cashflow_report.csv")
     fig = px.line(df, 
         x='year', 
@@ -130,14 +118,13 @@ def app4_serve_layout():
     fig.update_xaxes(showticklabels=False, nticks=15, title='Year')
     fig.update_yaxes(title='$(USD)')
 
+    # writes figure to png for PDF use
     fig.write_image("static/calculator/property_images/iec_report.png", scale=2)
-
     return dcc.Graph(id="ieo-graph", figure=fig)
 
 app5 = DjangoDash('LoanBalanceValueEquity')
 def app5_serve_layout():
     """Returns an area graph from data in loanbal_value_equity_report.csv"""
-
     df = pd.read_csv('loanbal_value_equity_report.csv')
     fig = px.line(df, 
         x='year', 
@@ -157,8 +144,8 @@ def app5_serve_layout():
     fig.update_xaxes(showticklabels=False, nticks=15, title='Year')
     fig.update_yaxes(title='$(USD)')
 
+    # writes figure to png for PDF use
     fig.write_image("static/calculator/property_images/lve_report.png", scale=2)
-
     return dcc.Graph(id="lbve-graph", figure=fig)
 
 app1.layout = app1_serve_layout

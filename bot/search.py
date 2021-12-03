@@ -1,5 +1,5 @@
+# My file imports
 from calculator.models import UserSettings
-
 
 class CreateSearchUrl():
     """Creates search urls for Redfin bot"""
@@ -12,7 +12,7 @@ class CreateSearchUrl():
         self.filters_url = None
 
     def get_user_settings(self):
-        """attempts to retrieve user settings"""
+        """Attempts to retrieve user settings"""
         try:
             user_settings = UserSettings.objects.get(user=self.user)
             self.settings = user_settings
@@ -21,7 +21,7 @@ class CreateSearchUrl():
             self.settings = None
 
     def create_city_url(self):
-        """Takes setting values and creates relevant redfin search url"""
+        """Creates city serach url"""
         if self.settings.city:
             self.settings.city = self.settings.city.title().replace(' ','-')
         if self.settings.minor_civil_div:
@@ -30,10 +30,12 @@ class CreateSearchUrl():
             self.city_url = f'city/{self.settings.city_code}/{self.settings.state}/{self.settings.city}/'
 
     def create_zipcode_url(self):
+        """Creates zipcode search url"""
         if self.settings.zipcode:
             self.zipcode_url = f'zipcode/{self.settings.zipcode}/'
 
     def create_filters_url(self):
+        """Creates filters appended to search url"""
         url_parts = []
         if self.settings.prop_type:
             unit_string = '+'.join(type for type in [i.lower() for i in self.settings.prop_type])
@@ -68,6 +70,7 @@ class CreateSearchUrl():
         self.filters_url = f'filter/{filters}'
 
     def get_complete_url(self):
+        """Assembles full search url"""
         self.get_user_settings()
         if self.settings.city_code and self.settings.state and self.settings.city:
             self.create_city_url()

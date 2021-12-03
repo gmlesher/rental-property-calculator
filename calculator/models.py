@@ -1,9 +1,11 @@
+# Django imports
 from django.db import models
 from django.contrib.auth.models import User
-from multiselectfield import MultiSelectField
-from requests.sessions import default_headers
 
-# my files
+# 3rd party imports
+from multiselectfield import MultiSelectField
+
+# My file imports
 from .choices import *
 
 class UserSettings(models.Model):
@@ -55,13 +57,12 @@ class UserSettings(models.Model):
     blacklist_bool      = models.BooleanField(blank=True)
     addr_blacklist      = models.JSONField(blank=True)
 
-
     def __str__(self):
-        """Return a string representation of the model."""
+        """Return a string representation of the model"""
         return f'{self.user}' + ' settings'
 
     def save(self, *args, **kwargs):
-        """Saves model."""
+        """Saves model"""
         if self.city and self.city_code and self.state:
             self.zipcode = ''
         if self.zipcode:
@@ -69,7 +70,6 @@ class UserSettings(models.Model):
             self.city_code = '' 
             self.state = ''
         super(UserSettings, self).save(*args, **kwargs)
-
 
     class Meta:
         verbose_name_plural = "User Settings"
@@ -156,7 +156,7 @@ class RentalPropCalcReport(models.Model):
                                 blank=True, null=True, default=7.5)
 
     def __str__(self):
-        """Return a string representation of the model."""
+        """Return a string representation of the model"""
         return self.report_title + ' - ' + self.owner.username + f' ({str(self.id)})'
 
     def save(self, *args, **kwargs):

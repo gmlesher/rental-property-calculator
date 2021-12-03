@@ -1,6 +1,8 @@
+# Django imports
 from django.contrib import admin
-from .models import *
 
+# My file imports
+from .models import *
 
 admin.site.register(RentalPropCalcReport)
 admin.site.register(UserSettings)
