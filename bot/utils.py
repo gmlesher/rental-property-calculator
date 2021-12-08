@@ -187,6 +187,59 @@ def run_report_calc(obj):
 
     return context
 
+def get_report_quality(user, coc_roi, cashflow):
+    """Returns the report quality based on user settings"""
+    user_settings = UserSettings.objects.get(user=user)
+    try:
+        coc_roi_bottom = user_settings.coc_roi_bottom
+        coc_roi_top = user_settings.coc_roi_top
+        cashflow_bottom = user_settings.cashflow_bottom
+        cashflow_top = user_settings.cashflow_top
+    except:
+        coc_roi_bottom = None
+        coc_roi_top = None
+        cashflow_bottom = None
+        cashflow_top = None
+
+    if (coc_roi_bottom and coc_roi_top) and (not cashflow_bottom and not cashflow_top):
+        if coc_roi >= coc_roi_top:
+            return 'good'
+        elif coc_roi <= coc_roi_bottom:
+            return 'bad'
+        else:
+            return 'average' 
+
+    if (cashflow_bottom and cashflow_top) and (not coc_roi_bottom and not coc_roi_top):
+        if cashflow >= cashflow_top:
+            return 'good'
+        elif cashflow <= cashflow_bottom:
+            return 'bad'
+        else:
+            return 'average' 
+
+    if (coc_roi_bottom and coc_roi_top) and (cashflow_bottom and cashflow_top):
+        if coc_roi >= coc_roi_top and cashflow >= cashflow_top:
+            return 'good'
+        elif coc_roi <= coc_roi_bottom and cashflow <= cashflow_bottom:
+            return 'bad'
+        else:
+            return 'average'    
+
+def save_report_quality(obj, quality):
+    """Saves the object quality"""
+    if quality == 'good':
+        obj.quality_g = True
+        obj.quality_a = False
+        obj.quality_b = False
+    elif quality == 'average':
+        obj.quality_g = False
+        obj.quality_a = True
+        obj.quality_b = False
+    elif quality == 'bad':
+        obj.quality_g = False
+        obj.quality_a = False
+        obj.quality_b = True
+    obj.save()
 
 class ProcessReportMixin:
     """Processes data to display on report page"""
@@ -200,6 +253,10 @@ class ProcessReportMixin:
             raise Http404
 
         context = run_report_calc(obj) # run calculations and retrieve context
+        coc_roi = context['coc_roi']
+        cashflow = context['cashflow']
+        quality  = get_report_quality(request.user, coc_roi, cashflow)
+        save_report_quality(obj, quality)
 
         return render(request, self.template, context)
     
@@ -238,6 +295,10 @@ class CreatePdfMixin:
 
         context['exp_pie_nums'] = exp_pie_nums
         context['inc_pie_nums'] = inc_pie_nums
+        coc_roi = context['coc_roi']
+        cashflow = context['cashflow']
+        quality  = get_report_quality(request.user, coc_roi, cashflow)
+        context['quality'] = quality
 
         pdf = render_to_pdf(self.template, context)
         pdf.getvalue()

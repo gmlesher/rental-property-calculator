@@ -64,6 +64,14 @@
             {% if report.owned %}
                 <span class="position-absolute top-0 start-0 translate-middle badge bg-info">Owned</span>
             {% endif %}
+
+            {% if report.quality_g %}
+                <span class="position-absolute top-0 start-0 translate-middle badge bg-dark">&#128077</span>
+            {% elif report.quality_b %}
+                <span class="position-absolute top-0 start-0 translate-middle badge bg-dark">&#128078</span>
+            {% elif report.quality_a %}
+                <span class="position-absolute top-0 start-0 translate-middle badge bg-dark">&#129335</span>
+            {% endif %}
         </div> 
         
         </li>

@@ -5,11 +5,23 @@
 
 
 {% block page_header %}
+<div class="pb-3">
+  <a class="btn btn-outline-dark" href="{% url 'calculator:reports' %}" role="button">&#x2190 Back To Reports</a>
+</div>
+
 <div>
   <h2>
     {{ obj.report_title }}
     {% if obj.owned %}
       <span class="badge bg-info ms-3">Owned</span>
+    {% endif %}
+
+    {% if obj.quality_g %}
+      <span class="badge bg-success ms-3">&#128077 Good Investment</span>
+    {% elif obj.quality_b %}
+      <span class="badge bg-danger ms-3">&#128078 Bad Investment</span>
+    {% elif obj.quality_a %}
+      <span class="badge bg-secondary ms-3">&#129335 Average Investment</span>
     {% endif %}
   </h2>
 

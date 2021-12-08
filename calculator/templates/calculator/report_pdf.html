@@ -84,6 +84,18 @@
     .padding-top {
       padding: 3px 0;
     }
+    .bg-success {
+      background-color: #198754;
+      color: white;
+    }
+    .bg-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    .bg-danger {
+      background-color: #dc3545;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -94,7 +106,15 @@
       <td id="header_report_title"><h1 class="align-right">{{ obj.report_title }}</h1></td>
     </tr>
     <tr>
-      <td></td>
+      <td>
+        {% if obj.quality_g %}
+          <span class="bg-success">&nbsp &#10004 Good Investment &nbsp</span>
+        {% elif obj.quality_a %}
+          <span class="bg-secondary">&nbsp ? Average Investment &nbsp</span>
+        {% elif obj.quality_b%}
+          <span class="bg-danger">&nbsp X Bad Investment &nbsp</span>
+        {% endif %}
+      </td>
       <td id="address">{{ obj.prop_address|default_if_none:"" }} {{ obj.prop_city|default_if_none:"" }},  {{ obj.prop_state|default_if_none:"" }} {{ obj.prop_zip|default_if_none:"" }}</td>
     </tr>
   </table><br>
