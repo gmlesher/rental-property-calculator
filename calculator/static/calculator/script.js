@@ -182,6 +182,9 @@ $(".toggleCityZip > .btn-group > input").click(function () {
   var active_id_num = parseInt(
     $("ul.pagination li.active").attr("id").split("_")[1]
   );
+
+  console.log("li_len:", li_len);
+  console.log("active_id_num:", active_id_num);
   if (active_id_num < 5) {
     var nums = [...Array(li_len + 1).keys()].slice(1, 6);
     for (let i of nums) {
@@ -193,12 +196,26 @@ $(".toggleCityZip > .btn-group > input").click(function () {
       $(`li#paginator_${i}`).show();
     }
   } else if (active_id_num == 5 && li_len > 5) {
-    var nums = [...Array(li_len + 1).keys()].slice(li_len - 5, li_len);
+    var nums = [...Array(li_len + 1).keys()].slice(
+      active_id_num - 3,
+      active_id_num + 2
+    );
+    for (let i of nums) {
+      $(`li#paginator_${i}`).show();
+    }
+  } else if (active_id_num == li_len) {
+    var nums = [...Array(li_len + 1).keys()].slice(
+      active_id_num - 4,
+      active_id_num + 2
+    );
     for (let i of nums) {
       $(`li#paginator_${i}`).show();
     }
   } else if (active_id_num > 5) {
-    var nums = [...Array(li_len + 1).keys()].slice(li_len - 4, li_len + 1);
+    var nums = [...Array(li_len + 1).keys()].slice(
+      active_id_num - 3,
+      active_id_num + 2
+    );
     for (let i of nums) {
       $(`li#paginator_${i}`).show();
     }
