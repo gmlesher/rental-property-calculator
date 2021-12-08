@@ -33,7 +33,7 @@ class BotReportsView(ListView):
     context_object_name = 'bot_object_list'
 
     def get_queryset(self):
-        return BotRentalReport.objects.filter(owner=self.request.user).order_by('-updated_at')
+        return BotRentalReport.objects.filter(owner=self.request.user).order_by('-created_at')
 
 @login_required
 def bot_delete_report(request, pk):

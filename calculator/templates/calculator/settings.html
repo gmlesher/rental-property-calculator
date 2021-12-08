@@ -102,6 +102,63 @@
             </div>
         </div>
 
+        <h3 class="pt-5" id="list-item-2">Investment Quality Settings</h3>
+        <small class="text-muted">*These settings will be used to determine the
+        quality of the investment you are looking for. Results will be categorized
+        as good(&#128077), average(&#129335), or bad(&#128078) on reports.<br><br>
+        "Bad" categorizations will be made for all 
+        reports that return a number equal to or lower than what you enter under "Bad Investment".<br>
+        "Good" categorizations will be made for all 
+        reports that return a number equal to or greater than what you enter under "Good Investment".<br><br>
+        *Cash on Cash ROI and Cashflow criteria may be used individually to 
+        determine investment quailty. If both criteria are specified, a report 
+        will need to meet both good or bad criteria categories to be considered 
+        for that designation. Otherwise, if only one criteria is met, the investment
+        is considered average.
+        </small>
+
+        <h5 class="pt-3 pb-3" id="list-item-2">Cash on Cash ROI</h5>
+        <small class="text-muted">*Leave a spead between your designations so that 
+        "average" designatoins may be made
+        </small><br><br>
+
+        <div class="row">
+            <div class="col-4 percentage">
+                <label class="form-label" for="id_coc_roi_bottom"
+                    >Bad Investment
+                </label>
+                {{ form.coc_roi_bottom|add_class:"form-control" }}
+            </div>
+            <div class="col-4 percentage">
+                <label class="form-label" for="id_coc_roi_top"
+                    >Good Investment
+                </label>
+                {{ form.coc_roi_top|add_class:"form-control" }}
+            </div>
+        </div>
+
+        <h5 class="pt-3 pb-3" id="list-item-2">Cashflow</h5>
+        <small class="text-muted">*Leave a spead between your designations so that 
+        "average" designatoins may be made
+        </small><br><br>
+
+        <div class="row">
+            <div class="col-4 currency">
+                <label class="form-label" for="id_cashflow_bottom"
+                    >Bad Investment
+                </label>
+                {{ form.cashflow_bottom|add_class:"form-control" }}
+            </div>
+            <div class="col-4 currency">
+                <label class="form-label" for="id_cashflow_top"
+                    >Good Investment
+                </label>
+                {{ form.cashflow_top|add_class:"form-control" }}
+            </div>
+        </div>
+
+
+
         <h3 class="pt-5" id="list-item-2">Bot Settings</h3>
         <small class="text-muted">*These settings will be used to determine the 
         search criteria for the bot so that it can get relevant property data for you. 

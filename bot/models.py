@@ -13,6 +13,10 @@ class BotRentalReport(models.Model):
     owner                   = models.ForeignKey(User, on_delete=models.CASCADE, \
                                 blank=True, null=True)
     bot_generated           = models.BooleanField(default=True)
+    # quality of investment
+    quality_g               = models.BooleanField(blank=True, default=False)
+    quality_a               = models.BooleanField(blank=True, default=False)
+    quality_b               = models.BooleanField(blank=True, default=False)
 
     # Property Info
     report_title            = models.CharField(max_length=75)

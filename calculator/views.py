@@ -4,12 +4,14 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404
 from django.views.generic import ListView, View
+from django.views.generic.edit import FormView
 
 
 # My file imports
 from .models import RentalPropCalcReport, UserSettings
-from bot.utils import CreatePdfMixin, ProcessReportMixin
+from bot.utils import CreatePdfMixin, ProcessReportMixin, run_report_calc, get_report_quality, save_report_quality
 from bot.crons import clear_crons, make_crons
+from bot.models import BotRentalReport
 from .forms import RentalPropForm, UserSettingsForm
 from .calc import *
 
@@ -144,7 +146,7 @@ class ReportsView(ListView):
 
     def get_queryset(self):
         """Returns all report objects from user. orders by -updated_at"""
-        return RentalPropCalcReport.objects.filter(owner=self.request.user).order_by('-updated_at')
+        return RentalPropCalcReport.objects.filter(owner=self.request.user).order_by('-created_at')
     
 @login_required
 def rental_prop_calculator(request):
@@ -258,9 +260,31 @@ def settings(request):
         form = UserSettingsForm(request.POST, instance=item)
         if form.is_valid():
             form.save()
-            if request.user.is_superuser:
+
+            # updates report quality if any investment quality settings change
+            if any(x in form.changed_data for x in ['coc_roi_bottom', 'coc_roi_top', 'cashflow_bottom', 'cashflow_top']):
+                bot_reports = BotRentalReport.objects.filter(owner=request.user).all()
+                reports = RentalPropCalcReport.objects.filter(owner=request.user).all()
+                for obj in bot_reports:
+                    context = run_report_calc(obj)
+                    coc_roi = context['coc_roi']
+                    cashflow = context['cashflow']
+                    quality  = get_report_quality(request.user, coc_roi, cashflow)
+                    save_report_quality(obj, quality)
+
+                for obj in reports:
+                    context = run_report_calc(obj)
+                    coc_roi = context['coc_roi']
+                    cashflow = context['cashflow']
+                    quality  = get_report_quality(request.user, coc_roi, cashflow)
+                    save_report_quality(obj, quality)
+
+            # clears and makes new crons for superuser if bot 
+            # auto search frequency is updated
+            if 'bot_frequency' in form.changed_data and request.user.is_superuser:
                 clear_crons(request.user)
                 make_crons(request.user)
+                
             return redirect('calculator:settings')
 
     else:

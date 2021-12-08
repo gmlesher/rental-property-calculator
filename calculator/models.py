@@ -27,6 +27,14 @@ class UserSettings(models.Model):
     mgmt_fees           = models.DecimalField(max_digits=4, decimal_places=2, \
                             blank=True, null=True)
 
+    # Investment Quality Settings
+    coc_roi_bottom      = models.DecimalField(max_digits=4, decimal_places=2, \
+                            blank=True, null=True)
+    coc_roi_top         = models.DecimalField(max_digits=4, decimal_places=2, \
+                            blank=True, null=True)
+    cashflow_bottom      = models.SmallIntegerField(blank=True, null=True)
+    cashflow_top         = models.SmallIntegerField(blank=True, null=True)
+
     # Bot Settings
     city                = models.CharField(max_length=30, blank=True)
     state               = models.CharField(max_length=10, \
@@ -81,6 +89,10 @@ class RentalPropCalcReport(models.Model):
     updated_at              = models.DateTimeField(auto_now=True)
     owner                   = models.ForeignKey(User, on_delete=models.CASCADE, \
                                 blank=True, null=True)
+    # quality of investment
+    quality_g               = models.BooleanField(blank=True, default=False)
+    quality_a               = models.BooleanField(blank=True, default=False)
+    quality_b               = models.BooleanField(blank=True, default=False)
 
     # Property Info
     listing_url             = models.URLField(blank=True)
