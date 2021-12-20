@@ -103,9 +103,17 @@ def run_bot_logic(user):
         new_reports = list(filter(lambda obj: obj != None, objs))
         if new_reports:
             BotRentalReport.objects.bulk_create(new_reports) # creates objects
-            print(f'{len(new_reports)} new reports created')
+            for o in new_reports:
+                obj = get_object_or_404(BotRentalReport, prop_address=o.prop_address)
+                context = run_report_calc(obj) # run calculations and retrieve context
+                coc_roi = context['coc_roi']
+                cashflow = context['cashflow']
+                quality  = get_report_quality(user, coc_roi, cashflow)
+                save_report_quality(obj, quality)
+                
+            print(f'{len(new_reports)} new reports created\n')
         else:
-            print(f'{len(new_reports)} new reports created')
+            print(f'{len(new_reports)} new reports created\n')
     else:
         print("0 new reports created\n")
 
