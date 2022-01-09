@@ -2,13 +2,22 @@
 {% load tz %}
 {% load static %}
 
-{% block page_header %}
-<div>
-  <h1 class="reportsTitle text-center">Home Page</h1>
-</div>
-
-{% endblock page_header %}
-
-{% block content %}
-
-{% endblock content %}
+{% block home_image %}
+  <div>
+    <div class="filter"></div>
+    <img class="indexImg mx-auto" src="{% static "calculator/home_img.jpg" %}">
+  </div>
+  <div class="taglineContainer">
+    <div class="tagline">
+      <span>In Depth.</span><br>
+      <span>Personalized.</span><br>
+      <span>Real Estate Analysis.</span><br>
+      {% if not user.is_authenticated %}
+        <a class="btn btn-lg homeButton" href="{% url 'users:register' %}" role="button">Register Here</a>
+      {% else %}
+        <a class="btn btn-lg homeButton" href="{% url 'calculator:rental-prop-calculator' %}" role="button">Run New Report</a>
+        <a class="btn btn-lg homeButton" href="{% url 'calculator:reports' %}" role="button">View My Reports</a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock home_image %}

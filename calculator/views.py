@@ -141,7 +141,7 @@ class ReportsView(ListView):
     """Page for listing all reports"""
     model = RentalPropCalcReport
     template_name = 'calculator/reports.html'
-    paginate_by = 5
+    paginate_by = 6
     context_object_name = 'report_object_list'
 
     def get_queryset(self):

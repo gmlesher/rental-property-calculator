@@ -7,7 +7,7 @@
 
 {% block page_header %}
 <div>
-  <h1 class="reportsTitle text-center">Settings</h1>
+  <h1 class="pageTitle text-center py-4">Settings</h1>
 </div>
 
 {% endblock page_header %} {% block content %}
@@ -28,7 +28,7 @@
       {% csrf_token %}
     <!-- Calculator Settings -->
 
-      <h3 class="pt-5" id="list-item-2">Calculator Settings</h3>
+      <h3 class="sectionHeading pt-5" id="list-item-2">Calculator Settings</h3>
       <small class="text-muted">*These settings will be used to pre-fill rental calculator fields
       and be used as the default values for running automatic rental reports with the bot.
       </small>
@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <h3 class="pt-5" id="list-item-2">Investment Quality Settings</h3>
+        <h3 class="sectionHeading pt-5" id="list-item-2">Investment Quality Settings</h3>
         <small class="text-muted">*These settings will be used to determine the
         quality of the investment you are looking for. Results will be categorized
         as good(&#128077), average(&#129335), or bad(&#128078) on reports.<br><br>
@@ -159,7 +159,7 @@
 
 
 
-        <h3 class="pt-5" id="list-item-2">Bot Settings</h3>
+        <h3 class="sectionHeading pt-5" id="list-item-2">Bot Settings</h3>
         <small class="text-muted">*These settings will be used to determine the 
         search criteria for the bot so that it can get relevant property data for you. 
         Make sure to read the help sections so you enter the right data for the bot to consume.
@@ -300,7 +300,7 @@
             </div>
         {% endif %}
 
-        <h3 class="pt-5" id="list-item-2">Other Settings</h3>
+        <h3 class="sectionHeading pt-5" id="list-item-2">Other Settings</h3>
 
         <h5 class="pt-4" id="list-item-2">Blacklist Settings</h5>
 

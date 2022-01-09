@@ -14,7 +14,7 @@
       {% if request.GET.next %}
         <input type="hidden" name="next" value="{{ request.GET.next }}" />
       {% else %}
-        <input type="hidden" name="next" value="{% url 'calculator:dashboard' %}" />
+        <input type="hidden" name="next" value="{% url 'calculator:index' %}" />
       {% endif %}
     </div> 
   </form>
