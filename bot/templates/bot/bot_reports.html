@@ -100,11 +100,11 @@
                 <ul class="pagination justify-content-center">
                     {% if page_obj.has_previous %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">PREV</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled">
-                            <a class="page-link">Previous</a>
+                            <a class="page-link">PREV</a>
                         </li>
                     {% endif %}
                     {% with ''|center:page_obj.paginator.num_pages as range %}
@@ -118,11 +118,11 @@
                     {% endwith %}
                     {% if page_obj.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">NEXT</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled">
-                            <a class="page-link">Next</a>
+                            <a class="page-link">NEXT</a>
                         </li>
                     {% endif %}
                 </ul>

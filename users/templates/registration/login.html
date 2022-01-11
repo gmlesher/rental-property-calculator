@@ -1,16 +1,14 @@
 {% extends "calculator/base.html" %}
 {% load crispy_forms_tags %}
 
-{% block page_header %}
-  <h2 class="text-center">Log in to your account</h2>
-{% endblock page_header %}
-
 {% block content %}
+
   <form method="post" action="{% url 'users:login' %}" class="form needs-validation" novalidate>
     {% csrf_token %} 
     <div class="mx-auto w-25">
+      <h2 class="py-4 accentColor">Log in</h2>
       {{ form|crispy }}
-      <button name="submit" type="submit" class="btn btn-dark mt-3 mx-auto">Log in</button>
+      <button name="submit" type="submit" class="btn btnTheme text-white mt-3 mx-auto">Log in</button>
       {% if request.GET.next %}
         <input type="hidden" name="next" value="{{ request.GET.next }}" />
       {% else %}

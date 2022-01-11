@@ -34,6 +34,11 @@ $(document).ready(function () {
   });
 });
 
+// navbar opaque only on home page
+if ($(".opaqueNav").length > 0) {
+  $(".navbar").css("--bs-bg-opacity", "0.8");
+}
+
 // preview of property image on upload
 function readURL(input) {
   if (input.files && input.files[0]) {

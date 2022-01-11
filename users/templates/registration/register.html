@@ -1,17 +1,14 @@
 {% extends "calculator/base.html" %}
 {% load crispy_forms_tags %}
 
-{% block page_header %}
-<h2 class="text-center">Register</h2>
-{% endblock page_header %}
-
 {% block content %}
-<div class="d-flex flex-column justify-content-center align-items-center">
+<div class="mx-auto w-25">
   <form class="needs-validation" method="post" enctype="multipart/form-data" action="{% url 'users:register' %}" novalidate>
   {% csrf_token %}
+  <h2 class="py-4 accentColor">Register</h2>
   {{ form|crispy }}
 
-  <button name="submit" class="btn btn-dark">Register</button>
+  <button name="submit" class="btn btnTheme">Register</button>
 
   <input type="hidden" name="next" value="{% url 'calculator:index' %}" />
 </form>

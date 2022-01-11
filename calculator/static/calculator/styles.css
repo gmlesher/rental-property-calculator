@@ -8,6 +8,25 @@
   --accentColorrgba: 0, 128, 128;
   --secondaryAccentColorrgba: 36, 123, 161;
 }
+.btnTheme {
+  background-color: var(--accentColor);
+  border-color: var(--accentColor);
+  color: white;
+}
+.btnTheme:hover {
+  background-color: var(--accentColor);
+  border-color: v;
+  filter: brightness(105%);
+  color: white;
+}
+.accentColor {
+  color: var(--accentColor);
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
 .asteriskField {
   color: red;
 }
@@ -96,17 +115,6 @@ h3.sectionHeading {
   /* font-weight: 600; */
   font-family: "Lato", sans-serif;
 }
-.homeButton {
-  background-color: var(--accentColor);
-  border-color: var(--accentColor);
-  color: white;
-}
-.homeButton:hover {
-  background-color: var(--accentColor);
-  border-color: v;
-  filter: brightness(105%);
-  color: white;
-}
 /*Reports Page*/
 .editDeleteButtons:hover {
   cursor: pointer;
@@ -191,7 +199,7 @@ aside > .modalLink:hover {
 .modal-body > p > iframe {
   width: 100%;
 }
-.list-group-item.active {
+.list-group-item.calculator.active {
   background: none;
   font-weight: 600;
   color: inherit;
@@ -409,4 +417,11 @@ a.formattedButton:hover,
   background-color: var(--accentColor);
   border-color: var(--accentColor);
   filter: brightness(95%);
+}
+.settingsList a {
+  background-color: #fbfbfb;
+}
+.settingsList a.active {
+  color: white;
+  background-color: var(--accentColor) !important;
 }
