@@ -296,9 +296,18 @@
 
             <div class="row">
                 <div class="col-12">
-                <small class="text-muted">*Make sure any updated settings are saved before running the bot!
-                </small><br>
-                <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
+                    <small class="text-muted">*Make sure any updated settings are saved before running the bot!
+                    </small><br>
+                    <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
+                </div>
+            </div>
+
+        {% else %}
+            <div class="row">
+                <div class="col-12">
+                    <small class="text-muted">*Make sure any updated settings are saved before running the bot!
+                    </small><br>
+                    <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
                 </div>
             </div>
         {% endif %}
