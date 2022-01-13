@@ -59,16 +59,16 @@ These settings provide users the ability to blacklist an address when an analysi
 
 #### Calculator Overview
 
-![calculator](https://github.com/gmlesher/rental-property-calculator/blob/readme/calculator.gif?raw=true)
+![calculator](https://user-images.githubusercontent.com/70789983/149426027-e68f3c4b-7ed8-4112-b5ef-5db976798344.gif)
 
 #### Property Analysis
 
-![analysis](https://github.com/gmlesher/rental-property-calculator/blob/readme/analysis.gif?raw=true)
+![analysis](https://user-images.githubusercontent.com/70789983/149426013-fda4dc09-877a-45fb-98e3-7aee35b53020.gif)
 
 #### PDF Download
 
-![pdf](https://github.com/gmlesher/rental-property-calculator/blob/readme/pdf.gif?raw=true)
+![pdf](https://user-images.githubusercontent.com/70789983/149426040-9c0eef38-c5d3-4fdf-9001-122b3ef61032.gif)
 
 #### Settings Overview
 
-![settings](https://github.com/gmlesher/rental-property-calculator/blob/readme/settings.gif?raw=true)
+![settings](https://user-images.githubusercontent.com/70789983/149426063-7c3310d2-8427-4d3d-bd80-ea4294eeca21.gif)
