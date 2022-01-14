@@ -62,8 +62,8 @@ class UserSettings(models.Model):
                                 choices=BOT_FREQUENCY, default='', blank=True)
 
     # Address Blacklist
-    blacklist_bool      = models.BooleanField(blank=True)
-    addr_blacklist      = models.JSONField(blank=True)
+    blacklist_bool      = models.BooleanField(blank=True, default=False)
+    addr_blacklist      = models.JSONField(blank=True, default=dict)
 
     def __str__(self):
         """Return a string representation of the model"""

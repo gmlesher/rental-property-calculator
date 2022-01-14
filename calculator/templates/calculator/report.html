@@ -5,12 +5,9 @@
 
 
 {% block page_header %}
-<div class="pb-3">
-  <a class="btn btn-outline-dark" href="{% url 'calculator:reports' %}" role="button">&#x2190 Back To Reports</a>
-</div>
 
 <div>
-  <h2>
+  <h2 class="my-3">
     {{ obj.report_title }}
     {% if obj.owned %}
       <span class="badge bg-info ms-3">Owned</span>
@@ -99,7 +96,7 @@
 
 {% block content %}
 <div class="report-results">
-  <hr>
+  <hr class="reportHr">
   <div class="row align-items-start">
     <div class="col-3">
       <table class="me-5" id="purchasePriceTable">
@@ -275,7 +272,7 @@
     </div>
   </div>
 
-  <hr>
+  <hr class="reportHr">
 
   <div class='financialInfo'>
     <h3>Financial Info</h3>
@@ -317,7 +314,7 @@
     </table>
   </div>
 
-  <hr>
+  <hr class="reportHr">
 
   <div class="aot">
     <h3>Analysis Over Time</h3>
@@ -372,7 +369,7 @@
         </div>
       </div>
     </div>
-    <hr>
+    <hr class="reportHr">
   </div>
   
 </div>

@@ -29,7 +29,7 @@ class BotReportsView(ListView):
     """Page for listing all bot reports"""
     model = BotRentalReport
     template_name = 'bot/bot_reports.html'
-    paginate_by = 5
+    paginate_by = 6
     context_object_name = 'bot_object_list'
 
     def get_queryset(self):

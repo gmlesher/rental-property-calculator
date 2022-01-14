@@ -4,75 +4,92 @@
 
 {% block page_header %}
 <div>
-  <h1 class="reportsTitle text-center">Reports</h1>
+  <h1 class="pageTitle text-center py-4">Reports</h1>
 </div>
 
 {% endblock page_header %}
 
 {% block content %}
+<div class="">
+  <div class="row align-items-start text-dark rounded py-2 my-3 bg-secondary bg-opacity-10">
+    <div class="col-1">
+    </div>
+    <div class="col-3">
+      Report Name
+    </div>
+    <div class="col-3">
+      Address
+    </div>
+    <div class="col-1">
+      Created
+    </div>
+    <div class="col-1">
+      Updated
+    </div>
+    <div class="col-1">
+      Quality
+    </div>
+    <div class="col-1">
+    </div>
+    <div class="col-1">
+    </div>
+  </div>
+</div>
+
 <div>
 {% if report_object_list %}
   <ul class="reportList">
     {% for report in  report_object_list %}
     <li>
-      <div class="card indexCard bg-dark mb-3 position-relative">
-        
-        
-        <div class="row g-0 indexCardInfo">
-          <div class="col-md-4 indexCardImgContainer">
-            <a href="{% url 'calculator:report' report.id %}">
-              {% if report.prop_photo %}
-                <img src="{{ report.prop_photo.url }}" class="img-fluid rounded-start">
-              {% else %}
-                <img src="https://via.placeholder.com/150" class="img-fluid rounded-start">
-              {% endif %}
-            </a>
-          </div>
-          <div class="col-md-7 indexCardDetailsContainer">
-            <a href="{% url 'calculator:report' report.id %}">
-              <div class="card-body text-white">
-                <h5 class="card-title">{{ report.report_title }}</h5>
-                {% if report.prop_address %}
-                  <p class="card-text">{{ report.prop_address }}, {{ report.prop_city }}, {{ report.prop_state }} {{ report.prop_zip }}</p>
-                {% endif %}
-                <p class="card-text">
-                  <small class="text-muted">
-                  {% timezone "America/New_York" %}
-                  Created: {{ report.created_at|date:'n/j/Y g:i a' }}
-                  {% endtimezone %}
-                  </small><br>
-                  <small class="text-muted">
-                  {% timezone "America/New_York" %}
-                  Updated: {{ report.updated_at|date:'n/j/Y g:i a' }}
-                  {% endtimezone %}
-                  </small>
-                </p>
-              </div>
-            </a>
-          </div>
-          <div class="col-1 editDeleteButtons"> 
-            <a class="modalLink" data-bs-toggle="modal" data-bs-target="#deleteModal">
-              <div class="bg-danger h-50 d-flex flex-end justify-content-center align-items-center rounded-top-right-1">X</div>
-            </a>
-            <a href="{% url 'calculator:edit-rental-prop-calc' report.pk %}">
-              <div class="bg-secondary h-50 d-flex flex-end justify-content-center align-items-center rounded-bottom-right-1">Edit</div> 
-            </a>
-          </div>
-          {% include "calculator/modal.html" %}
-        </div>  
-        {% if report.owned %}
-            <span class="position-absolute top-0 start-50 translate-middle badge bg-info">Owned</span>
-        {% endif %}
-
-        {% if report.quality_g %}
-            <span class="position-absolute top-0 start-0 translate-middle badge bg-dark">&#128077</span>
-        {% elif report.quality_b %}
-            <span class="position-absolute top-0 start-0 translate-middle badge bg-dark">&#128078</span>
-        {% elif report.quality_a %}
-            <span class="position-absolute top-0 start-0 translate-middle badge bg-dark">&#129335</span>
-        {% endif %}
+      <div class="reportRow row align-items-start my-2 bg-white border rounded">
+        <div class="col-1 reportImageContainer align-self-center">
+          <a href="{% url 'calculator:report' report.id %}">
+            {% if report.prop_photo %}
+              <img src="{{ report.prop_photo.url }}" class="img-fluid">
+            {% endif %}
+          </a>
+        </div>
+        <div class="col-3 align-self-center reportTitle">
+          <a  href="{% url 'calculator:report' report.id %}">
+            {{ report.report_title }}
+          </a>
+        </div>
+        <div class="col-3 text-muted align-self-center">
+          {% if report.prop_address %}
+            <p class="card-text">{{ report.prop_address }}, {{ report.prop_city }}, {{ report.prop_state }} {{ report.prop_zip }}</p>
+          {% endif %}
+        </div>
+        <div class="col-1 text-muted align-self-center">
+          {% timezone "America/New_York" %}
+            {{ report.created_at|date:"M j 'y" }}
+          {% endtimezone %}
+        </div>
+        <div class="col-1 text-muted align-self-center">
+          {% timezone "America/New_York" %}
+            {{ report.updated_at|date:"M j 'y" }}
+          {% endtimezone %}
+        </div>
+        <div class="col-1 text-muted align-self-center">
+          {% if report.quality_g %}
+            &#128077
+          {% elif report.quality_b %}
+            &#128078
+          {% elif report.quality_a %}
+            &#129335
+          {% endif %}
+        </div>
+        <div class="col-1 align-self-center">
+          <a class="btn btn-secondary" href="{% url 'calculator:edit-rental-prop-calc' report.pk %}">
+            Edit
+          </a>
+        </div>
+        <div class="col-1 editDeleteButtons align-self-center">
+          <a class="modalLink btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            X
+          </a>
+        </div>
+        {% include "calculator/modal.html" %}
       </div> 
-      
     </li>
     {% endfor %}
   </ul>
@@ -82,11 +99,11 @@
       <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
           <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">PREV</a>
           </li>
         {% else %}
           <li class="page-item disabled">
-            <a class="page-link">Previous</a>
+            <a class="page-link">PREV</a>
           </li>
         {% endif %}
         {% with ''|center:page_obj.paginator.num_pages as range %}
@@ -100,11 +117,11 @@
         {% endwith %}
         {% if page_obj.has_next %}
           <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">NEXT</a>
           </li>
         {% else %}
           <li class="page-item disabled">
-            <a class="page-link">Next</a>
+            <a class="page-link">NEXT</a>
           </li>
         {% endif %}
       </ul>

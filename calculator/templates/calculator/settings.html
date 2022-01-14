@@ -7,18 +7,21 @@
 
 {% block page_header %}
 <div>
-  <h1 class="reportsTitle text-center">Settings</h1>
+  <h1 class="pageTitle text-center py-4">Settings</h1>
 </div>
 
 {% endblock page_header %} {% block content %}
-<div class="row w-75 mx-auto">
-    <div class="col-6">
-        <div class="card sticky-top justify-content-center" style="width: 18rem;">
-        This is just dummy text for now
+<div class="row mx-auto border-top mb-5">
+    <div class="col-4">
+        <div class="settingsList bg-light list-group rounded-0 border-0 sticky-top justify-content-center mt-5 fs-5" id="scroll-list">
+            <a href="#list-item-1" class="w-75 bg-light list-group-item list-group-item-action text-start border-0 rounded">Calculator</a>
+            <a href="#list-item-2" class="w-75 bg-light list-group-item list-group-item-action text-start border-0 rounded">Investment Quality</a>
+            <a href="#list-item-3" class="w-75 bg-light list-group-item list-group-item-action text-start border-0 rounded">Bot</a>
+            <a href="#list-item-4" class="w-75 bg-light list-group-item list-group-item-action text-start border-0 rounded">Other</a>
         </div>
     </div>
 
-  <div class="col-6">
+  <div class="col-8 border-start ps-4">
     <form
       class="settingsForm needs-validation"
       method="post"
@@ -28,13 +31,13 @@
       {% csrf_token %}
     <!-- Calculator Settings -->
 
-      <h3 class="pt-5" id="list-item-2">Calculator Settings</h3>
+      <h3 class="sectionHeading pt-5" id="list-item-1">Calculator Settings</h3>
       <small class="text-muted">*These settings will be used to pre-fill rental calculator fields
       and be used as the default values for running automatic rental reports with the bot.
       </small>
 
 
-      <h5 class="pt-4" id="list-item-2">Purchase Info</h5>
+      <h5 class="pt-4">Purchase Info</h5>
 
       
       <div class="row pt-3">
@@ -64,7 +67,7 @@
             </div>
         </div>
 
-        <h5 class="pt-3 pb-3" id="list-item-2">Expenses</h5>
+        <h5 class="pt-3 pb-3">Expenses</h5>
 
         <div class="row">
             <div class="col-4 percentage">
@@ -102,7 +105,7 @@
             </div>
         </div>
 
-        <h3 class="pt-5" id="list-item-2">Investment Quality Settings</h3>
+        <h3 class="sectionHeading pt-5" id="list-item-2">Investment Quality Settings</h3>
         <small class="text-muted">*These settings will be used to determine the
         quality of the investment you are looking for. Results will be categorized
         as good(&#128077), average(&#129335), or bad(&#128078) on reports.<br><br>
@@ -117,7 +120,7 @@
         is considered average.
         </small>
 
-        <h5 class="pt-3 pb-3" id="list-item-2">Cash on Cash ROI</h5>
+        <h5 class="pt-3 pb-3">Cash on Cash ROI</h5>
         <small class="text-muted">*Leave a spead between your designations so that 
         "average" designatoins may be made
         </small><br><br>
@@ -137,7 +140,7 @@
             </div>
         </div>
 
-        <h5 class="pt-3 pb-3" id="list-item-2">Cashflow</h5>
+        <h5 class="pt-3 pb-3">Cashflow</h5>
         <small class="text-muted">*Leave a spead between your designations so that 
         "average" designatoins may be made
         </small><br><br>
@@ -159,13 +162,13 @@
 
 
 
-        <h3 class="pt-5" id="list-item-2">Bot Settings</h3>
+        <h3 class="sectionHeading pt-5" id="list-item-3">Bot Settings</h3>
         <small class="text-muted">*These settings will be used to determine the 
         search criteria for the bot so that it can get relevant property data for you. 
         Make sure to read the help sections so you enter the right data for the bot to consume.
         </small>
 
-        <h5 class="pt-3 pb-3" id="list-item-2">Search area</h5>
+        <h5 class="pt-3 pb-3">Search area</h5>
 
 
         <div class="toggleCityZip">
@@ -227,7 +230,7 @@
         </div>
         
 
-        <h5 class=" pb-3" id="list-item-2">Search Filters</h5>
+        <h5 class=" pb-3">Search Filters</h5>
 
         <div class="row">
             <div class="col-4">
@@ -280,7 +283,7 @@
         </div>
 
         {% if item.user.is_superuser %}
-            <h5 class="pt-3 pb-3" id="list-item-2">Auto Search Frequency</h5>
+            <h5 class="pt-3 pb-3">Auto Search Frequency</h5>
 
             <div class="row">
                 <div class="col-4">
@@ -293,16 +296,25 @@
 
             <div class="row">
                 <div class="col-12">
-                <small class="text-muted">*Make sure any updated settings are saved before running the bot!
-                </small>
+                    <small class="text-muted">*Make sure any updated settings are saved before running the bot!
+                    </small><br>
+                    <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
+                </div>
+            </div>
+
+        {% else %}
+            <div class="row">
+                <div class="col-12">
+                    <small class="text-muted">*Make sure any updated settings are saved before running the bot!
+                    </small><br>
                     <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
                 </div>
             </div>
         {% endif %}
 
-        <h3 class="pt-5" id="list-item-2">Other Settings</h3>
+        <h3 class="sectionHeading pt-5" id="list-item-4">Other Settings</h3>
 
-        <h5 class="pt-4" id="list-item-2">Blacklist Settings</h5>
+        <h5 class="pt-4">Blacklist Settings</h5>
 
       
         <div class="row">

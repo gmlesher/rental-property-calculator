@@ -6,7 +6,7 @@
           <h3>{{ report.report_title }}</h3>
         {% endif %}
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
+      </div>
       <div class="modal-body">
       </div>
       <div class="modal-footer">
@@ -20,7 +20,6 @@
             <a href="{% url 'calculator:delete-report' report.pk %}" role='button' class='btn btn-danger'>Delete</a>
           {% endif %}
         {% endif %}
-        
       </div>
     </div>
   </div>

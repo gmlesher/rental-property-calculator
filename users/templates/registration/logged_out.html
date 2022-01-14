@@ -1,14 +1,11 @@
 {% extends "calculator/base.html" %}
 
-{% block page_header %}
-<h2 class="text-center">Logged Out</h2>
-{% endblock page_header %}
-
 {% block content %}
-<div class="d-flex flex-column justify-content-center align-items-center">
-  <p class="text-center">You have been logged out. Thank you for visiting!</p>
+<div class="mx-auto w-25">
+<h2 class="py-4 accentColor">Logged Out</h2>
+  <p>Come back soon!</p>
 
-  <a class="btn btn-dark" href="{% url 'users:login' %}" role="button">Log in</a>
+  <a class="btn btnTheme" href="{% url 'users:login' %}" role="button">Log in</a>
   
 </div>
 

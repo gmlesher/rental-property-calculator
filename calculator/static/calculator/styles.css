@@ -1,4 +1,32 @@
 /*Global*/
+:root {
+  /* Theme colors */
+  --accentColor: rgb(0, 128, 128);
+  --secondaryAccentColor: rgb(36, 123, 161);
+
+  /* color rgb values to be used with rgba with opacity */
+  --accentColorrgba: 0, 128, 128;
+  --secondaryAccentColorrgba: 36, 123, 161;
+}
+.btnTheme {
+  background-color: var(--accentColor);
+  border-color: var(--accentColor);
+  color: white;
+}
+.btnTheme:hover {
+  background-color: var(--accentColor);
+  border-color: v;
+  filter: brightness(105%);
+  color: white;
+}
+.accentColor {
+  color: var(--accentColor);
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
 .asteriskField {
   color: red;
 }
@@ -22,7 +50,16 @@ footer li a:hover {
   color: inherit;
 }
 .navbar {
-  background: linear-gradient(to right, #001510 0%, #2c3e50 50%, #00bf8f 100%);
+  z-index: 1;
+}
+.dropdown-item:hover,
+.dropdown-item:focus,
+.dropdown-item:active {
+  color: white;
+  background-color: var(--accentColor);
+}
+.footer {
+  opacity: 90%;
 }
 .footer-sections {
   background-color: #00bf8f;
@@ -33,15 +70,52 @@ footer li a:hover {
 .rounded-bottom-right-1 {
   border-bottom-right-radius: 0.25rem;
 }
-
-/*Reports Page*/
-h1.reportsTitle {
+h1.pageTitle {
   font-size: 72px;
-  background: linear-gradient(to right, #001510 0%, #2c3e50 25%, #00bf8f 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--accentColor);
 }
+h3.sectionHeading {
+  color: var(--accentColor);
+}
+/* Home Page */
+.indexImg {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -3;
+  object-fit: cover;
+}
+.filter {
+  background-color: black;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 55%;
+  z-index: -2;
+}
+.taglineContainer {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+.tagline {
+  margin: 0;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  color: white;
+  font-size: 3em;
+  text-align: center;
+}
+.tagline span {
+  font-size: 4rem;
+  /* font-weight: 600; */
+  font-family: "Lato", sans-serif;
+}
+/*Reports Page*/
 .editDeleteButtons:hover {
   cursor: pointer;
 }
@@ -54,35 +128,47 @@ h1.reportsTitle {
 }
 .reportList li a {
   text-decoration: none;
-  color: white;
 }
-.indexCard {
-  border: none;
-  max-width: 700px;
-  height: 175px;
-  margin: auto;
+.reportRow {
+  height: 60px;
 }
-.indexCardInfo {
-  position: absolute;
-  width: 100%;
+.reportImageContainer {
+  padding-top: 3px;
+  padding-bottom: 3px;
   height: 100%;
 }
-.indexCardImgContainer {
-  max-width: 100%;
-  max-height: 100%;
-}
-.indexCardImgContainer img {
+.reportImageContainer img {
   object-fit: cover;
   background-repeat: no-repeat;
   background-position: center;
   height: 100%;
   width: 100%;
 }
-.indexCardDetailsContainer {
-  max-width: 100%;
-  max-height: 100%;
+.reportTitle a {
+  color: var(--accentColor);
 }
-
+/* Pagination section of reports page */
+.pagination > li > a {
+  background-color: white;
+  color: var(--accentColor);
+}
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover {
+  color: var(--accentColor);
+  background-color: #eee;
+  border-color: #ddd;
+}
+.pagination > .active > a {
+  color: white;
+  background-color: var(--accentColor) !important;
+  border: solid 1px var(--accentColor) !important;
+}
+.pagination > .active > a:hover {
+  background-color: var(--accentColor) !important;
+  border: solid 1px var(--accentColor);
+}
 /*Dashboard Page*/
 .dashboardBox > .card {
   height: 200px;
@@ -103,24 +189,17 @@ h1.reportsTitle {
 /*Calculator Page*/
 aside > .modalLink {
   text-decoration: none;
-  color: #00bf8f;
+  color: var(--accentColor);
 }
 aside > .modalLink:hover {
   text-decoration: none;
-  color: #00bf8f;
+  color: var(--accentColor);
   filter: brightness(90%);
 }
 .modal-body > p > iframe {
   width: 100%;
 }
-h1.rentalCalculatorTitle {
-  font-size: 72px;
-  background: linear-gradient(to right, #001510 0%, #2c3e50 25%, #00bf8f 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.list-group-item.active {
+.list-group-item.calculator.active {
   background: none;
   font-weight: 600;
   color: inherit;
@@ -210,26 +289,26 @@ aside > a {
 /*Report Page*/
 .report-buttons > a.primary,
 .analysisButton > button {
-  background-color: #00bf8f;
-  border-color: #00bf8f;
+  background-color: var(--accentColor);
+  border-color: var(--accentColor);
 }
 .report-buttons > a:hover,
 .analysisButton > button:hover {
   filter: brightness(95%);
 }
 .btn-group > label {
-  border-color: #00bf8f;
+  border-color: var(--accentColor);
   background-color: none;
-  color: #00bf8f;
+  color: var(--accentColor);
 }
 .btn-group > label:hover {
-  border-color: #00bf8f;
-  background-color: #00bf8f;
+  border-color: var(--accentColor);
+  background-color: var(--accentColor);
   color: white;
 }
 .btn-group > .btn-check:checked + .btn-outline-primary {
-  background-color: #00bf8f;
-  border-color: #00bf8f;
+  background-color: var(--accentColor);
+  border-color: var(--accentColor);
   color: white;
 }
 table td,
@@ -256,7 +335,7 @@ table th {
   height: 1px;
   bottom: 0;
   left: 0;
-  border-bottom: 2px solid #00bf8f;
+  border-bottom: 2px solid var(--accentColor);
 }
 .report-buttons button {
   width: 180px;
@@ -311,9 +390,9 @@ table th {
   height: 1px;
   bottom: 0;
   left: 0;
-  border-bottom: 2px solid #00bf8f;
+  border-bottom: 2px solid var(--accentColor);
 }
-hr {
+hr.reportHr {
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
@@ -326,16 +405,23 @@ a[data-bs-toggle="popover"]:hover {
 
 /* Settigns Page */
 .settingsButton > button {
-  background-color: #00bf8f;
-  border-color: #00bf8f;
+  background-color: var(--accentColor);
+  border-color: var(--accentColor);
 }
 a.formattedButton {
-  background-color: #00bf8f;
-  border-color: #00bf8f;
+  background-color: var(--accentColor);
+  border-color: var(--accentColor);
 }
 a.formattedButton:hover,
 .settingsButton > button:hover {
-  background-color: #00bf8f;
-  border-color: #00bf8f;
+  background-color: var(--accentColor);
+  border-color: var(--accentColor);
   filter: brightness(95%);
+}
+.settingsList a {
+  background-color: #fbfbfb;
+}
+.settingsList a.active {
+  color: white;
+  background-color: var(--accentColor) !important;
 }
