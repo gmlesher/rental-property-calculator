@@ -49,7 +49,9 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{% url 'calculator:dashboard' %}">Dashboard</a></li>
               <li><a class="dropdown-item" href="{% url 'calculator:reports' %}">Reports</a></li>
-              <li><a class="dropdown-item" href="{% url 'bot:bot-reports' %}">Bot Reports</a></li>
+              {% if user.is_superuser %}
+                <li><a class="dropdown-item" href="{% url 'bot:bot-reports' %}">Bot Reports</a></li>
+              {% endif %}
               <li><a class="dropdown-item" href="{% url 'calculator:settings' %}">Settings</a></li>
             </ul>
           </li>

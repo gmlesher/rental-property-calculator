@@ -16,7 +16,9 @@
         <div class="settingsList bg-light list-group rounded-0 border-0 sticky-top justify-content-center mt-5 fs-5" id="scroll-list">
             <a href="#list-item-1" class="w-75 bg-light list-group-item list-group-item-action text-start border-0 rounded">Calculator</a>
             <a href="#list-item-2" class="w-75 bg-light list-group-item list-group-item-action text-start border-0 rounded">Investment Quality</a>
-            <a href="#list-item-3" class="w-75 bg-light list-group-item list-group-item-action text-start border-0 rounded">Bot</a>
+            {% if user.is_superuser %}
+                <a href="#list-item-3" class="w-75 bg-light list-group-item list-group-item-action text-start border-0 rounded">Bot</a>
+            {% endif %}
             <a href="#list-item-4" class="w-75 bg-light list-group-item list-group-item-action text-start border-0 rounded">Other</a>
         </div>
     </div>
@@ -121,8 +123,8 @@
         </small>
 
         <h5 class="pt-3 pb-3">Cash on Cash ROI</h5>
-        <small class="text-muted">*Leave a spead between your designations so that 
-        "average" designatoins may be made
+        <small class="text-muted">*Leave a spread between your designations so that 
+        "average" designations may be made
         </small><br><br>
 
         <div class="row">
@@ -141,8 +143,8 @@
         </div>
 
         <h5 class="pt-3 pb-3">Cashflow</h5>
-        <small class="text-muted">*Leave a spead between your designations so that 
-        "average" designatoins may be made
+        <small class="text-muted">*Leave a spread between your designations so that 
+        "average" designations may be made
         </small><br><br>
 
         <div class="row">
@@ -160,156 +162,158 @@
             </div>
         </div>
 
+        {% if user.is_superuser %}
+
+            <h3 class="sectionHeading pt-5" id="list-item-3">Bot Settings</h3>
+            <small class="text-muted">*These settings will be used to determine the 
+            search criteria for the bot so that it can get relevant property data for you. 
+            Make sure to read the help sections so you enter the right data for the bot to consume.
+            </small>
+
+            <h5 class="pt-3 pb-3">Search area</h5>
 
 
-        <h3 class="sectionHeading pt-5" id="list-item-3">Bot Settings</h3>
-        <small class="text-muted">*These settings will be used to determine the 
-        search criteria for the bot so that it can get relevant property data for you. 
-        Make sure to read the help sections so you enter the right data for the bot to consume.
-        </small>
+            <div class="toggleCityZip">
+                <div class="btn-group pb-2" role="group">
+                    <input type="radio" class="btn-check" name="btnradio" id="cityradio1" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="cityradio1">City</label>
 
-        <h5 class="pt-3 pb-3">Search area</h5>
+                    <input type="radio" class="btn-check" name="btnradio" id="zipradio2" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="zipradio2">Zipcode</label>
+                </div>
+                <div class="city">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" for="id_city"
+                                >City Name
+                            </label>
+                            {{ form.city|add_class:"form-control" }}
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="form-label" for="id_state"
+                                >State
+                            </label>
+                            {{ form.state|add_class:"form-control" }}
+                        </div>
+                    </div>
 
-        <div class="toggleCityZip">
-            <div class="btn-group pb-2" role="group">
-                <input type="radio" class="btn-check" name="btnradio" id="cityradio1" autocomplete="off" checked>
-                <label class="btn btn-outline-primary" for="cityradio1">City</label>
+                    
 
-                <input type="radio" class="btn-check" name="btnradio" id="zipradio2" autocomplete="off">
-                <label class="btn btn-outline-primary" for="zipradio2">Zipcode</label>
-            </div>
-            <div class="city">
-                <div class="row">
-                    <div class="col-6">
-                        <label class="form-label" for="id_city"
-                            >City Name
-                        </label>
-                        {{ form.city|add_class:"form-control" }}
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="form-label" for="id_city_code"
+                                >City Code
+                            </label>
+                            {{ form.city_code|add_class:"form-control" }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            {{ form.minor_civil_div }}
+                            <label for="id_minor_civil_div" id="minor_civil_div"></label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-4">
-                        <label class="form-label" for="id_state"
-                            >State
-                        </label>
-                        {{ form.state|add_class:"form-control" }}
+                <div class="zipcode">
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="form-label" for="id_zipcode"
+                                >Zipcode
+                            </label>
+                            {{ form.zipcode|add_class:"form-control" }}
+                        </div>
                     </div>
-                </div>
-
-                
-
-                <div class="row">
-                    <div class="col-4">
-                        <label class="form-label" for="id_city_code"
-                            >City Code
-                        </label>
-                        {{ form.city_code|add_class:"form-control" }}
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        {{ form.minor_civil_div }}
-                        <label for="id_minor_civil_div" id="minor_civil_div"></label>
-                    </div>
-                </div>
+                </div> 
             </div>
+            
 
-            <div class="zipcode">
-                <div class="row">
-                    <div class="col-4">
-                        <label class="form-label" for="id_zipcode"
-                            >Zipcode
-                        </label>
-                        {{ form.zipcode|add_class:"form-control" }}
-                    </div>
-                </div>
-            </div> 
-        </div>
-        
-
-        <h5 class=" pb-3">Search Filters</h5>
-
-        <div class="row">
-            <div class="col-4">
-                <label class="form-label" for="id_min_price"
-                    >Min Price
-                </label>
-                {{ form.min_price|add_class:"form-control" }}
-            </div>
-            <div class="col-4">
-                <label class="form-label" for="id_max_price"
-                    >Max Price
-                </label>
-                {{ form.max_price|add_class:"form-control" }}
-            </div>
-        </div>
-
-        <div class="row">
-            <label class="form-label" for="id_prop_type"
-                >Property Type:
-            </label>
-            {% for checkbox in form.prop_type %}
-                <div class="col-md-12 m2m">
-                    <label>{{ checkbox.tag }} {{ checkbox.choice_label }}</label>
-                </div>
-            {% endfor %}
-        </div>
-
-        <div class="row">
-            <div class="col-4">
-                <label class="form-label" for="id_min_beds"
-                    >Min Beds
-                </label>
-                {{ form.min_beds|add_class:"form-control" }}
-            </div>
-            <div class="col-4">
-                <label class="form-label" for="id_max_beds"
-                    >Max Beds
-                </label>
-                {{ form.max_beds|add_class:"form-control" }}
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-4">
-                <label class="form-label" for="id_min_baths"
-                    >Baths
-                </label>
-                {{ form.min_baths|add_class:"form-control" }}
-            </div>
-        </div>
-
-        {% if item.user.is_superuser %}
-            <h5 class="pt-3 pb-3">Auto Search Frequency</h5>
+            <h5 class=" pb-3">Search Filters</h5>
 
             <div class="row">
                 <div class="col-4">
-                    <label class="form-label" for="id_bot_frequency"
-                        >Frequency
+                    <label class="form-label" for="id_min_price"
+                        >Min Price
                     </label>
-                    {{ form.bot_frequency|add_class:"form-control" }}
+                    {{ form.min_price|add_class:"form-control" }}
+                </div>
+                <div class="col-4">
+                    <label class="form-label" for="id_max_price"
+                        >Max Price
+                    </label>
+                    {{ form.max_price|add_class:"form-control" }}
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-12">
-                    <small class="text-muted">*Make sure any updated settings are saved before running the bot!
-                    </small><br>
-                    <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
+                <label class="form-label" for="id_prop_type"
+                    >Property Type:
+                </label>
+                {% for checkbox in form.prop_type %}
+                    <div class="col-md-12 m2m">
+                        <label>{{ checkbox.tag }} {{ checkbox.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label" for="id_min_beds"
+                        >Min Beds
+                    </label>
+                    {{ form.min_beds|add_class:"form-control" }}
+                </div>
+                <div class="col-4">
+                    <label class="form-label" for="id_max_beds"
+                        >Max Beds
+                    </label>
+                    {{ form.max_beds|add_class:"form-control" }}
                 </div>
             </div>
 
-        {% else %}
             <div class="row">
-                <div class="col-12">
-                    <small class="text-muted">*Make sure any updated settings are saved before running the bot!
-                    </small><br>
-                    <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
+                <div class="col-4">
+                    <label class="form-label" for="id_min_baths"
+                        >Baths
+                    </label>
+                    {{ form.min_baths|add_class:"form-control" }}
                 </div>
             </div>
+
+            {% if item.user.is_superuser %}
+                <h5 class="pt-3 pb-3">Auto Search Frequency</h5>
+
+                <div class="row">
+                    <div class="col-4">
+                        <label class="form-label" for="id_bot_frequency"
+                            >Frequency
+                        </label>
+                        {{ form.bot_frequency|add_class:"form-control" }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <small class="text-muted">*Make sure any updated settings are saved before running the bot!
+                        </small><br>
+                        <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="row">
+                    <div class="col-12">
+                        <small class="text-muted">*Make sure any updated settings are saved before running the bot!
+                        </small><br>
+                        <a class="btn btn-primary formattedButton mt-3" href="{% url 'bot:run-bot' %}" role="button">Run Bot</a>
+                    </div>
+                </div>
+            {% endif %}
+
         {% endif %}
 
         <h3 class="sectionHeading pt-5" id="list-item-4">Other Settings</h3>
