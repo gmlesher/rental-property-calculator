@@ -7,16 +7,16 @@ from django.views.generic import ListView, View
 
 # My file imports
 from bot.forms import BotRentalPropForm
-from .utils import run_bot_logic, CreatePdfMixin, ProcessReportMixin
+from .utils import CreatePdfMixin, ProcessReportMixin
 from .models import BotRentalReport
 from calculator.models import UserSettings
 
 
-@login_required
-def run_bot(request):
-    """Runs bot"""
-    run_bot_logic(request.user)
-    return redirect('bot:bot-reports')
+# @login_required
+# def run_bot(request):
+#     """Runs bot"""
+#     run_bot_logic(request.user)
+#     return redirect('bot:bot-reports')
     
 @method_decorator(login_required, name='dispatch')
 class BotReport(ProcessReportMixin, View):

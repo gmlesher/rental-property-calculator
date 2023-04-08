@@ -5,7 +5,7 @@ from . import views
 app_name = 'bot'
 urlpatterns = [
     # Run bot
-    path('run-bot/', views.run_bot, name='run-bot'),
+    # path('run-bot/', views.run_bot, name='run-bot'),
     # Bot Report Page
     path('bot-report/<int:pk>/', views.BotReport.as_view(), name='bot-report'),
     # Bot Reports Page
