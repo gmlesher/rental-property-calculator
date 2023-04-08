@@ -18,8 +18,8 @@ media/
 
 # image/csv files
 *.csv
-*.jpg
-*.jpeg
+# *.jpg
+# *.jpeg
 *.png
 
 # node 
