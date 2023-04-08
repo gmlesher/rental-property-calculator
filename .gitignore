@@ -14,7 +14,7 @@ environment.txt
 media/
 
 # root static directory for uploaded images
-/static/
+# /static/
 
 # image/csv files
 *.csv
