@@ -5,6 +5,8 @@ async-generator==1.10
 attrs==21.2.0
 beautifulsoup4==4.10.0
 billiard==3.6.4.0
+boto3==1.26.110
+botocore==1.29.110
 Brotli==1.0.9
 certifi==2021.10.8
 cffi==1.15.0
@@ -28,6 +30,7 @@ django-crispy-forms==1.13.0
 django-livereload-server==0.3.2
 django-multiselectfield==0.1.12
 django-plotly-dash==1.6.5
+django-storages==1.13.2
 django-timezone-field==4.2.1
 django-widget-tweaks==1.4.8
 dpd-components==0.1.0
@@ -41,6 +44,7 @@ html5lib==1.1
 idna==3.3
 itsdangerous==2.0.1
 Jinja2==3.0.1
+jmespath==1.0.1
 kaleido==0.2.1
 kombu==5.2.2
 MarkupSafe==2.0.1
@@ -63,6 +67,7 @@ python-dotenv==0.19.1
 pytz==2021.1
 reportlab==3.6.3
 requests==2.26.0
+s3transfer==0.6.0
 selenium==4.0.0
 six==1.16.0
 sniffio==1.2.0
