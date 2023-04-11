@@ -20,7 +20,7 @@ media/
 *.csv
 # *.jpg
 # *.jpeg
-*.png
+# *.png
 
 # node 
 node_modules/
